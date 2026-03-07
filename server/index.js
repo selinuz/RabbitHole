@@ -39,6 +39,46 @@ app.post("/api/facilitator", async (req, res) => {
       return res.json({ reply: result.response.text() });
     }
 
+    // Stage 1 pre-step: Analyze initial input to determine what's already known
+    if (stage === "analyze") {
+      const result = await model.generateContent(`
+        You are analyzing a user's initial message to a reflective conversation-prep app.
+
+        User's message: "${message}"
+
+        Determine what information can already be inferred from this message. Return ONLY valid JSON (no markdown):
+        {
+          "lifeArea": "Work" | "Family" | "Friends" | "Relationship" | "Other" | null,
+          "feeling": "Anxious" | "Hurt" | "Frustrated" | "Hopeful" | "Confused" | "Overwhelmed" | "Nervous" | "Sad" | null,
+          "timeline": "I'm initiating it" | "Responding to something" | null,
+          "importance": "It's everything right now" | "Really important" | "Somewhat important" | "I'm not sure yet" | null
+        }
+
+        Rules:
+        - Only set a value if it is clearly inferable from the message. If unsure, return null.
+        - "lifeArea" examples: mention of boyfriend/girlfriend/partner/husband/wife → "Relationship", mention of boss/work/job/colleague → "Work", mention of mom/dad/sibling/family → "Family", mention of friend → "Friends"
+        - "feeling" examples: "scared", "worried" → "Anxious"; "upset", "betrayed" → "Hurt"; "annoyed", "angry" → "Frustrated"; "lost", "don't know" → "Confused"
+        - "timeline": if they say "I need to tell", "I want to bring up", "I'm going to" → "I'm initiating it"; if they say "they said", "I need to respond", "they brought up" → "Responding to something"
+        - "importance": only infer if they use strong language like "need to", "can't go on", "urgent" → "It's everything right now"; otherwise null
+      `);
+
+      let inferred = {
+        lifeArea: null,
+        feeling: null,
+        timeline: null,
+        importance: null,
+      };
+      try {
+        const text = result.response.text().trim();
+        const cleaned = text.replace(/```json|```/g, "").trim();
+        inferred = JSON.parse(cleaned);
+      } catch {
+        // return all nulls — ask everything
+      }
+
+      return res.json({ inferred });
+    }
+
     // Stage 2: Extract the core issue from everything gathered
     if (stage === "core_issue") {
       const result = await model.generateContent(`
