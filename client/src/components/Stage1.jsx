@@ -62,32 +62,56 @@ const Stage1 = ({ stageData, onComplete }) => {
   const { initialInput } = stageData;
   const [acknowledgement, setAcknowledgement] = useState('');
   const [loadingAck, setLoadingAck] = useState(true);
+  const [activeQuestions, setActiveQuestions] = useState(null); // null = loading
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState({});
   const [textInput, setTextInput] = useState('');
   const [summaryConfirmed, setSummaryConfirmed] = useState(false);
 
-  // Fetch AI acknowledgement of initial input
+  // Fetch AI acknowledgement and analyze what's already known
   useEffect(() => {
-    const fetchAck = async () => {
+    const fetchAckAndAnalyze = async () => {
       try {
-        const res = await fetch('/api/facilitator', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ stage: 'ack', message: initialInput }),
-        });
-        const data = await res.json();
-        setAcknowledgement(data.reply);
+        const [ackRes, analyzeRes] = await Promise.all([
+          fetch('/api/facilitator', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ stage: 'ack', message: initialInput }),
+          }),
+          fetch('/api/facilitator', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ stage: 'analyze', message: initialInput }),
+          }),
+        ]);
+        const ackData = await ackRes.json();
+        setAcknowledgement(ackData.reply);
+
+        const analyzeData = await analyzeRes.json();
+        const inferred = analyzeData.inferred || {};
+
+        // Pre-fill answers with inferred values
+        const prefilled = {};
+        if (inferred.lifeArea) prefilled.lifeArea = inferred.lifeArea;
+        if (inferred.feeling) prefilled.feeling = inferred.feeling;
+        if (inferred.timeline) prefilled.timeline = inferred.timeline;
+        if (inferred.importance) prefilled.importance = inferred.importance;
+        setAnswers(prefilled);
+
+        // Only include questions that weren't already answered
+        const remaining = QUESTIONS.filter(q => !prefilled[q.id]);
+        setActiveQuestions(remaining);
       } catch {
         setAcknowledgement('I hear you. Let\'s understand this a bit better.');
+        setActiveQuestions(QUESTIONS);
       } finally {
         setLoadingAck(false);
       }
     };
-    fetchAck();
+    fetchAckAndAnalyze();
   }, [initialInput]);
 
-  const currentQuestion = QUESTIONS[currentQ];
+  const currentQuestion = activeQuestions ? activeQuestions[currentQ] : null;
 
   const ventPrompt = answers.feeling
     ? `You mentioned this is making you feel ${answers.feeling.toLowerCase()}. Tell me more — what happened? Who are the key people involved? What led to this moment?`
@@ -105,7 +129,7 @@ const Stage1 = ({ stageData, onComplete }) => {
     setCurrentQ(q => q + 1); // move past last question → show summary
   };
 
-  const allDone = currentQ >= QUESTIONS.length;
+  const allDone = activeQuestions !== null && currentQ >= activeQuestions.length;
 
   return (
     <motion.div
@@ -135,7 +159,14 @@ const Stage1 = ({ stageData, onComplete }) => {
       )}
 
       {/* Questions, one at a time */}
-      {!allDone && (
+      {activeQuestions === null && !loadingAck && (
+        <div className="flex items-center gap-3 text-white/50 mb-8">
+          <Loader2 size={16} className="animate-spin" />
+          <span className="text-sm">Personalizing your questions...</span>
+        </div>
+      )}
+
+      {activeQuestions !== null && !allDone && currentQuestion && (
         <AnimatePresence mode="wait">
           <motion.div
             key={currentQ}
@@ -178,7 +209,7 @@ const Stage1 = ({ stageData, onComplete }) => {
 
             {/* Step dots */}
             <div className="flex gap-1.5 mt-8">
-              {QUESTIONS.map((_, i) => (
+              {activeQuestions.map((_, i) => (
                 <div
                   key={i}
                   className={`h-1 rounded-full transition-all duration-300 ${
@@ -222,7 +253,7 @@ const Stage1 = ({ stageData, onComplete }) => {
                   That's right
                 </button>
                 <button
-                  onClick={() => { setCurrentQ(0); setAnswers({}); setTextInput(''); }}
+                  onClick={() => { setCurrentQ(0); setAnswers({}); setTextInput(''); setActiveQuestions(QUESTIONS); }}
                   className="px-5 py-2.5 bg-white/10 text-white/70 rounded-full text-sm hover:bg-white/15 transition-colors"
                 >
                   Let me adjust
