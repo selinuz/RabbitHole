@@ -1,0 +1,35 @@
+[dotenv@17.3.1] injecting env (2) from .env -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
+Server running on port 3001
+ReferenceError: fetch is not defined
+    at makeModelRequest (file:///Users/katja/Documents/RabbitHole/server/node_modules/@google/generative-ai/dist/index.mjs:388:11)
+    at generateContent (file:///Users/katja/Documents/RabbitHole/server/node_modules/@google/generative-ai/dist/index.mjs:865:28)
+    at GenerativeModel.generateContent (file:///Users/katja/Documents/RabbitHole/server/node_modules/@google/generative-ai/dist/index.mjs:1375:16)
+    at file:///Users/katja/Documents/RabbitHole/server/index.js:25:39
+    at Layer.handleRequest (/Users/katja/Documents/RabbitHole/server/node_modules/router/lib/layer.js:152:17)
+    at next (/Users/katja/Documents/RabbitHole/server/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/Users/katja/Documents/RabbitHole/server/node_modules/router/lib/route.js:117:3)
+    at handle (/Users/katja/Documents/RabbitHole/server/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/Users/katja/Documents/RabbitHole/server/node_modules/router/lib/layer.js:152:17)
+    at /Users/katja/Documents/RabbitHole/server/node_modules/router/index.js:295:15
+ReferenceError: fetch is not defined
+    at makeModelRequest (file:///Users/katja/Documents/RabbitHole/server/node_modules/@google/generative-ai/dist/index.mjs:388:11)
+    at generateContent (file:///Users/katja/Documents/RabbitHole/server/node_modules/@google/generative-ai/dist/index.mjs:865:28)
+    at GenerativeModel.generateContent (file:///Users/katja/Documents/RabbitHole/server/node_modules/@google/generative-ai/dist/index.mjs:1375:16)
+    at file:///Users/katja/Documents/RabbitHole/server/index.js:25:39
+    at Layer.handleRequest (/Users/katja/Documents/RabbitHole/server/node_modules/router/lib/layer.js:152:17)
+    at next (/Users/katja/Documents/RabbitHole/server/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/Users/katja/Documents/RabbitHole/server/node_modules/router/lib/route.js:117:3)
+    at handle (/Users/katja/Documents/RabbitHole/server/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/Users/katja/Documents/RabbitHole/server/node_modules/router/lib/layer.js:152:17)
+    at /Users/katja/Documents/RabbitHole/server/node_modules/router/index.js:295:15
+GoogleGenerativeAIError: [GoogleGenerativeAI Error]: First content should be with role 'user', got model
+    at validateChatHistory (file:///Users/katja/Documents/RabbitHole/server/node_modules/@google/generative-ai/dist/index.mjs:1050:19)
+    at new ChatSession (file:///Users/katja/Documents/RabbitHole/server/node_modules/@google/generative-ai/dist/index.mjs:1147:13)
+    at GenerativeModel.startChat (file:///Users/katja/Documents/RabbitHole/server/node_modules/@google/generative-ai/dist/index.mjs:1399:16)
+    at file:///Users/katja/Documents/RabbitHole/server/index.js:90:24
+    at Layer.handleRequest (/Users/katja/Documents/RabbitHole/server/node_modules/router/lib/layer.js:152:17)
+    at next (/Users/katja/Documents/RabbitHole/server/node_modules/router/lib/route.js:157:13)
+    at Route.dispatch (/Users/katja/Documents/RabbitHole/server/node_modules/router/lib/route.js:117:3)
+    at handle (/Users/katja/Documents/RabbitHole/server/node_modules/router/index.js:435:11)
+    at Layer.handleRequest (/Users/katja/Documents/RabbitHole/server/node_modules/router/lib/layer.js:152:17)
+    at /Users/katja/Documents/RabbitHole/server/node_modules/router/index.js:295:15

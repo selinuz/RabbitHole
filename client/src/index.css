@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+}
+
+@keyframes climb {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100vh); }
+}
+
+.rabbit-hole-bg {
+  background: linear-gradient(to bottom, #1a1a1a 0%, #2c2c2c 30%, #4a4a4a 60%, #e0f2f1 100%);
+  background-size: 100% 400%;
+  transition: background-position 1s ease-in-out;
+}
+
+/* Alice in Wonderland inspired glassmorphism */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+}
