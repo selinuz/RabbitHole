@@ -110,9 +110,9 @@ const Stage0 = ({ onComplete }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -24 }}
       transition={{ duration: 0.6 }}
-      className="glass-panel p-8 text-white text-center shadow-2xl"
-      style={{ backgroundColor: "rgba(0, 0, 0, 0.3)" }}>
-      <h2 className="text-3xl font-semibold font-serif mb-8">
+      className="glass-panel p-8 text-black text-center"
+      style={{ backgroundColor: "#F4EDE8BB" }}>
+      <h2 className="text-3xl font-semibold font-serif mb-8 text-black/70">
         What conversation is on your mind right now?
       </h2>
 
@@ -123,18 +123,18 @@ const Stage0 = ({ onComplete }) => {
             onChange={(e) => setValue(e.target.value)}
             placeholder="Type your thoughts here..."
             rows={4}
-            className="w-full bg-white/10 rounded-2xl p-4 text-white placeholder-white/60 text-base leading-relaxed outline-none focus:bg-white/[0.15] transition-all duration-300 resize-none font-figtree"
+            className="w-full bg-[#F4EDE8]/70 rounded-2xl p-4 text-black/50 placeholder-black/40 text-base leading-relaxed outline-none bg-[#F4EDE8]/70 transition-all duration-300 resize-none font-figtree"
           />
           {isRecording && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="absolute top-4 right-4 flex items-center gap-2 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg">
+              className="absolute top-4 right-4 flex items-center gap-2 bg-black/5 backdrop-blur-md px-3 py-1.5 rounded-full">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#F4EDE8]/70"></span>
               </span>
-              <span className="text-sm text-primary font-bold uppercase tracking-wider font-figtree">
+              <span className="text-sm text-black/40 font-bold uppercase tracking-wider font-figtree">
                 Recording
               </span>
             </motion.div>
@@ -143,21 +143,21 @@ const Stage0 = ({ onComplete }) => {
 
         <div className="flex items-center gap-4 py-2">
           <div className="h-px bg-white/20 flex-1" />
-          <span className="text-white/60 text-sm uppercase tracking-[0.3em] font-bold font-figtree">
+          <span className="text-black/60 text-sm uppercase tracking-[0.3em] font-bold font-figtree">
             OR
           </span>
-          <div className="h-px bg-white/20 flex-1" />
+          <div className="h-px bg-black/40 flex-1" />
         </div>
 
         <div className="flex flex-col items-center gap-8">
           <button
             onClick={toggleRecording}
             className={`group flex flex-col items-center gap-3 p-7 rounded-2xl transition-all duration-500 w-full max-w-[280px] ${isRecording
-              ? "bg-primary/20 text-primary shadow-[0_0_40px_rgba(214,107,109,0.2)]"
-              : "bg-white/10 text-white/70 hover:text-white lg:hover:bg-white/15"
+              ? "bg-[#F4EDE8]/70 text-black/50 shadow-[0_0_40px_rgba(214,107,109,0.2)]"
+              : "bg-[#F4EDE8]/30 text-black/70 hover:text-black/100 lg:hover:bg-[#F4EDE8]/60"
               } font-figtree`}>
             <div
-              className={`p-4 rounded-full transition-all duration-500 ${isRecording ? "bg-primary/30 text-primary" : "bg-white/10 text-white/50 group-hover:text-white"}`}>
+              className={`p-4 rounded-full transition-all duration-500 ${isRecording ? "bg-[#F4EDE8]/100 text-black/40" : "bg-[#F4EDE8]/10 text-black/50 group-hover:text-black"}`}>
               {isRecording ? (
                 <MicOff size={32} className="animate-pulse" />
               ) : (
@@ -165,11 +165,11 @@ const Stage0 = ({ onComplete }) => {
               )}
             </div>
             <div className="flex flex-col gap-1">
-              <span className="text-sm font-bold uppercase tracking-[0.2em]">
+              <span className="text-sm font-bold text-black/60 uppercase tracking-[0.2em]">
                 {isRecording ? "Listening to you..." : "Rant Out Loud"}
               </span>
               {!isRecording && (
-                <span className="text-sm text-white/60 font-medium">
+                <span className="text-sm text-black/60 font-medium">
                   Use your voice
                 </span>
               )}
@@ -196,7 +196,7 @@ const Stage0 = ({ onComplete }) => {
           </AnimatePresence>
 
           {!ready && wordCount > 0 && (
-            <p className="text-white/60 text-sm font-medium font-figtree">
+            <p className="text-black/60 text-sm font-medium font-figtree">
               A few more details please!
             </p>
           )}
