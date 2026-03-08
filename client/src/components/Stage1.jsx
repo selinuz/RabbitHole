@@ -50,36 +50,70 @@ const QUESTIONS = [
   },
 ];
 
-const PillGroup = ({ options, selected, onSelect, multi = false }) => (
-  <div className="flex flex-wrap gap-2 mt-4">
-    {options.map((opt) => {
-      const isSelected = multi
-        ? Array.isArray(selected) && selected.includes(opt)
-        : selected === opt;
-      return (
-        <button
-          key={opt}
-          onClick={() => onSelect(opt)}
-          className={`px-4 py-2 rounded-full text-base transition-all duration-200 font-figtree ${isSelected
-            ? "border-2 border-primary text-primary bg-[#F4EDE8]"
-            : "bg-[#F4EDE8]/60 text-black/70 hover:text-black lg:hover:bg-black/5"
-            }`}>
-          {opt}
-        </button>
-      );
-    })}
-  </div>
-);
+const PillGroup = ({ options, selected, onSelect, multi = false, allowCustom = false, customSelected = [], onCustomAdd, onCustomRemove }) => {
+  const [customInput, setCustomInput] = useState("");
+
+  const handleCustomKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const trimmed = customInput.trim();
+      if (trimmed && onCustomAdd) {
+        onCustomAdd(trimmed);
+        setCustomInput("");
+      }
+    }
+  };
+
+  const allOptions = [...options, ...customSelected];
+
+  return (
+    <div>
+      <div className="flex flex-wrap gap-2 mt-4">
+        {allOptions.map((opt) => {
+          const isCustom = customSelected.includes(opt);
+          const isSelected = multi
+            ? (Array.isArray(selected) && selected.includes(opt)) || isCustom
+            : selected === opt;
+          return (
+            <button
+              key={opt}
+              onClick={() => isCustom ? onCustomRemove && onCustomRemove(opt) : onSelect(opt)}
+              className={`px-4 py-2 rounded-full text-base transition-all duration-200 font-figtree flex items-center gap-1.5 ${isSelected
+                ? "border-2 border-primary text-primary bg-[#F4EDE8]"
+                : "bg-[#F4EDE8]/60 text-black/70 hover:text-black lg:hover:bg-black/5"
+                }`}>
+              {opt}
+              {isCustom && <span className="text-xs opacity-50">✕</span>}
+            </button>
+          );
+        })}
+      </div>
+
+      {allowCustom && (
+        <input
+          type="text"
+          value={customInput}
+          onChange={(e) => setCustomInput(e.target.value)}
+          onKeyDown={handleCustomKeyDown}
+          placeholder="Add your own..."
+          className="mt-3 w-full px-4 py-2.5 rounded-xl bg-[#F4EDE8]/60 text-black/80 placeholder-black/30 border border-black/10 focus:outline-none focus:border-primary text-base font-figtree"
+        />
+      )}
+    </div>
+  );
+};
 
 const Stage1 = ({ stageData, onComplete, onBack }) => {
   const { initialInput } = stageData;
   const [activeQuestions, setActiveQuestions] = useState(null); // null = loading
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState({});
+  const [customFeelings, setCustomFeelings] = useState([]);
 
   const [summaryConfirmed, setSummaryConfirmed] = useState(false);
   const [adjusting, setAdjusting] = useState(false);
   const [draftAnswers, setDraftAnswers] = useState({});
+  const [draftCustomFeelings, setDraftCustomFeelings] = useState([]);
 
   // Fetch AI acknowledgement and analyze what's already known
   useEffect(() => {
@@ -152,16 +186,31 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
 
   const openAdjust = () => {
     setDraftAnswers({ ...answers });
+    setDraftCustomFeelings([...customFeelings]);
     setAdjusting(true);
   };
 
   const saveAdjust = () => {
     setAnswers({ ...draftAnswers });
+    setCustomFeelings([...draftCustomFeelings]);
     setAdjusting(false);
   };
 
   const allDone =
     activeQuestions !== null && currentQ >= activeQuestions.length;
+
+  // Merge preset + custom feelings into the feeling field for onComplete
+  const buildFinalAnswers = () => {
+    const presetFeelings = Array.isArray(answers.feeling) ? answers.feeling : [];
+    const allFeelings = [...presetFeelings, ...customFeelings];
+    return { ...answers, feeling: allFeelings };
+  };
+
+  const isFeelingQuestion = currentQuestion?.id === "feeling";
+  const totalSelected = [
+    ...(Array.isArray(answers.feeling) ? answers.feeling : []),
+    ...customFeelings,
+  ];
 
   return (
     <motion.div
@@ -201,19 +250,29 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 selected={answers[currentQuestion.id]}
                 onSelect={handlePillSelect}
                 multi={currentQuestion.multi}
+                allowCustom={isFeelingQuestion}
+                customSelected={isFeelingQuestion ? customFeelings : []}
+                onCustomAdd={(v) => {
+                  if (!customFeelings.includes(v)) {
+                    setCustomFeelings((prev) => [...prev, v]);
+                  }
+                }}
+                onCustomRemove={(v) =>
+                  setCustomFeelings((prev) => prev.filter((f) => f !== v))
+                }
               />
             )}
 
             <div className="flex items-center gap-4 mt-6">
-              {currentQuestion.multi &&
-                Array.isArray(answers[currentQuestion.id]) &&
-                answers[currentQuestion.id].length > 0 && (
-                  <button
-                    onClick={() => setCurrentQ((q) => q + 1)}
-                    className="px-5 py-2.5 bg-primary text-black/80 rounded-full text-base font-semibold hover:bg-primary-hover transition-colors font-figtree">
-                    Continue →
-                  </button>
-                )}
+              {currentQuestion.multi && (
+                isFeelingQuestion ? totalSelected.length > 0 : (Array.isArray(answers[currentQuestion.id]) && answers[currentQuestion.id].length > 0)
+              ) && (
+                <button
+                  onClick={() => setCurrentQ((q) => q + 1)}
+                  className="px-5 py-2.5 bg-primary text-black/80 rounded-full text-base font-semibold hover:bg-primary-hover transition-colors font-figtree">
+                  Continue →
+                </button>
+              )}
               <button
                 onClick={handleBack}
                 className="text-black/80 text-base hover:text-black/60 transition-colors font-figtree">
@@ -271,6 +330,16 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                   options={FEELINGS}
                   selected={draftAnswers.feeling}
                   multi={true}
+                  allowCustom={true}
+                  customSelected={draftCustomFeelings}
+                  onCustomAdd={(v) => {
+                    if (!draftCustomFeelings.includes(v)) {
+                      setDraftCustomFeelings((prev) => [...prev, v]);
+                    }
+                  }}
+                  onCustomRemove={(v) =>
+                    setDraftCustomFeelings((prev) => prev.filter((f) => f !== v))
+                  }
                   onSelect={(v) => {
                     const current = Array.isArray(draftAnswers.feeling)
                       ? draftAnswers.feeling
@@ -336,11 +405,10 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
               <SummaryRow label="Area of life" value={answers.lifeArea} />
               <SummaryRow
                 label="How you're feeling"
-                value={
-                  Array.isArray(answers.feeling)
-                    ? answers.feeling.join(" · ")
-                    : answers.feeling
-                }
+                value={[
+                  ...(Array.isArray(answers.feeling) ? answers.feeling : answers.feeling ? [answers.feeling] : []),
+                  ...customFeelings,
+                ].join(" · ") || undefined}
               />
               <SummaryRow label="Your position" value={answers.timeline} />
               <SummaryRow label="Importance" value={answers.importance} />
@@ -363,7 +431,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
               <motion.button
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                onClick={() => onComplete(answers)}
+                onClick={() => onComplete(buildFinalAnswers())}
                 className="w-full py-3 bg-primary text-black/80 rounded-2xl text-lg font-semibold hover:bg-primary-hover transition-colors font-figtree">
                 Dig into the 1st Pillar →
               </motion.button>

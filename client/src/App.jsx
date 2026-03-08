@@ -145,7 +145,7 @@ const downloadPDF = ({ situation, preparation, empathy, phrasing }) => {
 
 const TOTAL_STAGES = 6;
 // How far into the image to travel per stage (0–1). 0.75 = 75% of image height used total.
-const BG_TRAVEL = 0.85;
+const BG_TRAVEL = 0.9;
 
 function App() {
   const [stage, setStage] = useState(0);
@@ -188,7 +188,7 @@ function App() {
 
       {/* Progress sidebar */}
       <div className="fixed right-6 top-1/2 -translate-y-1/2 flex flex-col gap-5 z-50 items-center">
-        {[1, 2, 3, 4, 5].map((s) => (
+        {[1, 2, 3, 4, 5, 6].map((s) => (
           <div key={s} className="relative flex items-center justify-center">
             {stage === s || (stage === 0 && s === 1) ? (
               <img

@@ -123,6 +123,8 @@ const Stage3 = ({ stageData, onComplete, onBack }) => {
   const [flippedCard, setFlippedCard] = useState(null);
   const [selectedTone, setSelectedTone] = useState(null);
   const [selectedEmotions, setSelectedEmotions] = useState([]);
+  const [customEmotions, setCustomEmotions] = useState([]);
+  const [emotionInput, setEmotionInput] = useState("");
 
   useEffect(() => {
     const fetchPerspectives = async () => {
@@ -161,8 +163,21 @@ const Stage3 = ({ stageData, onComplete, onBack }) => {
     );
   };
 
+  const allEmotions = [...selectedEmotions, ...customEmotions];
+
+  const handleEmotionInputKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const trimmed = emotionInput.trim();
+      if (trimmed && !customEmotions.includes(trimmed) && !selectedEmotions.includes(trimmed)) {
+        setCustomEmotions((prev) => [...prev, trimmed]);
+        setEmotionInput("");
+      }
+    }
+  };
+
   const canContinue =
-    selectedPerspective !== null && selectedTone && selectedEmotions.length > 0;
+    selectedPerspective !== null && selectedTone && allEmotions.length > 0;
 
   return (
     <motion.div
@@ -253,19 +268,35 @@ const Stage3 = ({ stageData, onComplete, onBack }) => {
           <span className="text-white/30">(pick a few)</span>
         </p>
         <div className="flex flex-wrap gap-2">
-          {EMOTIONS.map((emotion) => (
-            <button
-              key={emotion}
-              onClick={() => toggleEmotion(emotion)}
-              className={`px-3 py-1.5 rounded-full text-base transition-all duration-300 font-figtree ${
-                selectedEmotions.includes(emotion)
-                  ? "bg-primary text-white shadow-md"
-                  : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/80"
-              }`}>
-              {emotion}
-            </button>
-          ))}
+          {[...EMOTIONS, ...customEmotions].map((emotion) => {
+            const isCustom = customEmotions.includes(emotion);
+            const isSelected = selectedEmotions.includes(emotion) || isCustom;
+            return (
+              <button
+                key={emotion}
+                onClick={() => isCustom
+                  ? setCustomEmotions((prev) => prev.filter((x) => x !== emotion))
+                  : toggleEmotion(emotion)
+                }
+                className={`px-3 py-1.5 rounded-full text-base transition-all duration-300 font-figtree flex items-center gap-1.5 ${
+                  isSelected
+                    ? "bg-primary text-white shadow-md"
+                    : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/80"
+                }`}>
+                {emotion}
+                {isCustom && <span className="text-xs opacity-60">✕</span>}
+              </button>
+            );
+          })}
         </div>
+        <input
+          type="text"
+          value={emotionInput}
+          onChange={(e) => setEmotionInput(e.target.value)}
+          onKeyDown={handleEmotionInputKeyDown}
+          placeholder="Add your own..."
+          className="mt-3 w-full px-4 py-2.5 rounded-xl bg-white/5 text-white/80 placeholder-white/20 border border-white/10 focus:outline-none focus:border-primary text-base font-figtree"
+        />
       </div>
 
       <AnimatePresence>
@@ -276,7 +307,7 @@ const Stage3 = ({ stageData, onComplete, onBack }) => {
             onClick={() =>
               onComplete({
                 tone: selectedTone,
-                emotions: selectedEmotions,
+                emotions: allEmotions,
                 perspective: perspectives[selectedPerspective].front,
               })
             }
