@@ -1,111 +1,90 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mic, MicOff } from "lucide-react";
 
-const Stage0 = ({ onComplete }) => {
+const Stage0 = forwardRef(({ onComplete }, ref) => {
   const [value, setValue] = useState("");
   const [isRecording, setIsRecording] = useState(false);
-  const recognitionRef = useRef(null);
-
-  const hasReceivedResults = useRef(false);
-  const isRetrying = useRef(false);
+  const [isTranscribing, setIsTranscribing] = useState(false);
+  const mediaRecorderRef = useRef(null);
+  const chunksRef = useRef([]);
 
   const wordCount = value.trim() ? value.trim().split(/\s+/).length : 0;
   const ready = wordCount >= 15;
 
-  const toggleRecording = () => {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      alert("Speech recognition is not supported in your browser.");
-      return;
-    }
-
+  const toggleRecording = async () => {
     if (isRecording) {
-      if (recognitionRef.current) recognitionRef.current.stop();
+      mediaRecorderRef.current?.stop();
       return;
     }
 
-    const startSession = (retry = false) => {
-      if (!retry) {
-        hasReceivedResults.current = false;
-        isRetrying.current = false;
-      }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-      try {
-        const recognition = new SpeechRecognition();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = navigator.language || "en-US";
+      const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+        ? "audio/webm;codecs=opus"
+        : MediaRecorder.isTypeSupported("audio/webm")
+          ? "audio/webm"
+          : "audio/mp4";
 
-        recognition.onstart = () => {
-          setIsRecording(true);
-        };
+      const mediaRecorder = new MediaRecorder(stream, { mimeType });
+      mediaRecorderRef.current = mediaRecorder;
+      chunksRef.current = [];
 
-        recognition.onresult = (event) => {
-          let finalTranscript = "";
-          for (let i = event.resultIndex; i < event.results.length; i++) {
-            if (event.results[i].isFinal) {
-              finalTranscript += event.results[i][0].transcript;
-            }
-          }
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunksRef.current.push(e.data);
+      };
 
-          if (finalTranscript) {
-            hasReceivedResults.current = true;
-            isRetrying.current = false; // Successfully joined a session
+      mediaRecorder.onstart = () => setIsRecording(true);
+
+      mediaRecorder.onstop = async () => {
+        setIsRecording(false);
+        stream.getTracks().forEach((t) => t.stop());
+
+        const blob = new Blob(chunksRef.current, { type: mimeType });
+        chunksRef.current = [];
+
+        setIsTranscribing(true);
+        try {
+          const response = await fetch("/api/transcribe", {
+            method: "POST",
+            headers: { "Content-Type": mimeType },
+            body: blob,
+          });
+
+          if (!response.ok) throw new Error("Transcription failed");
+
+          const { transcript } = await response.json();
+          if (transcript) {
             setValue((prev) => {
               const separator = prev && !prev.endsWith(" ") ? " " : "";
-              return prev + separator + finalTranscript;
+              return prev + separator + transcript;
             });
           }
-        };
+        } catch (err) {
+          console.error("Transcription error:", err);
+          alert("Transcription failed. Please try again or type instead.");
+        } finally {
+          setIsTranscribing(false);
+        }
+      };
 
-        recognition.onerror = (event) => {
-          console.error("Speech recognition error:", event.error);
-
-          if (event.error === "network") {
-            if (!hasReceivedResults.current && !isRetrying.current) {
-              console.warn(
-                "Network error detected, attempting one silent retry...",
-              );
-              isRetrying.current = true;
-              startSession(true);
-              return;
-            }
-            if (!hasReceivedResults.current) {
-              alert(
-                "Connection lost. Please try again or check your internet.",
-              );
-            }
-          } else if (event.error === "not-allowed") {
-            alert(
-              "Microphone access denied. Please check your browser permissions.",
-            );
-          }
-
-          setIsRecording(false);
-          isRetrying.current = false;
-        };
-
-        recognition.onend = () => {
-          if (!isRetrying.current) {
-            setIsRecording(false);
-          }
-        };
-
-        recognitionRef.current = recognition;
-        recognition.start();
-      } catch (err) {
-        console.error("Failed to start speech recognition:", err);
-        setIsRecording(false);
+      mediaRecorder.start();
+    } catch (err) {
+      if (err.name === "NotAllowedError") {
+        alert(
+          "Microphone access denied. Please check your browser permissions.",
+        );
+      } else {
+        console.error("Failed to start recording:", err);
+        alert("Could not access your microphone. Please try again.");
       }
-    };
-
-    startSession();
+    }
   };
 
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -24 }}
@@ -125,7 +104,7 @@ const Stage0 = ({ onComplete }) => {
             rows={4}
             className="w-full bg-[#F4EDE8]/70 rounded-2xl p-4 text-black/50 placeholder-black/40 text-base leading-relaxed outline-none bg-[#F4EDE8]/70 transition-all duration-300 resize-none font-figtree"
           />
-          {isRecording && (
+          {(isRecording || isTranscribing) && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -135,7 +114,7 @@ const Stage0 = ({ onComplete }) => {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#F4EDE8]/70"></span>
               </span>
               <span className="text-sm text-black/40 font-bold uppercase tracking-wider font-figtree">
-                Recording
+                {isTranscribing ? "Transcribing..." : "Recording"}
               </span>
             </motion.div>
           )}
@@ -152,10 +131,13 @@ const Stage0 = ({ onComplete }) => {
         <div className="flex flex-col items-center gap-8">
           <button
             onClick={toggleRecording}
+            disabled={isTranscribing}
             className={`group flex flex-col items-center gap-3 p-7 rounded-2xl transition-all duration-500 w-full max-w-[280px] ${
               isRecording
                 ? "bg-[#F4EDE8]/70 text-black/50 shadow-[0_0_40px_rgba(214,107,109,0.2)]"
-                : "bg-[#F4EDE8]/30 text-black/70 hover:text-black/100 lg:hover:bg-[#F4EDE8]/60"
+                : isTranscribing
+                  ? "bg-[#F4EDE8]/50 text-black/30 cursor-not-allowed"
+                  : "bg-[#F4EDE8]/30 text-black/70 hover:text-black/100 lg:hover:bg-[#F4EDE8]/60"
             } font-figtree`}>
             <div
               className={`p-4 rounded-full transition-all duration-500 ${isRecording ? "bg-[#F4EDE8]/100 text-black/40" : "bg-[#F4EDE8]/10 text-black/50 group-hover:text-black"}`}>
@@ -167,13 +149,12 @@ const Stage0 = ({ onComplete }) => {
             </div>
             <div className="flex flex-col gap-1">
               <span className="text-sm font-bold text-black/60 uppercase tracking-[0.2em]">
-                {isRecording ? "Listening to you..." : "Rant Out Loud"}
+                {isRecording
+                  ? "Press to stop"
+                  : isTranscribing
+                    ? "Processing..."
+                    : "Rant Out Loud"}
               </span>
-              {!isRecording && (
-                <span className="text-sm text-black/60 font-medium">
-                  Use your voice
-                </span>
-              )}
             </div>
           </button>
 
@@ -186,7 +167,7 @@ const Stage0 = ({ onComplete }) => {
                 className="w-full flex flex-col items-center gap-4">
                 <button
                   onClick={() => {
-                    if (isRecording) recognitionRef.current.stop();
+                    if (isRecording) mediaRecorderRef.current?.stop();
                     onComplete(value.trim());
                   }}
                   className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-2xl shadow-primary/30 text-lg font-figtree">
@@ -205,6 +186,6 @@ const Stage0 = ({ onComplete }) => {
       </div>
     </motion.div>
   );
-};
+});
 
 export default Stage0;

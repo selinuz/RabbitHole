@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, ChevronLeft } from "lucide-react";
 
@@ -115,7 +115,7 @@ const FlipCard = ({ front, back, selected, flipped, onSelect, suitKey }) => {
   );
 };
 
-const Stage3 = ({ stageData, onComplete, onBack }) => {
+const Stage3 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
   const { initialInput, situation, preparation } = stageData;
   const [perspectives, setPerspectives] = useState([]);
   const [loadingPerspectives, setLoadingPerspectives] = useState(true);
@@ -184,6 +184,7 @@ const Stage3 = ({ stageData, onComplete, onBack }) => {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -24 }}
+      ref={ref}
       transition={{ duration: 0.5 }}
       className="glass-panel p-8 text-white">
       <div className="flex items-center mb-6">
@@ -318,6 +319,6 @@ const Stage3 = ({ stageData, onComplete, onBack }) => {
       </AnimatePresence>
     </motion.div>
   );
-};
+});
 
 export default Stage3;

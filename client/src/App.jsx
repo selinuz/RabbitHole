@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Download } from "lucide-react";
+import { Download, Volume2, VolumeX, Loader } from "lucide-react";
 import { jsPDF } from "jspdf";
 import Stage0 from "./components/Stage0";
 import Stage1 from "./components/Stage1";
@@ -143,6 +143,119 @@ const downloadPDF = ({ situation, preparation, empathy, phrasing }) => {
   doc.save("conversation-plan.pdf");
 };
 
+const SpeakerButton = ({ panelRef }) => {
+  const [status, setStatus] = useState("idle"); // idle | loading | playing
+  const audioRef = useRef(null);
+
+  const toggle = async () => {
+    if (status === "playing") {
+      audioRef.current?.pause();
+      audioRef.current = null;
+      setStatus("idle");
+      return;
+    }
+
+    if (!panelRef.current) return;
+
+    const BLOCK_TAGS = new Set([
+      "DIV", "P", "H1", "H2", "H3", "H4", "H5", "H6",
+      "LI", "TR", "TD", "TH", "SECTION", "ARTICLE", "HEADER",
+      "FOOTER", "BLOCKQUOTE", "LABEL", "SPAN",
+    ]);
+
+    const extractText = (node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return node.textContent;
+      }
+
+      if (node.nodeType !== Node.ELEMENT_NODE) return "";
+
+      const tag = node.tagName;
+
+      // Replace inputs/textareas with their value or placeholder
+      if (tag === "TEXTAREA" || tag === "INPUT") {
+        const val = node.value?.trim();
+        const ph = node.placeholder?.trim();
+        return (val || ph || "") + ". ";
+      }
+
+      // Skip SVGs entirely
+      if (tag === "SVG" || tag === "svg") return "";
+
+      // Skip navigation/action buttons (Back, Continue, →, etc.) but read option buttons
+      if (tag === "BUTTON") {
+        const btnText = node.textContent?.trim() ?? "";
+        // Short action words or arrow-only buttons are navigation — skip them
+        const isNavButton = /^(←|→|back|continue|save|cancel|that'?s right|let me adjust|dive in|dig (in|deeper)|see how|see the bigger picture|add your own)/i.test(btnText);
+        if (isNavButton) return "";
+        // Otherwise it's an option pill — read it as a list item
+        return btnText + ". ";
+      }
+
+      let inner = "";
+      for (const child of node.childNodes) {
+        inner += extractText(child);
+      }
+
+      // After block-level elements, ensure a sentence break
+      if (BLOCK_TAGS.has(tag)) {
+        const trimmed = inner.trim();
+        if (!trimmed) return "";
+        // Add ". " if doesn't already end with sentence-ending punctuation
+        return trimmed.match(/[.!?]$/) ? trimmed + " " : trimmed + ". ";
+      }
+
+      return inner;
+    };
+
+    const text = extractText(panelRef.current).replace(/\.\s*\.\s*/g, ". ").replace(/\s{2,}/g, " ").trim();
+    if (!text) return;
+
+    setStatus("loading");
+    try {
+      const response = await fetch("/api/speak", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!response.ok) throw new Error("TTS failed");
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audioRef.current = audio;
+
+      audio.onended = () => {
+        URL.revokeObjectURL(url);
+        audioRef.current = null;
+        setStatus("idle");
+      };
+
+      audio.play();
+      setStatus("playing");
+    } catch (err) {
+      console.error("TTS error:", err);
+      setStatus("idle");
+    }
+  };
+
+  return (
+    <button
+      onClick={toggle}
+      title={status === "playing" ? "Stop reading" : "Read instructions aloud"}
+      className="absolute -top-4 -right-4 z-20 p-2.5 rounded-full bg-primary hover:bg-primary-hover transition-all duration-300 text-white shadow-lg shadow-primary/30">
+      {status === "loading" ? (
+        <Loader size={18} className="animate-spin" />
+      ) : status === "playing" ? (
+        <VolumeX size={18} />
+      ) : (
+        <Volume2 size={18} />
+      )}
+    </button>
+  );
+};
+
 const TOTAL_STAGES = 6;
 // How far into the image to travel per stage (0–1). 0.75 = 75% of image height used total.
 const BG_TRAVEL = 0.9;
@@ -156,6 +269,9 @@ function App() {
     empathy: {},
     phrasing: {},
   });
+
+  // Points to the rendered panel DOM node — read by SpeakerButton via .innerText
+  const panelRef = useRef(null);
 
   const advanceTo = (nextStage, newData = {}) => {
     setStageData((prev) => ({ ...prev, ...newData }));
@@ -222,9 +338,13 @@ function App() {
                   A guide for navigating difficult conversations
                 </p>
               </div>
-              <Stage0
-                onComplete={(input) => advanceTo(1, { initialInput: input })}
-              />
+              <div className="relative">
+                <SpeakerButton panelRef={panelRef} />
+                <Stage0
+                  ref={panelRef}
+                  onComplete={(input) => advanceTo(1, { initialInput: input })}
+                />
+              </div>
             </motion.div>
           )}
           {stage === 1 && (
@@ -234,11 +354,15 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}>
-              <Stage1
-                stageData={stageData}
-                onComplete={(situation) => advanceTo(2, { situation })}
-                onBack={goBack}
-              />
+              <div className="relative">
+                <SpeakerButton panelRef={panelRef} />
+                <Stage1
+                  ref={panelRef}
+                  stageData={stageData}
+                  onComplete={(situation) => advanceTo(2, { situation })}
+                  onBack={goBack}
+                />
+              </div>
             </motion.div>
           )}
           {stage === 2 && (
@@ -248,11 +372,15 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}>
-              <Stage2
-                stageData={stageData}
-                onComplete={(preparation) => advanceTo(3, { preparation })}
-                onBack={goBack}
-              />
+              <div className="relative">
+                <SpeakerButton panelRef={panelRef} />
+                <Stage2
+                  ref={panelRef}
+                  stageData={stageData}
+                  onComplete={(preparation) => advanceTo(3, { preparation })}
+                  onBack={goBack}
+                />
+              </div>
             </motion.div>
           )}
           {stage === 3 && (
@@ -262,11 +390,15 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}>
-              <Stage3
-                stageData={stageData}
-                onComplete={(empathy) => advanceTo(4, { empathy })}
-                onBack={goBack}
-              />
+              <div className="relative">
+                <SpeakerButton panelRef={panelRef} />
+                <Stage3
+                  ref={panelRef}
+                  stageData={stageData}
+                  onComplete={(empathy) => advanceTo(4, { empathy })}
+                  onBack={goBack}
+                />
+              </div>
             </motion.div>
           )}
           {stage === 4 && (
@@ -276,11 +408,15 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}>
-              <Stage4
-                stageData={stageData}
-                onComplete={(phrasing) => advanceTo(5, { phrasing })}
-                onBack={goBack}
-              />
+              <div className="relative">
+                <SpeakerButton panelRef={panelRef} />
+                <Stage4
+                  ref={panelRef}
+                  stageData={stageData}
+                  onComplete={(phrasing) => advanceTo(5, { phrasing })}
+                  onBack={goBack}
+                />
+              </div>
             </motion.div>
           )}
           {stage === 5 && (
@@ -290,11 +426,15 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}>
-              <Stage5
-                stageData={stageData}
-                onBack={goBack}
-                onFinish={() => setStage(6)}
-              />
+              <div className="relative">
+                <SpeakerButton panelRef={panelRef} />
+                <Stage5
+                  ref={panelRef}
+                  stageData={stageData}
+                  onBack={goBack}
+                  onFinish={() => setStage(6)}
+                />
+              </div>
             </motion.div>
           )}
           {stage === 6 && (

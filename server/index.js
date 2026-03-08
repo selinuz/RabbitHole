@@ -11,6 +11,80 @@ const port = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
+app.post("/api/speak", async (req, res) => {
+  const { text } = req.body;
+
+  if (!text) {
+    return res.status(400).json({ error: "No text provided" });
+  }
+
+  try {
+    const response = await fetch(
+      "https://api.elevenlabs.io/v1/text-to-speech/EXAVITQu4vr4xnSDxMaL",
+      {
+        method: "POST",
+        headers: {
+          "xi-api-key": process.env.ELEVENLABS_API_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text,
+          model_id: "eleven_turbo_v2_5",
+          voice_settings: { stability: 0.5, similarity_boost: 0.75 },
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error("ElevenLabs TTS error:", error);
+      return res.status(502).json({ error: "Text-to-speech failed" });
+    }
+
+    res.setHeader("Content-Type", "audio/mpeg");
+    const reader = response.body.getReader();
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      res.write(Buffer.from(value));
+    }
+    res.end();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "TTS request failed" });
+  }
+});
+
+app.post("/api/transcribe", express.raw({ type: "*/*", limit: "25mb" }), async (req, res) => {
+  const audioBuffer = req.body;
+  const contentType = req.headers["content-type"] || "audio/webm";
+
+  const formData = new FormData();
+  const audioBlob = new Blob([audioBuffer], { type: contentType });
+  formData.append("file", audioBlob, "audio.webm");
+  formData.append("model_id", "scribe_v1");
+
+  try {
+    const response = await fetch("https://api.elevenlabs.io/v1/speech-to-text", {
+      method: "POST",
+      headers: { "xi-api-key": process.env.ELEVENLABS_API_KEY },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error("ElevenLabs STT error:", error);
+      return res.status(502).json({ error: "Transcription failed" });
+    }
+
+    const data = await response.json();
+    return res.json({ transcript: data.text || "" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Transcription request failed" });
+  }
+});
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 app.post("/api/facilitator", async (req, res) => {

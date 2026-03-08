@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, forwardRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, ArrowRight, ChevronLeft } from 'lucide-react';
 
-const Stage4 = ({ stageData, onComplete, onBack }) => {
+const Stage4 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
   const { preparation, empathy } = stageData;
   const [instinct, setInstinct] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -83,6 +83,7 @@ const Stage4 = ({ stageData, onComplete, onBack }) => {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -24 }}
+      ref={ref}
       transition={{ duration: 0.5 }}
       className="glass-panel p-8 text-white"
     >
@@ -177,7 +178,7 @@ const Stage4 = ({ stageData, onComplete, onBack }) => {
       </AnimatePresence>
     </motion.div>
   );
-};
+});
 
 const renderInteractivePhrase = (phrase, fillers, onChange) => {
   if (!phrase) return null;

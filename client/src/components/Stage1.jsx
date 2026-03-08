@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
 
@@ -103,7 +103,7 @@ const PillGroup = ({ options, selected, onSelect, multi = false, allowCustom = f
   );
 };
 
-const Stage1 = ({ stageData, onComplete, onBack }) => {
+const Stage1 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
   const { initialInput } = stageData;
   const [activeQuestions, setActiveQuestions] = useState(null); // null = loading
   const [currentQ, setCurrentQ] = useState(0);
@@ -217,6 +217,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -24 }}
+      ref={ref}
       transition={{ duration: 0.5 }}
       className="glass-panel p-8 text-black/80"
       style={{ backgroundColor: "#F4EDE8BB" }}>
@@ -441,7 +442,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
       )}
     </motion.div>
   );
-};
+});
 
 const SummaryRow = ({ label, value }) =>
   value ? (
