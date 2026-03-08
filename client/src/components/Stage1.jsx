@@ -62,7 +62,7 @@ const PillGroup = ({ options, selected, onSelect }) => (
         onClick={() => onSelect(opt)}
         className={`px-4 py-2 rounded-full text-sm border transition-all duration-200 ${
           selected === opt
-            ? "bg-teal-500 border-teal-400 text-white"
+            ? "bg-primary border-primary-hover text-white"
             : "bg-white/5 border-white/20 text-white/70 hover:border-white/40 hover:text-white"
         }`}>
         {opt}
@@ -217,7 +217,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 <button
                   onClick={handleTextSubmit}
                   disabled={!textInput.trim()}
-                  className="mt-3 px-5 py-2 bg-teal-500 text-white rounded-full text-sm font-semibold disabled:opacity-30 hover:bg-teal-400 transition-colors">
+                  className="mt-3 px-5 py-2 bg-primary text-white rounded-full text-sm font-semibold disabled:opacity-30 hover:bg-primary-hover transition-colors">
                   Continue
                 </button>
               </div>
@@ -237,7 +237,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                   key={i}
                   className={`h-1 rounded-full transition-all duration-300 ${
                     i < currentQ
-                      ? "w-6 bg-teal-400"
+                      ? "w-6 bg-primary-hover"
                       : i === currentQ
                         ? "w-6 bg-white/60"
                         : "w-3 bg-white/15"
@@ -325,7 +325,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={saveAdjust}
-                className="px-5 py-2.5 bg-teal-500 text-white rounded-full text-sm font-semibold hover:bg-teal-400 transition-colors">
+                className="px-5 py-2.5 bg-primary text-white rounded-full text-sm font-semibold hover:bg-primary-hover transition-colors">
                 Save changes
               </button>
               <button
@@ -367,7 +367,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
               <div className="flex gap-3">
                 <button
                   onClick={() => setSummaryConfirmed(true)}
-                  className="px-5 py-2.5 bg-teal-500 text-white rounded-full text-sm font-semibold hover:bg-teal-400 transition-colors">
+                  className="px-5 py-2.5 bg-primary text-white rounded-full text-sm font-semibold hover:bg-primary-hover transition-colors">
                   That's right
                 </button>
                 <button
@@ -381,7 +381,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 onClick={() => onComplete(answers)}
-                className="w-full py-3 bg-teal-500 text-white rounded-2xl font-semibold hover:bg-teal-400 transition-colors">
+                className="w-full py-3 bg-primary text-white rounded-2xl font-semibold hover:bg-primary-hover transition-colors">
                 Dig into the 1st Pillar →
               </motion.button>
             )}

@@ -87,7 +87,7 @@ const Facilitator = ({ stage, initialTheme, onComplete }) => {
               <div
                 className={`max-w-[85%] p-4 rounded-2xl ${
                   msg.role === "user"
-                    ? "bg-teal-600 text-white rounded-tr-none"
+                    ? "bg-primary text-white rounded-tr-none"
                     : "bg-white/10 text-white rounded-tl-none border border-white/10"
                 }`}>
                 {msg.content}
@@ -100,7 +100,7 @@ const Facilitator = ({ stage, initialTheme, onComplete }) => {
               animate={{ opacity: 1 }}
               className="flex justify-start">
               <div className="bg-white/10 p-4 rounded-2xl rounded-tl-none border border-white/10">
-                <Loader2 className="animate-spin text-teal-400" />
+                <Loader2 className="animate-spin text-primary-hover" />
               </div>
             </motion.div>
           )}
@@ -113,7 +113,7 @@ const Facilitator = ({ stage, initialTheme, onComplete }) => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             onClick={onComplete}
-            className="w-full p-4 bg-teal-500 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-teal-400 transition-all shadow-lg">
+            className="w-full p-4 bg-primary text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-primary-hover transition-all shadow-lg">
             Dig deeper <ChevronDown />
           </motion.button>
         ) : (
@@ -124,12 +124,12 @@ const Facilitator = ({ stage, initialTheme, onComplete }) => {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               placeholder="Reflect here..."
-              className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white outline-none focus:ring-2 focus:ring-teal-400/50 pr-12 transition-all"
+              className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white outline-none focus:ring-2 focus:ring-primary-hover/50 pr-12 transition-all"
             />
             <button
               onClick={handleSend}
               disabled={loading || !inputValue.trim()}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-teal-500 rounded-xl text-white hover:bg-teal-400 disabled:opacity-50 transition-all">
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-primary rounded-xl text-white hover:bg-primary-hover disabled:opacity-50 transition-all">
               <Send size={20} />
             </button>
           </>

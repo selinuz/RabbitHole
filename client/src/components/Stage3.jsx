@@ -16,7 +16,7 @@ const FlipCard = ({ front, back, selected, onSelect }) => {
   return (
     <div
       className={`relative cursor-pointer transition-all duration-300 rounded-xl ${
-        selected ? 'ring-2 ring-teal-400 ring-offset-2 ring-offset-[#0d1117] scale-[1.02]' : ''
+        selected ? 'ring-2 ring-primary-hover ring-offset-2 ring-offset-[--color-bg] scale-[1.02]' : ''
       }`}
       style={{ perspective: 1000 }}
       onClick={(e) => {
@@ -39,13 +39,13 @@ const FlipCard = ({ front, back, selected, onSelect }) => {
         {/* Front */}
         <div
           className={`rounded-xl border p-4 transition-colors ${
-            selected ? 'border-teal-400 bg-teal-500/20' : 'border-white/15 bg-white/5'
+            selected ? 'border-primary-hover bg-primary/20' : 'border-white/15 bg-white/5'
           }`}
           style={{ backfaceVisibility: 'hidden' }}
         >
           <div className="flex justify-between items-start mb-1">
             <p className="text-white/40 text-xs">From their side</p>
-            {selected && <div className="w-2 h-2 rounded-full bg-teal-400 shadow-[0_0_8px_rgba(45,212,191,0.6)]" />}
+            {selected && <div className="w-2 h-2 rounded-full bg-primary-hover shadow-[0_0_8px_var(--color-glow)]" />}
           </div>
           <p className="text-white/85 text-sm leading-relaxed">{front}</p>
           <p className="text-white/25 text-xs mt-3 flex items-center gap-1">
@@ -56,11 +56,11 @@ const FlipCard = ({ front, back, selected, onSelect }) => {
         {/* Back */}
         <div
           className={`absolute inset-0 rounded-xl border p-4 ${
-            selected ? 'border-teal-400 bg-teal-500/20' : 'border-teal-400/30 bg-teal-500/10'
+            selected ? 'border-primary-hover bg-primary/20' : 'border-primary-hover/30 bg-primary/10'
           }`}
           style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
         >
-          <p className="text-teal-300 text-xs mb-1">How this might affect them</p>
+          <p className="text-accent text-xs mb-1">How this might affect them</p>
           <p className="text-white/85 text-sm leading-relaxed">{back}</p>
         </div>
       </motion.div>
@@ -155,7 +155,7 @@ const Stage3 = ({ stageData, onComplete }) => {
               onClick={() => setSelectedTone(tone.id)}
               className={`p-3 rounded-xl border text-left transition-all ${
                 selectedTone === tone.id
-                  ? 'border-teal-400 bg-teal-500/20 text-white'
+                  ? 'border-primary-hover bg-primary/20 text-white'
                   : 'border-white/15 bg-white/5 text-white/60 hover:border-white/30 hover:text-white/80'
               }`}
             >
@@ -176,7 +176,7 @@ const Stage3 = ({ stageData, onComplete }) => {
               onClick={() => toggleEmotion(emotion)}
               className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
                 selectedEmotions.includes(emotion)
-                  ? 'bg-teal-500 border-teal-400 text-white'
+                  ? 'bg-primary border-primary-hover text-white'
                   : 'bg-white/5 border-white/15 text-white/60 hover:border-white/35 hover:text-white/80'
               }`}
             >
@@ -196,7 +196,7 @@ const Stage3 = ({ stageData, onComplete }) => {
               emotions: selectedEmotions,
               perspective: perspectives[selectedPerspective].front
             })}
-            className="w-full py-3 bg-teal-500 text-white rounded-2xl font-semibold hover:bg-teal-400 transition-colors"
+            className="w-full py-3 bg-primary text-white rounded-2xl font-semibold hover:bg-primary-hover transition-colors"
           >
             Dig into the 3rd Pillar →
           </motion.button>
