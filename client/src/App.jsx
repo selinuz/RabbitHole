@@ -59,7 +59,10 @@ function App() {
                 src="/rabbit.png"
                 alt="current step"
                 className="w-6 h-9 select-none"
-                style={{ filter: "drop-shadow(0 0 4px var(--color-black-60, rgba(0,0,0,0.6)))" }}
+                style={{
+                  filter:
+                    "drop-shadow(0 0 4px var(--color-black-60, rgba(0,0,0,0.6)))",
+                }}
               />
             ) : (
               <div
@@ -73,7 +76,7 @@ function App() {
       </div>
 
       {/* Single stage shown at a time, fades in/out */}
-      <div className="max-w-2xl w-full relative z-10">
+      <div className="max-w-4xl w-full relative z-10">
         <AnimatePresence mode="wait">
           {stage === 0 && (
             <motion.div

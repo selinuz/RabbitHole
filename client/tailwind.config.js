@@ -6,7 +6,7 @@ export default {
       colors: {
         primary: "var(--color-primary)",
         "primary-hover": "var(--color-primary-hover)",
-        accent: "var(--color-accent)",
+        accent: "var(--color-primary)",
         surface: "var(--color-surface)",
         border: "var(--color-border)",
       },
