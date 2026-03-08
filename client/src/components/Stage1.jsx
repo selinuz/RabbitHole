@@ -78,6 +78,9 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
   const [answers, setAnswers] = useState({});
   const [textInput, setTextInput] = useState("");
   const [summaryConfirmed, setSummaryConfirmed] = useState(false);
+  const [adjusting, setAdjusting] = useState(false);
+  const [draftAnswers, setDraftAnswers] = useState({});
+  const [draftText, setDraftText] = useState("");
 
   // Fetch AI acknowledgement and analyze what's already known
   useEffect(() => {
@@ -136,6 +139,17 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
     if (!textInput.trim()) return;
     setAnswers((prev) => ({ ...prev, vent: textInput.trim() }));
     setCurrentQ((q) => q + 1); // move past last question → show summary
+  };
+
+  const openAdjust = () => {
+    setDraftAnswers({ ...answers });
+    setDraftText(answers.vent || "");
+    setAdjusting(true);
+  };
+
+  const saveAdjust = () => {
+    setAnswers({ ...draftAnswers, vent: draftText.trim() || draftAnswers.vent });
+    setAdjusting(false);
   };
 
   const allDone =
@@ -232,8 +246,89 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
         </AnimatePresence>
       )}
 
+      {/* Adjust screen */}
+      {allDone && adjusting && (
+        <AnimatePresence>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}>
+            <p className="text-white/50 text-sm mb-6">
+              Update your answers below, then save.
+            </p>
+
+            <div className="space-y-6">
+              <div>
+                <p className="text-white/60 text-xs uppercase tracking-wider mb-2">
+                  Area of life
+                </p>
+                <PillGroup
+                  options={LIFE_AREAS}
+                  selected={draftAnswers.lifeArea}
+                  onSelect={(v) => setDraftAnswers((p) => ({ ...p, lifeArea: v }))}
+                />
+              </div>
+              <div>
+                <p className="text-white/60 text-xs uppercase tracking-wider mb-2">
+                  How you're feeling
+                </p>
+                <PillGroup
+                  options={FEELINGS}
+                  selected={draftAnswers.feeling}
+                  onSelect={(v) => setDraftAnswers((p) => ({ ...p, feeling: v }))}
+                />
+              </div>
+              <div>
+                <p className="text-white/60 text-xs uppercase tracking-wider mb-2">
+                  Your position
+                </p>
+                <PillGroup
+                  options={TIMELINES}
+                  selected={draftAnswers.timeline}
+                  onSelect={(v) => setDraftAnswers((p) => ({ ...p, timeline: v }))}
+                />
+              </div>
+              <div>
+                <p className="text-white/60 text-xs uppercase tracking-wider mb-2">
+                  Importance
+                </p>
+                <PillGroup
+                  options={IMPORTANCE}
+                  selected={draftAnswers.importance}
+                  onSelect={(v) => setDraftAnswers((p) => ({ ...p, importance: v }))}
+                />
+              </div>
+              <div>
+                <p className="text-white/60 text-xs uppercase tracking-wider mb-2">
+                  What you shared
+                </p>
+                <textarea
+                  value={draftText}
+                  onChange={(e) => setDraftText(e.target.value)}
+                  rows={4}
+                  className="w-full bg-white/5 border border-white/15 rounded-xl p-4 text-white placeholder-white/25 outline-none focus:border-white/35 transition-colors resize-none"
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={saveAdjust}
+                className="px-5 py-2.5 bg-teal-500 text-white rounded-full text-sm font-semibold hover:bg-teal-400 transition-colors">
+                Save changes
+              </button>
+              <button
+                onClick={() => setAdjusting(false)}
+                className="px-5 py-2.5 bg-white/10 text-white/70 rounded-full text-sm hover:bg-white/15 transition-colors">
+                Cancel
+              </button>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      )}
+
       {/* Summary card */}
-      {allDone && (
+      {allDone && !adjusting && (
         <AnimatePresence>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -258,30 +353,16 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
             </div>
 
             {!summaryConfirmed ? (
-              <div className="flex gap-3 flex-wrap">
+              <div className="flex gap-3">
                 <button
                   onClick={() => setSummaryConfirmed(true)}
                   className="px-5 py-2.5 bg-teal-500 text-white rounded-full text-sm font-semibold hover:bg-teal-400 transition-colors">
                   That's right
                 </button>
                 <button
-                  onClick={() => {
-                    setCurrentQ(0);
-                    setAnswers({});
-                    setTextInput("");
-                    setActiveQuestions(QUESTIONS);
-                  }}
+                  onClick={openAdjust}
                   className="px-5 py-2.5 bg-white/10 text-white/70 rounded-full text-sm hover:bg-white/15 transition-colors">
                   Let me adjust
-                </button>
-                <button
-                  onClick={() => {
-                    const lastQ = activeQuestions[activeQuestions.length - 1];
-                    if (lastQ.id === "vent") setTextInput(answers.vent || "");
-                    setCurrentQ(activeQuestions.length - 1);
-                  }}
-                  className="text-white/35 text-sm hover:text-white/60 transition-colors self-center ml-1">
-                  ← Back
                 </button>
               </div>
             ) : (
