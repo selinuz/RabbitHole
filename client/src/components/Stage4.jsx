@@ -159,16 +159,16 @@ const Stage4 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
             if (val) fillerMap[i] = val;
           });
           setFillerValues((prev) => ({ ...prev, [key]: fillerMap }));
-        } catch {
-          // silent fail — user can try again
+        } catch (err) {
+          console.error("Mic fill error:", err);
         } finally {
           setMicState((prev) => ({ ...prev, [key]: "idle" }));
         }
       };
 
       mediaRecorder.start();
-    } catch {
-      // mic access denied or unavailable
+    } catch (err) {
+      console.error("Mic access error:", err);
     }
   };
 
