@@ -14,8 +14,10 @@
 
   /* === Theme === */
   --color-bg: #0d1117;
-  --color-primary: #d66b6d; /* teal-500 — buttons, active states */
-  --color-primary-hover: #b5585a; /* teal-400 — hover */
+  --color-primary: #d66b6d;
+  /* teal-500 — buttons, active states */
+  --color-primary-hover: #b5585a;
+  /* teal-400 — hover */
   --color-text: #ffffff;
   --color-surface: rgba(0, 0, 0, 0.1);
   --color-border: rgba(255, 255, 255, 0.15);
@@ -46,6 +48,7 @@ body {
   from {
     transform: translateY(0);
   }
+
   to {
     transform: translateY(100vh);
   }

@@ -235,9 +235,9 @@ const Stage1 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
       exit={{ opacity: 0, y: -24 }}
       ref={ref}
       transition={{ duration: 0.5 }}
-      className="glass-panel p-8 text-black/80"
+      className="glass-panel p-5 sm:p-8 text-black/80"
       style={{ backgroundColor: "#F4EDE8BB" }}>
-      <h2 className="text-3xl font-semibold font-serif mb-8">
+      <h2 className="text-2xl sm:text-3xl font-semibold font-serif mb-8">
         Let's understand the situation
       </h2>
 
@@ -493,7 +493,7 @@ const Stage1 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
 const SummaryRow = ({ label, value, inferred }) =>
   value ? (
     <div className="flex items-baseline gap-3">
-      <span className="text-black/85 text-base w-40 shrink-0 font-figtree">
+      <span className="text-black/85 text-base w-28 sm:w-40 shrink-0 font-figtree">
         {label}
       </span>
       <span className="text-black/100 text-base font-figtree">{value}</span>

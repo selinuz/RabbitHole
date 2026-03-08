@@ -12,7 +12,7 @@ const Stage5 = forwardRef(({ stageData, onFinish, onBack }, ref) => {
       exit={{ opacity: 0, y: -24 }}
       ref={ref}
       transition={{ duration: 0.6 }}
-      className="glass-panel p-8 text-white">
+      className="glass-panel p-5 sm:p-8 text-white">
       <div className="flex items-center mb-6">
         <button
           onClick={onBack}
@@ -22,12 +22,12 @@ const Stage5 = forwardRef(({ stageData, onFinish, onBack }, ref) => {
       </div>
 
       <div className="text-center mb-10">
-        <h2 className="text-3xl font-semibold font-serif mb-2">
+        <h2 className="text-2xl sm:text-3xl font-semibold font-serif mb-2">
           Your Conversation Plan
         </h2>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 mb-8 items-stretch">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8 items-stretch">
         {/* BASE 1 — Core Needs */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}

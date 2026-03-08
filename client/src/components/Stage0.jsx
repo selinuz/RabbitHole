@@ -89,9 +89,9 @@ const Stage0 = forwardRef(({ onComplete }, ref) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -24 }}
       transition={{ duration: 0.6 }}
-      className="glass-panel p-8 text-black text-center"
+      className="glass-panel p-5 sm:p-8 text-black text-center"
       style={{ backgroundColor: "#F4EDE877" }}>
-      <h2 className="text-3xl font-semibold font-serif mb-8 text-black/70">
+      <h2 className="text-2xl sm:text-3xl font-semibold font-serif mb-8 text-black/70">
         What conversation is on your mind right now?
       </h2>
 

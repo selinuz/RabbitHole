@@ -285,7 +285,7 @@ function App() {
 
   return (
     <div
-      className="min-h-screen w-screen overflow-y-auto flex items-center justify-center p-4"
+      className="min-h-screen w-screen overflow-y-auto flex items-start sm:items-center justify-center p-4 pt-14 sm:pt-4"
       style={{
         backgroundImage: "url(/background.png)",
         backgroundSize: "cover",
@@ -294,8 +294,23 @@ function App() {
         transition: "background-position 1s ease-in-out",
       }}>
 
-      {/* Progress sidebar */}
-      <div className="fixed right-6 top-1/2 -translate-y-1/2 flex flex-col gap-5 z-50 items-center">
+      {/* Mobile progress — horizontal dots across the top */}
+      <div className="sm:hidden fixed top-3 left-1/2 -translate-x-1/2 flex flex-row gap-3 z-50 items-center">
+        {[1, 2, 3, 4, 5, 6].map((s) => (
+          <div key={s} className="relative flex items-center justify-center">
+            {stage === s || (stage === 0 && s === 1) ? (
+              <div className="w-2 h-2 rounded-full bg-primary shadow-lg shadow-primary/40" />
+            ) : (
+              <div
+                className={`rounded-full transition-all duration-500 ${stage > s ? "w-2 h-2 bg-primary-hover" : "w-1.5 h-1.5 bg-white/30"}`}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop progress — vertical bunny sidebar */}
+      <div className="hidden sm:flex flex-col gap-5 z-50 items-center fixed right-6 top-1/2 -translate-y-1/2">
         {[1, 2, 3, 4, 5, 6].map((s) => (
           <div key={s} className="relative flex items-center justify-center">
             {stage === s || (stage === 0 && s === 1) ? (
@@ -310,8 +325,7 @@ function App() {
               />
             ) : (
               <div
-                className={`w-5 h-5 rounded-full transition-all duration-500 ${stage > s ? "bg-primary-hover" : "bg-white/20"
-                  }`}
+                className={`w-5 h-5 rounded-full transition-all duration-500 ${stage > s ? "bg-primary-hover" : "bg-white/20"}`}
               />
             )}
           </div>

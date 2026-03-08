@@ -85,7 +85,7 @@ const Stage4 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
       exit={{ opacity: 0, y: -24 }}
       ref={ref}
       transition={{ duration: 0.5 }}
-      className="glass-panel p-8 text-white"
+      className="glass-panel p-5 sm:p-8 text-white"
       style={{ backgroundColor: "rgba(0, 0, 0, 0.40)" }}
     >
       <div className="flex items-center mb-6">
@@ -98,7 +98,7 @@ const Stage4 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
       </div>
 
       <p className="text-white/40 text-sm uppercase tracking-widest mb-1 font-figtree">3rd Pillar · Phrasing & Rehearsal</p>
-      <h2 className="text-3xl font-semibold font-serif mb-2">Finding the right words</h2>
+      <h2 className="text-2xl sm:text-3xl font-semibold font-serif mb-2">Finding the right words</h2>
 
       <p className="text-white/50 text-base mb-8 font-figtree">Start with what comes naturally — we'll refine from there.</p>
 

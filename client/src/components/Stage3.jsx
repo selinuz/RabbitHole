@@ -186,7 +186,7 @@ const Stage3 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
       exit={{ opacity: 0, y: -24 }}
       ref={ref}
       transition={{ duration: 0.5 }}
-      className="glass-panel p-8 text-white"
+      className="glass-panel p-5 sm:p-8 text-white"
       style={{ backgroundColor: "rgba(0, 0, 0, 0.40)" }}>
       <div className="flex items-center mb-6">
         <button
@@ -200,7 +200,7 @@ const Stage3 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
       <p className="text-white/40 text-sm uppercase tracking-widest mb-1 font-figtree">
         2nd Pillar · Open with Empathy
       </p>
-      <h2 className="text-3xl font-semibold font-serif mb-2">Their perspective</h2>
+      <h2 className="text-2xl sm:text-3xl font-semibold font-serif mb-2">Their perspective</h2>
       <p className="text-white/50 text-base mb-8 font-figtree">
         Which of these feels most like how they might be experiencing this?
       </p>
@@ -213,11 +213,8 @@ const Stage3 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
         </div>
       ) : (
         <div
-          className="grid items-stretch mb-8"
-          style={{
-            gridTemplateColumns: `repeat(${perspectives.length}, 1fr)`,
-            gap: "12px",
-          }}>
+          className="grid grid-cols-1 sm:grid-cols-3 items-stretch mb-8"
+          style={{ gap: "12px" }}>
           {perspectives.map((p, i) => (
             <motion.div
               key={i}
@@ -246,7 +243,7 @@ const Stage3 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
         <p className="text-white/70 text-base mb-4 font-figtree">
           What tone feels right for opening?
         </p>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {TONES.map((tone) => (
             <button
               key={tone.id}
