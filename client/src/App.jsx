@@ -33,7 +33,7 @@ function App() {
 
   return (
     <div
-      className="h-screen w-screen overflow-hidden flex items-center justify-center p-4"
+      className="min-h-screen w-screen overflow-y-auto flex items-center justify-center p-4"
       style={{
         backgroundImage: "url(/background.png)",
         backgroundSize: "cover",
