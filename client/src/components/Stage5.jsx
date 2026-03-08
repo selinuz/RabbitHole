@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { CheckCircle, ChevronLeft } from "lucide-react";
 
-const Stage5 = ({ stageData, onRestart, onBack }) => {
+const Stage5 = ({ stageData, onFinish, onBack }) => {
   const { situation, preparation, empathy, phrasing } = stageData;
 
   return (
@@ -220,29 +220,10 @@ const Stage5 = ({ stageData, onRestart, onBack }) => {
             <p
               className="text-sm font-semibold font-figtree mt-0.5"
               style={{ color: "#5a3a3b" }}>
-              Your Opener
+              Your Openers
             </p>
           </div>
           <div className="flex-1 space-y-3">
-            {phrasing.chosenText && (
-              <div
-                className="rounded-xl p-3"
-                style={{
-                  backgroundColor: "rgba(214,107,109,0.12)",
-                  border: "1px solid #D66B6D",
-                }}>
-                <p
-                  className="text-xs font-bold uppercase tracking-widest mb-1.5 font-figtree"
-                  style={{ color: "#D66B6D" }}>
-                  Practice saying this
-                </p>
-                <p
-                  className="text-sm leading-relaxed font-figtree"
-                  style={{ color: "#5a3a3b" }}>
-                  "{phrasing.chosenText}"
-                </p>
-              </div>
-            )}
             {phrasing.instinct && (
               <div
                 className="rounded-xl p-3"
@@ -259,14 +240,41 @@ const Stage5 = ({ stageData, onRestart, onBack }) => {
                 </p>
               </div>
             )}
+            {[
+              { key: "iStatementText", label: "I-statement" },
+              { key: "gottmanText", label: "Soft opening" },
+              { key: "framingText", label: "Framing" },
+            ].map(
+              ({ key, label }) =>
+                phrasing[key] && (
+                  <div
+                    key={key}
+                    className="rounded-xl p-3"
+                    style={{
+                      backgroundColor: "rgba(214,107,109,0.12)",
+                      border: "1px solid #D66B6D",
+                    }}>
+                    <p
+                      className="text-xs font-bold uppercase tracking-widest mb-1.5 font-figtree"
+                      style={{ color: "#D66B6D" }}>
+                      {label}
+                    </p>
+                    <p
+                      className="text-sm leading-relaxed font-figtree"
+                      style={{ color: "#5a3a3b" }}>
+                      "{phrasing[key]}"
+                    </p>
+                  </div>
+                ),
+            )}
           </div>
         </motion.div>
       </div>
 
       <button
-        onClick={onRestart}
-        className="w-full py-2.5 text-white/60 hover:text-white/70 text-base transition-colors underline underline-offset-4 font-figtree">
-        Start another dig
+        onClick={onFinish}
+        className="w-full py-4 bg-primary text-white rounded-2xl text-lg font-bold hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 font-figtree">
+        I'm ready →
       </button>
     </motion.div>
   );
