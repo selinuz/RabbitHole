@@ -66,9 +66,8 @@ function App() {
               />
             ) : (
               <div
-                className={`w-5 h-5 rounded-full transition-all duration-500 ${
-                  stage > s ? "bg-primary-hover" : "bg-white/20"
-                }`}
+                className={`w-5 h-5 rounded-full transition-all duration-500 ${stage > s ? "bg-primary-hover" : "bg-white/20"
+                  }`}
               />
             )}
           </div>
@@ -91,8 +90,8 @@ function App() {
                   alt="RabbitHole"
                   className="mx-auto mb-10 h-25"
                 />
-                <p className="text-white/80 text-md tracking-widest uppercase">
-                  A guide for difficult conversations
+                <p className="text-white/80 text-md tracking-widest uppercase font-figtree">
+                  A guide for navigating difficult conversations
                 </p>
               </div>
               <Stage0

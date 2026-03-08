@@ -83,13 +83,13 @@ const Stage4 = ({ stageData, onComplete, onBack }) => {
       </div>
 
       <p className="text-white/40 text-xs uppercase tracking-widest mb-1">3rd Pillar · Phrasing & Rehearsal</p>
-      <h2 className="text-3xl font-bold font-serif mb-2">Finding the right words</h2>
-      <p className="text-white/50 text-sm mb-8">Start with what comes naturally — we'll refine from there.</p>
+      <h2 className="text-3xl font-medium font-serif mb-2">Finding the right words</h2>
+      <p className="text-white/50 text-md mt-8 mb-8">Start with what comes naturally — we'll refine from there.</p>
 
       {/* Step 1: Instinct phrase */}
       {!submitted && (
         <div>
-          <p className="text-white/80 mb-4">What's the first thing you feel like saying to them?</p>
+          <p className="text-white/80 mb-4 font-md">What's the first thing you feel like saying to them?</p>
           <textarea
             value={instinct}
             onChange={e => setInstinct(e.target.value)}
@@ -100,7 +100,7 @@ const Stage4 = ({ stageData, onComplete, onBack }) => {
           <button
             onClick={handleSubmitInstinct}
             disabled={!instinct.trim()}
-            className="px-6 py-2.5 bg-primary text-white rounded-full text-sm font-semibold disabled:opacity-30 hover:bg-primary-hover transition-colors flex items-center gap-2"
+            className="px-6 py-2.5 bg-primary text-white rounded-full text-sm font-semibold disabled:opacity-30 hover:bg-primary-hover transition-colors flex items-center gap-2 font-figtree"
           >
             See how this could land <ArrowRight size={14} />
           </button>
@@ -112,19 +112,19 @@ const Stage4 = ({ stageData, onComplete, onBack }) => {
         <AnimatePresence>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
             {/* Original */}
-            <div className="rounded-xl bg-white/5 p-4 mb-6 shadow-sm">
-              <p className="text-white/35 text-xs uppercase tracking-wider mb-2">What you said</p>
-              <p className="text-white/80 italic">"{instinct}"</p>
+            <div className="rounded-xl bg-white/5 p-4 mb-6 shadow-sm font-figtree">
+              <p className="text-white/35 text-xs uppercase tracking-wider mb-2 font-figtree">What you said</p>
+              <p className="text-white/80 italic font-figtree">"{instinct}"</p>
             </div>
 
             {loadingRewrite ? (
-              <div className="flex items-center gap-2 text-white/40">
+              <div className="flex items-center gap-2 text-white/60 font-figtree">
                 <Loader2 size={14} className="animate-spin" />
                 <span className="text-sm">Finding better words...</span>
               </div>
             ) : rewrite && (
               <div>
-                <p className="text-white/60 text-sm mb-4">Here are three science-backed alternatives — tap one to practice with it:</p>
+                <p className="text-white/60 text-md mb-4">Here are three science-backed alternatives — tap one to practice with it:</p>
                 <div className="space-y-3 mb-6">
                   <PhraseCard
                     label="I-statement"
@@ -132,8 +132,8 @@ const Stage4 = ({ stageData, onComplete, onBack }) => {
                     phrase={rewrite.iStatement}
                     selected={chosenPhrase === 'iStatement'}
                     onSelect={() => {
-                        setChosenPhrase('iStatement');
-                        setFillerValues({});
+                      setChosenPhrase('iStatement');
+                      setFillerValues({});
                     }}
                   />
                   <PhraseCard
@@ -142,8 +142,8 @@ const Stage4 = ({ stageData, onComplete, onBack }) => {
                     phrase={rewrite.gottman}
                     selected={chosenPhrase === 'gottman'}
                     onSelect={() => {
-                        setChosenPhrase('gottman');
-                        setFillerValues({});
+                      setChosenPhrase('gottman');
+                      setFillerValues({});
                     }}
                   />
                   <PhraseCard
@@ -152,8 +152,8 @@ const Stage4 = ({ stageData, onComplete, onBack }) => {
                     phrase={rewrite.framing}
                     selected={chosenPhrase === 'framing'}
                     onSelect={() => {
-                        setChosenPhrase('framing');
-                        setFillerValues({});
+                      setChosenPhrase('framing');
+                      setFillerValues({});
                     }}
                   />
                 </div>
@@ -162,15 +162,15 @@ const Stage4 = ({ stageData, onComplete, onBack }) => {
                   <motion.div
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-primary/10 rounded-xl p-4 mb-6 shadow-sm"
+                    className="bg-primary/10 rounded-xl p-4 mb-6 shadow-sm font-figtree"
                   >
-                    <p className="text-accent text-xs mb-1 uppercase tracking-wider">Your rehearsal template</p>
-                    <div className="text-white/90 text-sm leading-relaxed flex flex-wrap items-center gap-y-2">
+                    <p className="text-accent text-sm mb-1 uppercase tracking-wider font-figtree">Your rehearsal template</p>
+                    <div className="text-white/90 text-sm leading-relaxed flex flex-wrap items-center gap-y-2 font-figtree">
                       {renderInteractivePhrase(rewrite[chosenPhrase], fillerValues, (idx, val) => {
                         setFillerValues(prev => ({ ...prev, [idx]: val }));
                       })}
                     </div>
-                    <p className="text-white/35 text-xs mt-3">Fill in the blanks with your own words as you practice.</p>
+                    <p className="text-white/35 text-xs mt-3 font-figtree">Fill in the blanks with your own words as you practice.</p>
                   </motion.div>
                 )}
               </div>
@@ -199,7 +199,7 @@ const renderInteractivePhrase = (phrase, fillers, onChange) => {
   if (!phrase) return null;
   const parts = phrase.split(/(\[.*?\])/g);
   let blankIndex = 0;
-  
+
   return parts.map((part, i) => {
     if (part.startsWith('[') && part.endsWith(']')) {
       const idx = blankIndex++;
@@ -216,7 +216,7 @@ const renderInteractivePhrase = (phrase, fillers, onChange) => {
         />
       );
     }
-    return <span key={i}>{part}</span>;
+    return <span key={i} className="font-figtree">{part}</span>;
   });
 };
 
@@ -238,17 +238,16 @@ const renderPhrase = (phrase) => {
 const PhraseCard = ({ label, sublabel, phrase, selected, onSelect }) => (
   <button
     onClick={onSelect}
-    className={`w-full text-left rounded-xl p-4 transition-all duration-300 ${
-      selected
-        ? 'bg-primary/20 text-white shadow-lg'
-        : 'bg-white/5 text-white/75 hover:bg-white/10'
-    }`}
+    className={`w-full text-left rounded-xl p-4 transition-all duration-300 font-figtree ${selected
+      ? 'bg-primary/20 text-white shadow-lg'
+      : 'bg-white/5 text-white/75 hover:bg-white/10'
+      }`}
   >
-    <div className="flex items-baseline gap-2 mb-1">
-      <span className="text-xs font-semibold uppercase tracking-wider text-accent">{label}</span>
-      <span className="text-xs text-white/30">{sublabel}</span>
+    <div className="flex items-baseline gap-2 mb-1 font-figtree">
+      <span className="text-md font-semibold uppercase tracking-wider text-accent font-figtree">{label}</span>
+      <span className="text-md text-white/30 font-figtree">{sublabel}</span>
     </div>
-    <div className="text-sm leading-relaxed">
+    <div className="text-md leading-relaxed font-figtree">
       "{renderPhrase(phrase)}"
     </div>
   </button>

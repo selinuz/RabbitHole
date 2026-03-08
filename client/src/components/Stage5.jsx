@@ -100,7 +100,7 @@ const Stage5 = ({ stageData, onRestart, onBack }) => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: i * 0.15, duration: 0.4 }}
             className={`rounded-2xl p-5 ${base.color}`}>
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-3 font-figtree">
               <span className={`text-xs font-bold ${base.labelColor}`}>
                 BASE {base.number}
               </span>
@@ -109,14 +109,10 @@ const Stage5 = ({ stageData, onRestart, onBack }) => {
               </span>
             </div>
             <div className="space-y-2">
-              {base.items.map((item) => (
-                <div key={item.key} className="flex items-baseline gap-3">
-                  <span className="text-white/30 text-xs w-28 shrink-0">
-                    {item.key}
-                  </span>
-                  <span className="text-white/85 text-sm leading-relaxed">
-                    {item.value}
-                  </span>
+              {base.items.map(item => (
+                <div key={item.key} className="flex items-baseline gap-3 font-figtree">
+                  <span className="text-white/30 text-xs w-28 shrink-0 font-figtree">{item.key}</span>
+                  <span className="text-white/85 text-sm leading-relaxed font-figtree">{item.value}</span>
                 </div>
               ))}
             </div>
@@ -129,16 +125,10 @@ const Stage5 = ({ stageData, onRestart, onBack }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
-        className="rounded-2xl bg-white/[0.07] p-5 mb-8 shadow-sm">
-        <p className="text-white/40 text-xs uppercase tracking-widest mb-1">
-          Base 4
-        </p>
-        <p className="text-white/70 text-sm font-medium mb-3">
-          The rest is in your hands.
-        </p>
-        <p className="text-white/45 text-sm mb-4">
-          Come back after the conversation and record how it went.
-        </p>
+        className="rounded-2xl bg-white/[0.07] p-5 mb-8 shadow-sm font-figtree">
+        <p className="text-white/60 text-xs uppercase tracking-widest mb-1 font-figtree">Base 4</p>
+        <p className="text-white/70 text-sm font-medium mb-3 font-figtree">The rest is in your hands.</p>
+        <p className="text-white/45 text-sm mb-4 font-figtree">Come back after the conversation and record how it went.</p>
 
         {!reflectionSaved ? (
           <>
@@ -161,7 +151,8 @@ const Stage5 = ({ stageData, onRestart, onBack }) => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-white/5 rounded-xl p-3 text-white/70 text-sm leading-relaxed">
+            className="bg-white/5 rounded-xl p-3 text-white/70 text-sm leading-relaxed font-figtree"
+          >
             {reflection}
           </motion.div>
         )}
@@ -169,7 +160,8 @@ const Stage5 = ({ stageData, onRestart, onBack }) => {
 
       <button
         onClick={onRestart}
-        className="w-full py-2.5 text-white/40 hover:text-white/70 text-sm transition-colors underline underline-offset-4">
+        className="w-full py-2.5 text-white/60 hover:text-white/70 text-sm transition-colors underline underline-offset-4 font-figtree"
+      >
         Start another dig
       </button>
     </motion.div>

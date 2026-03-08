@@ -10,6 +10,10 @@ export default {
         surface: "var(--color-surface)",
         border: "var(--color-border)",
       },
+      fontFamily: {
+        figtree: ["Figtree", "sans-serif"],
+        fraunces: ["Fraunces", "serif"],
+      },
       backgroundImage: {
         "rabbit-hole":
           "linear-gradient(to bottom, #e8f5e9 0%, #4a4a4a 40%, #2c2c2c 70%, #1a1a1a 100%)",

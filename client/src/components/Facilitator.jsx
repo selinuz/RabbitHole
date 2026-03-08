@@ -85,7 +85,7 @@ const Facilitator = ({ stage, initialTheme, onComplete }) => {
               animate={{ opacity: 1, x: 0 }}
               className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
               <div
-                className={`max-w-[85%] p-4 rounded-2xl ${
+                className={`max-w-[85%] p-4 rounded-2xl font-figtree ${
                   msg.role === "user"
                     ? "bg-primary text-white rounded-tr-none"
                     : "bg-white/10 text-white rounded-tl-none shadow-sm"
@@ -113,7 +113,7 @@ const Facilitator = ({ stage, initialTheme, onComplete }) => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             onClick={onComplete}
-            className="w-full p-4 bg-primary text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-primary-hover transition-all shadow-lg">
+            className="w-full p-4 bg-primary text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-primary-hover transition-all shadow-lg font-figtree">
             Dig deeper <ChevronDown />
           </motion.button>
         ) : (

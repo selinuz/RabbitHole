@@ -54,9 +54,9 @@ const Stage2 = ({ stageData, onComplete, onBack }) => {
         </button>
       </div>
 
-      <p className="text-white/40 text-xs uppercase tracking-widest mb-1">1st Pillar · Preparation</p>
-      <h2 className="text-3xl font-bold font-serif mb-2">Mapping the situation</h2>
-      <p className="text-white/50 text-sm mb-8">Before walking in, you need to know what you're carrying.</p>
+      <p className="text-white/60 text-xs uppercase tracking-widest mb-1">1st Pillar · Preparation</p>
+      <h2 className="text-3xl font-medium font-serif mb-2">Mapping the situation</h2>
+      <p className="text-white/80 text-md mt-8 mb-8">Before walking in, you need to know what you're carrying.</p>
 
       <div className="space-y-5">
         {/* Core Issue — AI generated */}
@@ -67,11 +67,11 @@ const Stage2 = ({ stageData, onComplete, onBack }) => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="rounded-2xl bg-primary/15 p-5 shadow-sm"
+              className="rounded-2xl p-5 shadow-sm border-2 border-accent"
             >
               <p className="text-accent text-xs uppercase tracking-widest mb-2">Core Issue</p>
               {loadingIssue ? (
-                <div className="flex items-center gap-2 text-white/40">
+                <div className="flex items-center gap-2 text-white/60">
                   <Loader2 size={14} className="animate-spin" />
                   <span className="text-sm">Identifying the core tension...</span>
                 </div>
@@ -93,7 +93,7 @@ const Stage2 = ({ stageData, onComplete, onBack }) => {
               className="rounded-2xl bg-white/[0.07] p-5 shadow-sm"
             >
               <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Your Goal</p>
-              <p className="text-white/70 text-sm mb-3">What do you want to achieve in this conversation?</p>
+              <p className="text-white/90 text-md mb-3">What do you want to achieve in this conversation?</p>
               <input
                 type="text"
                 value={goal}
@@ -118,7 +118,7 @@ const Stage2 = ({ stageData, onComplete, onBack }) => {
               className="rounded-2xl bg-white/[0.07] p-5 shadow-sm"
             >
               <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Desired Outcome</p>
-              <p className="text-white/70 text-sm mb-3">What would a good ending look like for both of you?</p>
+              <p className="text-white/90 text-md mb-3">What would a good ending look like for both of you?</p>
               <input
                 type="text"
                 value={outcome}
@@ -138,9 +138,9 @@ const Stage2 = ({ stageData, onComplete, onBack }) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             onClick={() => onComplete({ coreIssue, goal: goal.trim(), outcome: outcome.trim() })}
-            className="mt-8 w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover transition-all shadow-xl shadow-primary/20"
+            className="mt-8 w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 font-figtree"
           >
-            Dig into the 2nd Pillar →
+            Dig deeper →
           </motion.button>
         )}
       </AnimatePresence>
