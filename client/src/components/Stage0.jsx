@@ -142,8 +142,8 @@ const Stage0 = ({ onComplete }) => {
         </div>
 
         <div className="flex items-center gap-4 py-2">
-          <div className="h-px bg-white/20 flex-1" />
-          <span className="text-black/60 text-sm uppercase tracking-[0.3em] font-bold font-figtree">
+          <div className="h-px bg-black/40 flex-1" />
+          <span className="text-black/40 text-md uppercase tracking-[0.3em] font-bold">
             OR
           </span>
           <div className="h-px bg-black/40 flex-1" />
@@ -152,10 +152,11 @@ const Stage0 = ({ onComplete }) => {
         <div className="flex flex-col items-center gap-8">
           <button
             onClick={toggleRecording}
-            className={`group flex flex-col items-center gap-3 p-7 rounded-2xl transition-all duration-500 w-full max-w-[280px] ${isRecording
-              ? "bg-[#F4EDE8]/70 text-black/50 shadow-[0_0_40px_rgba(214,107,109,0.2)]"
-              : "bg-[#F4EDE8]/30 text-black/70 hover:text-black/100 lg:hover:bg-[#F4EDE8]/60"
-              } font-figtree`}>
+            className={`group flex flex-col items-center gap-3 p-7 rounded-2xl transition-all duration-500 w-full max-w-[280px] ${
+              isRecording
+                ? "bg-[#F4EDE8]/70 text-black/50 shadow-[0_0_40px_rgba(214,107,109,0.2)]"
+                : "bg-[#F4EDE8]/30 text-black/70 hover:text-black/100 lg:hover:bg-[#F4EDE8]/60"
+            } font-figtree`}>
             <div
               className={`p-4 rounded-full transition-all duration-500 ${isRecording ? "bg-[#F4EDE8]/100 text-black/40" : "bg-[#F4EDE8]/10 text-black/50 group-hover:text-black"}`}>
               {isRecording ? (
