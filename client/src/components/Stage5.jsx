@@ -1,7 +1,8 @@
+import { forwardRef } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle, ChevronLeft } from "lucide-react";
 
-const Stage5 = ({ stageData, onFinish, onBack }) => {
+const Stage5 = forwardRef(({ stageData, onFinish, onBack }, ref) => {
   const { situation, preparation, empathy, phrasing } = stageData;
 
   return (
@@ -9,6 +10,7 @@ const Stage5 = ({ stageData, onFinish, onBack }) => {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -24 }}
+      ref={ref}
       transition={{ duration: 0.6 }}
       className="glass-panel p-8 text-white">
       <div className="flex items-center mb-6">
@@ -278,6 +280,6 @@ const Stage5 = ({ stageData, onFinish, onBack }) => {
       </button>
     </motion.div>
   );
-};
+});
 
 export default Stage5;

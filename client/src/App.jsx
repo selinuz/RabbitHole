@@ -143,17 +143,7 @@ const downloadPDF = ({ situation, preparation, empathy, phrasing }) => {
   doc.save("conversation-plan.pdf");
 };
 
-const STAGE_INSTRUCTIONS = {
-  0: "What conversation is on your mind right now? Type your thoughts, or press the microphone button to speak them out loud. Share as much detail as you can — the more context you give, the better we can help you prepare.",
-  1: "Let's understand your situation a little better. Answer a few quick questions so we can tailor this experience to what you're going through.",
-  2: "Now let's get to the heart of it. We've identified the core tension in your situation. Tell us what you're hoping to achieve, and what a good outcome would look like for you.",
-  3: "Before you speak, try to see things from their side. Flip through these perspective cards to understand what the other person might be feeling — then choose a tone and the emotions you want to bring into the conversation.",
-  4: "Here are three science-backed ways to open your conversation. Each one is a template — fill in the bracketed parts with your own words to make it feel natural and true to you.",
-  5: "Here's everything you've built. Review your conversation plan, and when you're ready, you can save it as a PDF to revisit before the conversation.",
-  6: "You've done the work. You have a plan, a perspective, and the words to start. Now go have that conversation.",
-};
-
-const SpeakerButton = ({ stage }) => {
+const SpeakerButton = ({ panelRef }) => {
   const [status, setStatus] = useState("idle"); // idle | loading | playing
   const audioRef = useRef(null);
 
@@ -165,12 +155,32 @@ const SpeakerButton = ({ stage }) => {
       return;
     }
 
+    if (!panelRef.current) return;
+
+    // Clone the panel so we can inject placeholder text without mutating the DOM
+    const clone = panelRef.current.cloneNode(true);
+    clone.querySelectorAll("textarea, input[type='text']").forEach((el) => {
+      const value = el.value?.trim();
+      const placeholder = el.placeholder?.trim();
+      if (!value && placeholder) {
+        // Replace the element with a text node so innerText picks it up
+        const textNode = document.createTextNode(placeholder + ". ");
+        el.replaceWith(textNode);
+      } else if (value) {
+        const textNode = document.createTextNode(value + ". ");
+        el.replaceWith(textNode);
+      }
+    });
+
+    const text = clone.innerText?.trim();
+    if (!text) return;
+
     setStatus("loading");
     try {
       const response = await fetch("/api/speak", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: STAGE_INSTRUCTIONS[stage] }),
+        body: JSON.stringify({ text }),
       });
 
       if (!response.ok) throw new Error("TTS failed");
@@ -223,6 +233,9 @@ function App() {
     empathy: {},
     phrasing: {},
   });
+
+  // Points to the rendered panel DOM node — read by SpeakerButton via .innerText
+  const panelRef = useRef(null);
 
   const advanceTo = (nextStage, newData = {}) => {
     setStageData((prev) => ({ ...prev, ...newData }));
@@ -299,8 +312,9 @@ function App() {
                 </p>
               </div>
               <div className="relative">
-                <SpeakerButton stage={stage} />
+                <SpeakerButton panelRef={panelRef} />
                 <Stage0
+                  ref={panelRef}
                   onComplete={(input) => advanceTo(1, { initialInput: input })}
                 />
               </div>
@@ -314,8 +328,9 @@ function App() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}>
               <div className="relative">
-                <SpeakerButton stage={stage} />
+                <SpeakerButton panelRef={panelRef} />
                 <Stage1
+                  ref={panelRef}
                   stageData={stageData}
                   onComplete={(situation) => advanceTo(2, { situation })}
                   onBack={goBack}
@@ -331,8 +346,9 @@ function App() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}>
               <div className="relative">
-                <SpeakerButton stage={stage} />
+                <SpeakerButton panelRef={panelRef} />
                 <Stage2
+                  ref={panelRef}
                   stageData={stageData}
                   onComplete={(preparation) => advanceTo(3, { preparation })}
                   onBack={goBack}
@@ -348,8 +364,9 @@ function App() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}>
               <div className="relative">
-                <SpeakerButton stage={stage} />
+                <SpeakerButton panelRef={panelRef} />
                 <Stage3
+                  ref={panelRef}
                   stageData={stageData}
                   onComplete={(empathy) => advanceTo(4, { empathy })}
                   onBack={goBack}
@@ -365,8 +382,9 @@ function App() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}>
               <div className="relative">
-                <SpeakerButton stage={stage} />
+                <SpeakerButton panelRef={panelRef} />
                 <Stage4
+                  ref={panelRef}
                   stageData={stageData}
                   onComplete={(phrasing) => advanceTo(5, { phrasing })}
                   onBack={goBack}
@@ -382,8 +400,9 @@ function App() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}>
               <div className="relative">
-                <SpeakerButton stage={stage} />
+                <SpeakerButton panelRef={panelRef} />
                 <Stage5
+                  ref={panelRef}
                   stageData={stageData}
                   onBack={goBack}
                   onFinish={() => setStage(6)}

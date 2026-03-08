@@ -1,8 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useRef, forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mic, MicOff } from "lucide-react";
 
-const Stage0 = ({ onComplete }) => {
+const Stage0 = forwardRef(({ onComplete }, ref) => {
   const [value, setValue] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
@@ -84,6 +84,7 @@ const Stage0 = ({ onComplete }) => {
 
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -24 }}
@@ -185,6 +186,6 @@ const Stage0 = ({ onComplete }) => {
       </div>
     </motion.div>
   );
-};
+});
 
 export default Stage0;
