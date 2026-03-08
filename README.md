@@ -1,23 +1,23 @@
-# 🐇 RabbitHole
+# Rabbit Hole
 
 > *A guide for navigating difficult conversations.*
 
-RabbitHole is a reflective, AI-powered web app that helps you prepare for challenging conversations — not by writing scripts, but by helping you think. It walks you through four evidence-based pillars so you show up grounded, empathetic, and clear.
+Navigating difficult, emotionally charged conversations can be intense... kind of like spiralling down a rabbit hole. That's where we come in. Rabbit Hole is a structured, AI-powered web app that helps you prepare for challenging conversations through science-backed communication frameworks. It walks you through three evidence-based pillars so you show up with a plan, a tone and an outcome in mind.
 
 ---
 
 ## How it works
 
-RabbitHole guides you through a structured 4-stage process before you ever say a word:
+Rabbit Hole guides you through the following stages encompassing three pillars -- Preparation, Empathy, and Phrasing:
 
 | Stage | Pillar | What happens |
 |-------|--------|--------------|
-| **0** | Entry | You describe the situation — by typing or speaking aloud. The AI listens and identifies what it already understands. |
-| **1** | Preparation | Smart follow-up questions fill in the gaps: area of life, how you're feeling, your position, what matters. |
-| **2** | Mapping the Situation | The AI surfaces the core tension and prompts you to define your goal and desired outcome. |
-| **3** | Open with Empathy | Perspective flip-cards help you see through the other person's eyes. You pick a tone and emotional intentions. |
-| **4** | Phrasing & Rehearsal | Your instinct phrase gets rewritten into three science-backed templates (I-statements, Gottman-style, collaborative framing) with fill-in-the-blank blanks you complete in your own words. |
-| **5** | Conversation Compass | A summary of everything you've built — your bases, your opener, a space to reflect after the conversation. |
+| **0** | Entry | You describe the situation by typing or speaking aloud. The AI listens and identifies what it already understands. |
+| **1** | 1: Preparation | Smart follow-up questions fill in the gaps: area of life, how you're feeling, your position, what matters. |
+| **2** | Mapping the Situation | Rabbit Hole identifies core points of tension and prompts you to define your goal and desired outcome. |
+| **3** | 2: Open with Empathy | Perspective flip-cards help you see the conversation through the other person's eyes. You then pick a tone and emotional intention that matches the other party's anticipated reaction. |
+| **4** | 3: Phrasing & Rehearsal | Your instinct phrase gets rewritten into three science-backed templates (I-statements, Gottman-style, collaborative framing) with fill-in-the-blank blanks you complete in your own words. |
+| **5** | Conversation Plan | A summary of everything you've built — your bases, your opener, a space to reflect after the conversation. |
 
 ---
 
@@ -29,7 +29,6 @@ RabbitHole guides you through a structured 4-stage process before you ever say a
 | **Backend** | Node.js + Express (local dev), Vercel serverless functions (production) |
 | **AI** | Google Gemini 2.5 Flash via `@google/generative-ai` |
 | **Speech** | Web Speech API (browser-native) |
-| **Fonts** | Fraunces (headings), Figtree (UI elements) |
 | **Deploy** | Vercel |
 
 ---
