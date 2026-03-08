@@ -321,7 +321,7 @@ function App() {
           <div key={s} className="relative flex items-center justify-center">
             {stage === s || (stage === 0 && s === 1) ? (
               <img
-                src="/rabbit.png"
+                src="/rabbit.svg"
                 alt="current step"
                 className="w-6 h-9 select-none"
                 style={{
