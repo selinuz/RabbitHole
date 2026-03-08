@@ -88,7 +88,7 @@ const Facilitator = ({ stage, initialTheme, onComplete }) => {
                 className={`max-w-[85%] p-4 rounded-2xl ${
                   msg.role === "user"
                     ? "bg-primary text-white rounded-tr-none"
-                    : "bg-white/10 text-white rounded-tl-none border border-white/10"
+                    : "bg-white/10 text-white rounded-tl-none shadow-sm"
                 }`}>
                 {msg.content}
               </div>
@@ -99,7 +99,7 @@ const Facilitator = ({ stage, initialTheme, onComplete }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="flex justify-start">
-              <div className="bg-white/10 p-4 rounded-2xl rounded-tl-none border border-white/10">
+              <div className="bg-white/10 p-4 rounded-2xl rounded-tl-none shadow-sm">
                 <Loader2 className="animate-spin text-primary-hover" />
               </div>
             </motion.div>
@@ -124,7 +124,7 @@ const Facilitator = ({ stage, initialTheme, onComplete }) => {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               placeholder="Reflect here..."
-              className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white outline-none focus:ring-2 focus:ring-primary-hover/50 pr-12 transition-all"
+              className="w-full p-4 bg-white/5 rounded-2xl text-white outline-none focus:bg-white/10 transition-all pr-12 shadow-sm"
             />
             <button
               onClick={handleSend}

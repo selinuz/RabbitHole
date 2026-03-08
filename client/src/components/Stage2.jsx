@@ -58,7 +58,7 @@ const Stage2 = ({ stageData, onComplete }) => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="rounded-2xl border border-primary-hover/30 bg-primary/10 p-5"
+              className="rounded-2xl bg-primary/15 p-5 shadow-sm"
             >
               <p className="text-accent text-xs uppercase tracking-widest mb-2">Core Issue</p>
               {loadingIssue ? (
@@ -81,7 +81,7 @@ const Stage2 = ({ stageData, onComplete }) => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="rounded-2xl border border-white/15 bg-white/5 p-5"
+              className="rounded-2xl bg-white/[0.07] p-5 shadow-sm"
             >
               <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Your Goal</p>
               <p className="text-white/70 text-sm mb-3">What do you want to achieve in this conversation?</p>
@@ -92,7 +92,7 @@ const Stage2 = ({ stageData, onComplete }) => {
                 onBlur={handleGoalSubmit}
                 onKeyDown={e => e.key === 'Enter' && handleGoalSubmit()}
                 placeholder="e.g. Be heard, reach an agreement, clear the air..."
-                className="w-full bg-transparent border-b border-white/15 pb-2 text-white placeholder-white/25 outline-none focus:border-white/40 transition-colors text-sm"
+                className="w-full bg-white/5 p-3 rounded-xl text-white placeholder-white/25 outline-none focus:bg-white/10 transition-all text-sm"
               />
             </motion.div>
           )}
@@ -106,7 +106,7 @@ const Stage2 = ({ stageData, onComplete }) => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="rounded-2xl border border-white/15 bg-white/5 p-5"
+              className="rounded-2xl bg-white/[0.07] p-5 shadow-sm"
             >
               <p className="text-white/50 text-xs uppercase tracking-widest mb-3">Desired Outcome</p>
               <p className="text-white/70 text-sm mb-3">What would a good ending look like for both of you?</p>
@@ -115,7 +115,7 @@ const Stage2 = ({ stageData, onComplete }) => {
                 value={outcome}
                 onChange={e => setOutcome(e.target.value)}
                 placeholder="e.g. Mutual understanding, a clear plan, a repaired connection..."
-                className="w-full bg-transparent border-b border-white/15 pb-2 text-white placeholder-white/25 outline-none focus:border-white/40 transition-colors text-sm"
+                className="w-full bg-white/5 p-3 rounded-xl text-white placeholder-white/25 outline-none focus:bg-white/10 transition-all text-sm"
               />
             </motion.div>
           )}
@@ -129,7 +129,7 @@ const Stage2 = ({ stageData, onComplete }) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             onClick={() => onComplete({ coreIssue, goal: goal.trim(), outcome: outcome.trim() })}
-            className="mt-8 w-full py-3 bg-primary text-white rounded-2xl font-semibold hover:bg-primary-hover transition-colors"
+            className="mt-8 w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover transition-all shadow-xl shadow-primary/20"
           >
             Dig into the 2nd Pillar →
           </motion.button>

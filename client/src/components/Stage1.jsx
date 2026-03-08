@@ -60,10 +60,10 @@ const PillGroup = ({ options, selected, onSelect }) => (
       <button
         key={opt}
         onClick={() => onSelect(opt)}
-        className={`px-4 py-2 rounded-full text-sm border transition-all duration-200 ${
+        className={`px-4 py-2 rounded-full text-sm transition-all duration-200 ${
           selected === opt
-            ? "bg-primary border-primary-hover text-white"
-            : "bg-white/5 border-white/20 text-white/70 hover:border-white/40 hover:text-white"
+            ? "bg-primary text-white"
+            : "bg-white/5 text-white/70 hover:text-white lg:hover:bg-white/10"
         }`}>
         {opt}
       </button>
@@ -209,7 +209,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                   onChange={(e) => setTextInput(e.target.value)}
                   placeholder="Take your time..."
                   rows={4}
-                  className="w-full bg-white/5 border border-white/15 rounded-xl p-4 text-white placeholder-white/25 outline-none focus:border-white/35 transition-colors resize-none"
+                  className="w-full bg-white/5 rounded-xl p-4 text-white placeholder-white/25 outline-none focus:bg-white/10 transition-all resize-none"
                   onKeyDown={(e) =>
                     e.key === "Enter" && e.metaKey && handleTextSubmit()
                   }
@@ -217,7 +217,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 <button
                   onClick={handleTextSubmit}
                   disabled={!textInput.trim()}
-                  className="mt-3 px-5 py-2 bg-primary text-white rounded-full text-sm font-semibold disabled:opacity-30 hover:bg-primary-hover transition-colors">
+                  className="mt-3 px-5 py-2 bg-primary text-white rounded-full text-sm font-semibold disabled:opacity-30 hover:bg-primary-hover transition-all">
                   Continue
                 </button>
               </div>
@@ -317,7 +317,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                   value={draftText}
                   onChange={(e) => setDraftText(e.target.value)}
                   rows={4}
-                  className="w-full bg-white/5 border border-white/15 rounded-xl p-4 text-white placeholder-white/25 outline-none focus:border-white/35 transition-colors resize-none"
+                  className="w-full bg-white/5 rounded-xl p-4 text-white placeholder-white/25 outline-none focus:bg-white/10 transition-all resize-none"
                 />
               </div>
             </div>
@@ -348,13 +348,13 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
             <p className="text-white/50 text-sm mb-4">
               Here's what I'm hearing:
             </p>
-            <div className="bg-white/5 border border-white/15 rounded-2xl p-6 space-y-3 mb-6">
+            <div className="bg-white/5 rounded-2xl p-6 space-y-3 mb-6">
               <SummaryRow label="Area of life" value={answers.lifeArea} />
               <SummaryRow label="How you're feeling" value={answers.feeling} />
               <SummaryRow label="Your position" value={answers.timeline} />
               <SummaryRow label="Importance" value={answers.importance} />
               {answers.vent && (
-                <div className="pt-3 border-t border-white/10">
+                <div className="pt-3 border-t border-white/5">
                   <p className="text-white/40 text-xs mb-1">What you shared</p>
                   <p className="text-white/80 text-sm leading-relaxed">
                     {answers.vent}
@@ -367,7 +367,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
               <div className="flex gap-3">
                 <button
                   onClick={() => setSummaryConfirmed(true)}
-                  className="px-5 py-2.5 bg-primary text-white rounded-full text-sm font-semibold hover:bg-primary-hover transition-colors">
+                  className="px-5 py-2.5 bg-primary text-white rounded-full text-sm font-semibold hover:bg-primary-hover transition-all shadow-lg shadow-primary/10">
                   That's right
                 </button>
                 <button

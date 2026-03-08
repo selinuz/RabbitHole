@@ -11,7 +11,7 @@ const Stage5 = ({ stageData, onRestart }) => {
     {
       number: '1',
       label: 'Core Needs',
-      color: 'border-primary-hover/40 bg-primary/10',
+      color: 'bg-primary/15 shadow-sm',
       labelColor: 'text-accent',
       items: [
         preparation.coreIssue && { key: 'The issue', value: preparation.coreIssue },
@@ -22,7 +22,7 @@ const Stage5 = ({ stageData, onRestart }) => {
     {
       number: '2',
       label: 'Strategy',
-      color: 'border-purple-400/30 bg-purple-500/10',
+      color: 'bg-purple-500/15 shadow-sm',
       labelColor: 'text-purple-300',
       items: [
         situation.feeling && { key: 'Going in feeling', value: situation.feeling },
@@ -34,7 +34,7 @@ const Stage5 = ({ stageData, onRestart }) => {
     {
       number: '3',
       label: 'Your Opener',
-      color: 'border-amber-400/30 bg-amber-500/10',
+      color: 'bg-amber-500/15 shadow-sm',
       labelColor: 'text-amber-300',
       items: [
         phrasing.chosenText && { key: 'Practice saying this', value: `"${phrasing.chosenText}"` },
@@ -66,7 +66,7 @@ const Stage5 = ({ stageData, onRestart }) => {
             initial={{ opacity: 0, x: -16 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: i * 0.15, duration: 0.4 }}
-            className={`rounded-2xl border p-5 ${base.color}`}
+            className={`rounded-2xl p-5 ${base.color}`}
           >
             <div className="flex items-center gap-2 mb-3">
               <span className={`text-xs font-bold ${base.labelColor}`}>BASE {base.number}</span>
@@ -89,7 +89,7 @@ const Stage5 = ({ stageData, onRestart }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
-        className="rounded-2xl border border-white/10 bg-white/5 p-5 mb-8"
+        className="rounded-2xl bg-white/[0.07] p-5 mb-8 shadow-sm"
       >
         <p className="text-white/40 text-xs uppercase tracking-widest mb-1">Base 4</p>
         <p className="text-white/70 text-sm font-medium mb-3">The rest is in your hands.</p>
@@ -102,7 +102,7 @@ const Stage5 = ({ stageData, onRestart }) => {
               onChange={e => setReflection(e.target.value)}
               placeholder="How did it go? What happened? How do you feel now?"
               rows={3}
-              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white placeholder-white/20 outline-none focus:border-white/25 transition-colors resize-none text-sm mb-3"
+              className="w-full bg-white/5 rounded-xl p-3 text-white placeholder-white/20 outline-none focus:bg-white/10 transition-all resize-none text-sm mb-3"
             />
             {reflection.trim() && (
               <button
