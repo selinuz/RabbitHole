@@ -26,6 +26,11 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const goBack = () => {
+    setStage(prev => Math.max(0, prev - 1));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const getBackgroundPosition = () => `0% ${(stage / STAGE_COUNT) * 100}%`;
 
   return (
@@ -60,6 +65,7 @@ function App() {
               key="stage1"
               stageData={stageData}
               onComplete={(situation) => advanceTo(2, { situation })}
+              onBack={goBack}
             />
           )}
           {stage === 2 && (
