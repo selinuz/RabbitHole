@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Download } from "lucide-react";
+import { Download, Volume2, VolumeX, Loader } from "lucide-react";
 import { jsPDF } from "jspdf";
 import Stage0 from "./components/Stage0";
 import Stage1 from "./components/Stage1";
@@ -143,6 +143,73 @@ const downloadPDF = ({ situation, preparation, empathy, phrasing }) => {
   doc.save("conversation-plan.pdf");
 };
 
+const STAGE_INSTRUCTIONS = {
+  0: "What conversation is on your mind right now? Type your thoughts, or press the microphone button to speak them out loud. Share as much detail as you can — the more context you give, the better we can help you prepare.",
+  1: "Let's understand your situation a little better. Answer a few quick questions so we can tailor this experience to what you're going through.",
+  2: "Now let's get to the heart of it. We've identified the core tension in your situation. Tell us what you're hoping to achieve, and what a good outcome would look like for you.",
+  3: "Before you speak, try to see things from their side. Flip through these perspective cards to understand what the other person might be feeling — then choose a tone and the emotions you want to bring into the conversation.",
+  4: "Here are three science-backed ways to open your conversation. Each one is a template — fill in the bracketed parts with your own words to make it feel natural and true to you.",
+  5: "Here's everything you've built. Review your conversation plan, and when you're ready, you can save it as a PDF to revisit before the conversation.",
+  6: "You've done the work. You have a plan, a perspective, and the words to start. Now go have that conversation.",
+};
+
+const SpeakerButton = ({ stage }) => {
+  const [status, setStatus] = useState("idle"); // idle | loading | playing
+  const audioRef = useRef(null);
+
+  const toggle = async () => {
+    if (status === "playing") {
+      audioRef.current?.pause();
+      audioRef.current = null;
+      setStatus("idle");
+      return;
+    }
+
+    setStatus("loading");
+    try {
+      const response = await fetch("/api/speak", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: STAGE_INSTRUCTIONS[stage] }),
+      });
+
+      if (!response.ok) throw new Error("TTS failed");
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audioRef.current = audio;
+
+      audio.onended = () => {
+        URL.revokeObjectURL(url);
+        audioRef.current = null;
+        setStatus("idle");
+      };
+
+      audio.play();
+      setStatus("playing");
+    } catch (err) {
+      console.error("TTS error:", err);
+      setStatus("idle");
+    }
+  };
+
+  return (
+    <button
+      onClick={toggle}
+      title={status === "playing" ? "Stop reading" : "Read instructions aloud"}
+      className="absolute -top-4 -right-4 z-20 p-2.5 rounded-full bg-primary hover:bg-primary-hover transition-all duration-300 text-white shadow-lg shadow-primary/30">
+      {status === "loading" ? (
+        <Loader size={18} className="animate-spin" />
+      ) : status === "playing" ? (
+        <VolumeX size={18} />
+      ) : (
+        <Volume2 size={18} />
+      )}
+    </button>
+  );
+};
+
 const TOTAL_STAGES = 6;
 // How far into the image to travel per stage (0–1). 0.75 = 75% of image height used total.
 const BG_TRAVEL = 0.9;
@@ -231,9 +298,12 @@ function App() {
                   A guide for navigating difficult conversations
                 </p>
               </div>
-              <Stage0
-                onComplete={(input) => advanceTo(1, { initialInput: input })}
-              />
+              <div className="relative">
+                <SpeakerButton stage={stage} />
+                <Stage0
+                  onComplete={(input) => advanceTo(1, { initialInput: input })}
+                />
+              </div>
             </motion.div>
           )}
           {stage === 1 && (
@@ -243,11 +313,14 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}>
-              <Stage1
-                stageData={stageData}
-                onComplete={(situation) => advanceTo(2, { situation })}
-                onBack={goBack}
-              />
+              <div className="relative">
+                <SpeakerButton stage={stage} />
+                <Stage1
+                  stageData={stageData}
+                  onComplete={(situation) => advanceTo(2, { situation })}
+                  onBack={goBack}
+                />
+              </div>
             </motion.div>
           )}
           {stage === 2 && (
@@ -257,11 +330,14 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}>
-              <Stage2
-                stageData={stageData}
-                onComplete={(preparation) => advanceTo(3, { preparation })}
-                onBack={goBack}
-              />
+              <div className="relative">
+                <SpeakerButton stage={stage} />
+                <Stage2
+                  stageData={stageData}
+                  onComplete={(preparation) => advanceTo(3, { preparation })}
+                  onBack={goBack}
+                />
+              </div>
             </motion.div>
           )}
           {stage === 3 && (
@@ -271,11 +347,14 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}>
-              <Stage3
-                stageData={stageData}
-                onComplete={(empathy) => advanceTo(4, { empathy })}
-                onBack={goBack}
-              />
+              <div className="relative">
+                <SpeakerButton stage={stage} />
+                <Stage3
+                  stageData={stageData}
+                  onComplete={(empathy) => advanceTo(4, { empathy })}
+                  onBack={goBack}
+                />
+              </div>
             </motion.div>
           )}
           {stage === 4 && (
@@ -285,11 +364,14 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}>
-              <Stage4
-                stageData={stageData}
-                onComplete={(phrasing) => advanceTo(5, { phrasing })}
-                onBack={goBack}
-              />
+              <div className="relative">
+                <SpeakerButton stage={stage} />
+                <Stage4
+                  stageData={stageData}
+                  onComplete={(phrasing) => advanceTo(5, { phrasing })}
+                  onBack={goBack}
+                />
+              </div>
             </motion.div>
           )}
           {stage === 5 && (
@@ -299,11 +381,14 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}>
-              <Stage5
-                stageData={stageData}
-                onBack={goBack}
-                onFinish={() => setStage(6)}
-              />
+              <div className="relative">
+                <SpeakerButton stage={stage} />
+                <Stage5
+                  stageData={stageData}
+                  onBack={goBack}
+                  onFinish={() => setStage(6)}
+                />
+              </div>
             </motion.div>
           )}
           {stage === 6 && (

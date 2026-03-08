@@ -154,11 +154,6 @@ const Stage0 = ({ onComplete }) => {
                     ? "Processing..."
                     : "Rant Out Loud"}
               </span>
-              {!isRecording && !isTranscribing && (
-                <span className="text-sm text-black/60 font-medium">
-                  Use your voice
-                </span>
-              )}
             </div>
           </button>
 
