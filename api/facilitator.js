@@ -138,20 +138,20 @@ export default async function handler(req, res) {
 
         Context about the situation, the other person's perspective, and the desired tone: "${message}"
 
-        Rewrite the user's instinct phrase in 3 different ways. Use the identified perspective to ensure the tone and framing address the other person's likely concerns or feelings.
+        Rewrite the user's instinct phrase in 3 different ways. Instead of writing complete scripts, provide **templates with fill-in-the-blank brackets** (e.g., [feeling], [behavior], [specific request]) so the user can use their own words.
 
         Return ONLY valid JSON (no markdown):
         {
-          "iStatement": "A version using I-statements that avoids blame (e.g. 'I feel... when... because...')",
-          "gottman": "A soft, Gottman-style opening that avoids harsh start-ups and invites dialogue",
-          "framing": "A version that frames this as a shared challenge both people can solve together"
+          "iStatement": "A template using I-statements that avoids blame (e.g. 'I feel [emotion] when [behavior] occurs because...')",
+          "gottman": "A template for a soft, Gottman-style opening that avoids harsh start-ups and invites dialogue",
+          "framing": "A template that frames this as a shared challenge both people can solve together"
         }
 
         Rules:
-        - Each version should feel natural and conversational, not scripted
+        - Each version should use bracketed placeholders for specific details
         - Match the tone they selected (gentle/direct/curious) if mentioned
         - Keep each under 35 words
-        - Do NOT use placeholder brackets like [name] — write complete sentences
+        - Use descriptive brackets like [how you feel] or [what you noticed]
       `);
 
       let rewrite = null;
@@ -162,11 +162,11 @@ export default async function handler(req, res) {
       } catch {
         rewrite = {
           iStatement:
-            "I've been feeling unsettled about something, and I think it's worth us talking through it together.",
+            "I've been feeling [how you feel] about [the situation], and I was hoping we could [your goal].",
           gottman:
-            "There's something on my mind that matters to me — would you be open to hearing it?",
+            "I've been thinking about [topic] and realized I'd love to [desire] — would you be open to talking?",
           framing:
-            "I think we're both affected by this, and I'd like us to figure it out together.",
+            "I want us to both feel [positive state] when it comes to [issue], and I'd like to hear your thoughts on [specific part].",
         };
       }
 
