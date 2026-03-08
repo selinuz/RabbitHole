@@ -34,6 +34,7 @@ const QUESTIONS = [
     text: "How does approaching this conversation make you feel?",
     type: "pills",
     options: FEELINGS,
+    multi: true,
   },
   {
     id: "timeline",
@@ -49,19 +50,25 @@ const QUESTIONS = [
   },
 ];
 
-const PillGroup = ({ options, selected, onSelect }) => (
+const PillGroup = ({ options, selected, onSelect, multi = false }) => (
   <div className="flex flex-wrap gap-2 mt-4">
-    {options.map((opt) => (
-      <button
-        key={opt}
-        onClick={() => onSelect(opt)}
-        className={`px-4 py-2 rounded-full text-sm transition-all duration-200 font-figtree ${selected === opt
-          ? "bg-primary text-white"
-          : "bg-white/5 text-white/70 hover:text-white lg:hover:bg-white/10"
+    {options.map((opt) => {
+      const isSelected = multi
+        ? Array.isArray(selected) && selected.includes(opt)
+        : selected === opt;
+      return (
+        <button
+          key={opt}
+          onClick={() => onSelect(opt)}
+          className={`px-4 py-2 rounded-full text-sm transition-all duration-200 font-figtree ${
+            isSelected
+              ? "border-2 border-primary text-primary bg-[#F4EDE8]/70"
+              : "bg-white/5 text-white/70 hover:text-white lg:hover:bg-white/10"
           }`}>
-        {opt}
-      </button>
-    ))}
+          {opt}
+        </button>
+      );
+    })}
   </div>
 );
 
@@ -90,14 +97,26 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
 
         // Pre-fill answers with inferred values
         const prefilled = {};
-        if (inferred.lifeArea) prefilled.lifeArea = inferred.lifeArea;
-        if (inferred.feeling) prefilled.feeling = inferred.feeling;
-        if (inferred.timeline) prefilled.timeline = inferred.timeline;
-        if (inferred.importance) prefilled.importance = inferred.importance;
+        if (inferred.lifeArea && LIFE_AREAS.includes(inferred.lifeArea))
+          prefilled.lifeArea = inferred.lifeArea;
+        if (Array.isArray(inferred.feeling) && inferred.feeling.length > 0) {
+          prefilled.feeling = inferred.feeling.filter((f) =>
+            FEELINGS.includes(f),
+          );
+          if (prefilled.feeling.length === 0) delete prefilled.feeling;
+        }
+        if (inferred.timeline && TIMELINES.includes(inferred.timeline))
+          prefilled.timeline = inferred.timeline;
+        if (inferred.importance && IMPORTANCE.includes(inferred.importance))
+          prefilled.importance = inferred.importance;
         setAnswers(prefilled);
 
         // Only include questions that weren't already answered
-        const remaining = QUESTIONS.filter((q) => !prefilled[q.id]);
+        const remaining = QUESTIONS.filter(
+          (q) =>
+            !prefilled[q.id] ||
+            (Array.isArray(prefilled[q.id]) && prefilled[q.id].length === 0),
+        );
         setActiveQuestions(remaining);
       } catch {
         setActiveQuestions(QUESTIONS);
@@ -117,9 +136,19 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
   };
 
   const handlePillSelect = (value) => {
-    const newAnswers = { ...answers, [currentQuestion.id]: value };
-    setAnswers(newAnswers);
-    setTimeout(() => setCurrentQ((q) => q + 1), 300);
+    if (currentQuestion.multi) {
+      const current = Array.isArray(answers[currentQuestion.id])
+        ? answers[currentQuestion.id]
+        : [];
+      const updated = current.includes(value)
+        ? current.filter((v) => v !== value)
+        : [...current, value];
+      setAnswers((prev) => ({ ...prev, [currentQuestion.id]: updated }));
+    } else {
+      const newAnswers = { ...answers, [currentQuestion.id]: value };
+      setAnswers(newAnswers);
+      setTimeout(() => setCurrentQ((q) => q + 1), 300);
+    }
   };
 
   const openAdjust = () => {
@@ -171,27 +200,39 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 options={currentQuestion.options}
                 selected={answers[currentQuestion.id]}
                 onSelect={handlePillSelect}
+                multi={currentQuestion.multi}
               />
             )}
 
-            {/* Back button */}
-            <button
-              onClick={handleBack}
-              className="mt-6 text-white/35 text-sm hover:text-white/60 transition-colors font-figtree">
-              ← Back
-            </button>
+            <div className="flex items-center gap-4 mt-6">
+              {currentQuestion.multi &&
+                Array.isArray(answers[currentQuestion.id]) &&
+                answers[currentQuestion.id].length > 0 && (
+                  <button
+                    onClick={() => setCurrentQ((q) => q + 1)}
+                    className="px-5 py-2.5 bg-primary text-white rounded-full text-sm font-semibold hover:bg-primary-hover transition-colors font-figtree">
+                    Continue →
+                  </button>
+                )}
+              <button
+                onClick={handleBack}
+                className="text-white/35 text-sm hover:text-white/60 transition-colors font-figtree">
+                ← Back
+              </button>
+            </div>
 
             {/* Step dots */}
             <div className="flex gap-1.5 mt-4">
               {activeQuestions.map((_, i) => (
                 <div
                   key={i}
-                  className={`h-1 rounded-full transition-all duration-300 ${i < currentQ
-                    ? "w-6 bg-primary-hover"
-                    : i === currentQ
-                      ? "w-6 bg-white/60"
-                      : "w-3 bg-white/15"
-                    }`}
+                  className={`h-1 rounded-full transition-all duration-300 ${
+                    i < currentQ
+                      ? "w-6 bg-primary-hover"
+                      : i === currentQ
+                        ? "w-6 bg-white/60"
+                        : "w-3 bg-white/15"
+                  }`}
                 />
               ))}
             </div>
@@ -230,9 +271,16 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 <PillGroup
                   options={FEELINGS}
                   selected={draftAnswers.feeling}
-                  onSelect={(v) =>
-                    setDraftAnswers((p) => ({ ...p, feeling: v }))
-                  }
+                  multi={true}
+                  onSelect={(v) => {
+                    const current = Array.isArray(draftAnswers.feeling)
+                      ? draftAnswers.feeling
+                      : [];
+                    const updated = current.includes(v)
+                      ? current.filter((f) => f !== v)
+                      : [...current, v];
+                    setDraftAnswers((p) => ({ ...p, feeling: updated }));
+                  }}
                 />
               </div>
               <div>
@@ -284,12 +332,17 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}>
-            <p className="text-white text-md mb-4">
-              Here's what I'm hearing:
-            </p>
+            <p className="text-white text-md mb-4">Here's what I'm hearing:</p>
             <div className="bg-white/5 rounded-2xl p-6 space-y-3 mb-6">
               <SummaryRow label="Area of life" value={answers.lifeArea} />
-              <SummaryRow label="How you're feeling" value={answers.feeling} />
+              <SummaryRow
+                label="How you're feeling"
+                value={
+                  Array.isArray(answers.feeling)
+                    ? answers.feeling.join(" · ")
+                    : answers.feeling
+                }
+              />
               <SummaryRow label="Your position" value={answers.timeline} />
               <SummaryRow label="Importance" value={answers.importance} />
             </div>

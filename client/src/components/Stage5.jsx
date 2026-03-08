@@ -30,9 +30,9 @@ const Stage5 = ({ stageData, onRestart, onBack }) => {
       color: "bg-purple-500/15 shadow-sm",
       labelColor: "text-purple-300",
       items: [
-        situation.feeling && {
+        (Array.isArray(situation.feeling) ? situation.feeling.length > 0 : situation.feeling) && {
           key: "Going in feeling",
-          value: situation.feeling,
+          value: Array.isArray(situation.feeling) ? situation.feeling.join(" · ") : situation.feeling,
         },
         empathy.perspective && {
           key: "Their side",

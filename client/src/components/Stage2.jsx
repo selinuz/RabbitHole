@@ -13,7 +13,8 @@ const Stage2 = ({ stageData, onComplete, onBack }) => {
   useEffect(() => {
     const fetchCoreIssue = async () => {
       try {
-        const context = `Situation: ${initialInput}. Life area: ${situation.lifeArea}. Feeling: ${situation.feeling}. Position: ${situation.timeline}. More context: ${situation.vent || ''}`;
+        const feelingStr = Array.isArray(situation.feeling) ? situation.feeling.join(', ') : situation.feeling;
+        const context = `Situation: ${initialInput}. Life area: ${situation.lifeArea}. Feeling: ${feelingStr}. Position: ${situation.timeline}. More context: ${situation.vent || ''}`;
         const res = await fetch('/api/facilitator', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
