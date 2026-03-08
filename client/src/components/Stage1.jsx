@@ -50,7 +50,16 @@ const QUESTIONS = [
   },
 ];
 
-const PillGroup = ({ options, selected, onSelect, multi = false, allowCustom = false, customSelected = [], onCustomAdd, onCustomRemove }) => {
+const PillGroup = ({
+  options,
+  selected,
+  onSelect,
+  multi = false,
+  allowCustom = false,
+  customSelected = [],
+  onCustomAdd,
+  onCustomRemove,
+}) => {
   const [customInput, setCustomInput] = useState("");
 
   const handleCustomKeyDown = (e) => {
@@ -77,11 +86,14 @@ const PillGroup = ({ options, selected, onSelect, multi = false, allowCustom = f
           return (
             <button
               key={opt}
-              onClick={() => isCustom ? onCustomRemove && onCustomRemove(opt) : onSelect(opt)}
-              className={`px-4 py-2 rounded-full text-base transition-all duration-200 font-figtree flex items-center gap-1.5 ${isSelected
-                ? "border-2 border-primary text-primary bg-[#F4EDE8]"
-                : "bg-[#F4EDE8]/60 text-black/70 hover:text-black lg:hover:bg-black/5"
-                }`}>
+              onClick={() =>
+                isCustom ? onCustomRemove && onCustomRemove(opt) : onSelect(opt)
+              }
+              className={`px-4 py-2 rounded-full text-base transition-all duration-200 font-figtree flex items-center gap-1.5 ${
+                isSelected
+                  ? "border-2 border-primary text-primary bg-[#F4EDE8]"
+                  : "bg-[#F4EDE8]/60 text-black/70 hover:text-black lg:hover:bg-black/5"
+              }`}>
               {opt}
               {isCustom && <span className="text-xs opacity-50">✕</span>}
             </button>
@@ -110,6 +122,7 @@ const Stage1 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
   const [answers, setAnswers] = useState({});
   const [customFeelings, setCustomFeelings] = useState([]);
 
+  const [inferredKeys, setInferredKeys] = useState(new Set());
   const [summaryConfirmed, setSummaryConfirmed] = useState(false);
   const [adjusting, setAdjusting] = useState(false);
   const [draftAnswers, setDraftAnswers] = useState({});
@@ -143,6 +156,7 @@ const Stage1 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
         if (inferred.importance && IMPORTANCE.includes(inferred.importance))
           prefilled.importance = inferred.importance;
         setAnswers(prefilled);
+        setInferredKeys(new Set(Object.keys(prefilled)));
 
         // Only include questions that weren't already answered
         const remaining = QUESTIONS.filter(
@@ -201,7 +215,9 @@ const Stage1 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
 
   // Merge preset + custom feelings into the feeling field for onComplete
   const buildFinalAnswers = () => {
-    const presetFeelings = Array.isArray(answers.feeling) ? answers.feeling : [];
+    const presetFeelings = Array.isArray(answers.feeling)
+      ? answers.feeling
+      : [];
     const allFeelings = [...presetFeelings, ...customFeelings];
     return { ...answers, feeling: allFeelings };
   };
@@ -229,7 +245,9 @@ const Stage1 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
       {activeQuestions === null && (
         <div className="flex items-center gap-3 text-black/50 mb-8">
           <Loader2 size={16} className="animate-spin" />
-          <span className="text-base font-figtree">Personalizing your questions...</span>
+          <span className="text-base font-figtree">
+            Personalizing your questions...
+          </span>
         </div>
       )}
 
@@ -265,9 +283,11 @@ const Stage1 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
             )}
 
             <div className="flex items-center gap-4 mt-6">
-              {currentQuestion.multi && (
-                isFeelingQuestion ? totalSelected.length > 0 : (Array.isArray(answers[currentQuestion.id]) && answers[currentQuestion.id].length > 0)
-              ) && (
+              {currentQuestion.multi &&
+                (isFeelingQuestion
+                  ? totalSelected.length > 0
+                  : Array.isArray(answers[currentQuestion.id]) &&
+                    answers[currentQuestion.id].length > 0) && (
                   <button
                     onClick={() => setCurrentQ((q) => q + 1)}
                     className="px-5 py-2.5 bg-primary text-black/80 rounded-full text-base font-semibold hover:bg-primary-hover transition-colors font-figtree">
@@ -286,12 +306,13 @@ const Stage1 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
               {activeQuestions.map((_, i) => (
                 <div
                   key={i}
-                  className={`h-1 rounded-full transition-all duration-300 ${i < currentQ
-                    ? "w-6 bg-primary-hover"
-                    : i === currentQ
-                      ? "w-6 bg-white/60"
-                      : "w-3 bg-white/15"
-                    }`}
+                  className={`h-1 rounded-full transition-all duration-300 ${
+                    i < currentQ
+                      ? "w-6 bg-primary-hover"
+                      : i === currentQ
+                        ? "w-6 bg-white/60"
+                        : "w-3 bg-white/15"
+                  }`}
                 />
               ))}
             </div>
@@ -339,7 +360,9 @@ const Stage1 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
                     }
                   }}
                   onCustomRemove={(v) =>
-                    setDraftCustomFeelings((prev) => prev.filter((f) => f !== v))
+                    setDraftCustomFeelings((prev) =>
+                      prev.filter((f) => f !== v),
+                    )
                   }
                   onSelect={(v) => {
                     const current = Array.isArray(draftAnswers.feeling)
@@ -401,18 +424,41 @@ const Stage1 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}>
-            <p className="text-black/80 text-base mb-4 font-figtree">Here's what I'm hearing:</p>
+            <p className="text-black/80 text-base mb-4 font-figtree">
+              Here's what I'm hearing:
+            </p>
             <div className="bg-[#F4EDE8]/5 rounded-2xl p-6 space-y-3 mb-6">
-              <SummaryRow label="Area of life" value={answers.lifeArea} />
+              <SummaryRow
+                label="Area of life"
+                value={answers.lifeArea}
+                inferred={inferredKeys.has("lifeArea")}
+              />
               <SummaryRow
                 label="How you're feeling"
-                value={[
-                  ...(Array.isArray(answers.feeling) ? answers.feeling : answers.feeling ? [answers.feeling] : []),
-                  ...customFeelings,
-                ].join(" · ") || undefined}
+                value={
+                  [
+                    ...(Array.isArray(answers.feeling)
+                      ? answers.feeling
+                      : answers.feeling
+                        ? [answers.feeling]
+                        : []),
+                    ...customFeelings,
+                  ].join(" · ") || undefined
+                }
+                inferred={
+                  inferredKeys.has("feeling") && customFeelings.length === 0
+                }
               />
-              <SummaryRow label="Your position" value={answers.timeline} />
-              <SummaryRow label="Importance" value={answers.importance} />
+              <SummaryRow
+                label="Your position"
+                value={answers.timeline}
+                inferred={inferredKeys.has("timeline")}
+              />
+              <SummaryRow
+                label="Importance"
+                value={answers.importance}
+                inferred={inferredKeys.has("importance")}
+              />
             </div>
 
             {!summaryConfirmed ? (
@@ -444,11 +490,20 @@ const Stage1 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
   );
 });
 
-const SummaryRow = ({ label, value }) =>
+const SummaryRow = ({ label, value, inferred }) =>
   value ? (
     <div className="flex items-baseline gap-3">
-      <span className="text-black/85 text-base w-40 shrink-0 font-figtree">{label}</span>
+      <span className="text-black/85 text-base w-40 shrink-0 font-figtree">
+        {label}
+      </span>
       <span className="text-black/100 text-base font-figtree">{value}</span>
+      {inferred && (
+        <span
+          className="text-xs font-semibold font-figtree leading-none"
+          style={{ color: "var(--color-primary)" }}>
+          [ inferred ]
+        </span>
+      )}
     </div>
   ) : null;
 
