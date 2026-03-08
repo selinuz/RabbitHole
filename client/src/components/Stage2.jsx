@@ -46,6 +46,7 @@ const Stage2 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
       ref={ref}
       transition={{ duration: 0.5 }}
       className="glass-panel p-8 text-white"
+      style={{ backgroundColor: "rgba(0, 0, 0, 0.40)" }}
     >
       <div className="flex items-center mb-6">
         <button

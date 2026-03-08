@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, ArrowRight, ChevronLeft } from 'lucide-react';
 
 const Stage4 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
-  const { preparation, empathy } = stageData;
+  const { preparation, empathy, situation } = stageData;
   const [instinct, setInstinct] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [rewrite, setRewrite] = useState(null);
@@ -86,6 +86,7 @@ const Stage4 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
       ref={ref}
       transition={{ duration: 0.5 }}
       className="glass-panel p-8 text-white"
+      style={{ backgroundColor: "rgba(0, 0, 0, 0.40)" }}
     >
       <div className="flex items-center mb-6">
         <button
@@ -98,7 +99,8 @@ const Stage4 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
 
       <p className="text-white/40 text-sm uppercase tracking-widest mb-1 font-figtree">3rd Pillar · Phrasing & Rehearsal</p>
       <h2 className="text-3xl font-semibold font-serif mb-2">Finding the right words</h2>
-      <p className="text-white/50 text-base mt-8 mb-8 font-figtree">Start with what comes naturally — we'll refine from there.</p>
+
+      <p className="text-white/50 text-base mb-8 font-figtree">Start with what comes naturally — we'll refine from there.</p>
 
       {/* Step 1: Instinct phrase */}
       {!submitted && (
@@ -138,6 +140,13 @@ const Stage4 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
               </div>
             ) : rewrite && (
               <div>
+                {empathy?.perspective && (
+                  <div className="mb-5 rounded-xl px-4 py-3.5 flex items-start gap-3"
+                    style={{ backgroundColor: 'transparent', border: '2px solid #D66B6D' }}>
+                    <span className="text-xs font-bold uppercase tracking-widest mt-0.5 font-figtree shrink-0" style={{ color: '#D66B6D' }}>Keep in mind</span>
+                    <p className="text-white/70 text-base leading-relaxed font-figtree">{empathy.perspective}</p>
+                  </div>
+                )}
                 <p className="text-white/60 text-base mb-4 font-figtree">Try all three science-backed techniques — fill in the blanks on each to continue:</p>
                 <div className="space-y-4 mb-6">
                   {[

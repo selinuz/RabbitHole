@@ -134,24 +134,27 @@ export default async function handler(req, res) {
       const result = await model.generateContent(`
         You are a conversation coach trained in Gottman Method principles and nonviolent communication.
 
-        The user is preparing for a difficult conversation. They have identified with a specific perspective of the other person to better understand where they are coming from.
+        The user is preparing for a difficult conversation. They have identified a specific perspective of the other person to ground their approach in empathy.
 
         Context about the situation, the other person's perspective, and the desired tone: "${message}"
+
+        IMPORTANT: The "Perspective identified" field above describes how the other person may be experiencing this situation. Let this perspective actively shape the opener templates — each one should in some way acknowledge or leave room for that reality. For example, if the perspective says the other person may feel pressured or caught off guard, the templates should create space for their experience rather than only asserting the user's needs.
 
         Rewrite the user's instinct phrase in 3 different ways. Instead of writing complete scripts, provide **templates with fill-in-the-blank brackets** (e.g., [feeling], [behavior], [specific request]) so the user can use their own words.
 
         Return ONLY valid JSON (no markdown):
         {
-          "iStatement": "A template using I-statements that avoids blame (e.g. 'I feel [emotion] when [behavior] occurs because...')",
-          "gottman": "A template for a soft, Gottman-style opening that avoids harsh start-ups and invites dialogue",
-          "framing": "A template that frames this as a shared challenge both people can solve together"
+          "iStatement": "A template using I-statements that avoids blame and reflects awareness of their perspective",
+          "gottman": "A template for a soft, Gottman-style opening that creates space for the other person given their likely state",
+          "framing": "A template that frames this as a shared challenge and gently acknowledges the other person's reality"
         }
 
         Rules:
         - Each version should use bracketed placeholders for specific details
         - Match the tone they selected (gentle/direct/curious) if mentioned
-        - Keep each under 35 words
+        - Keep each under 40 words
         - Use descriptive brackets like [how you feel] or [what you noticed]
+        - Do NOT simply paste the perspective verbatim — let it inform the structure and invitation of the opener
       `);
 
       let rewrite = null;
