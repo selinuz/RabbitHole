@@ -11,6 +11,36 @@ const port = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
+app.post("/api/transcribe", express.raw({ type: "*/*", limit: "25mb" }), async (req, res) => {
+  const audioBuffer = req.body;
+  const contentType = req.headers["content-type"] || "audio/webm";
+
+  const formData = new FormData();
+  const audioBlob = new Blob([audioBuffer], { type: contentType });
+  formData.append("file", audioBlob, "audio.webm");
+  formData.append("model_id", "scribe_v1");
+
+  try {
+    const response = await fetch("https://api.elevenlabs.io/v1/speech-to-text", {
+      method: "POST",
+      headers: { "xi-api-key": process.env.ELEVENLABS_API_KEY },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error("ElevenLabs STT error:", error);
+      return res.status(502).json({ error: "Transcription failed" });
+    }
+
+    const data = await response.json();
+    return res.json({ transcript: data.text || "" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Transcription request failed" });
+  }
+});
+
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 app.post("/api/facilitator", async (req, res) => {
