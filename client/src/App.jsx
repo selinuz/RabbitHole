@@ -7,7 +7,7 @@ import Stage3 from "./components/Stage3";
 import Stage4 from "./components/Stage4";
 import Stage5 from "./components/Stage5";
 
-const TOTAL_STAGES = 5;
+const TOTAL_STAGES = 6;
 // How far into the image to travel per stage (0–1). 0.75 = 75% of image height used total.
 const BG_TRAVEL = 0.75;
 
@@ -166,7 +166,28 @@ function App() {
               <Stage5
                 stageData={stageData}
                 onBack={goBack}
-                onRestart={() => {
+                onFinish={() => setStage(6)}
+              />
+            </motion.div>
+          )}
+          {stage === 6 && (
+            <motion.div
+              key="s6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+              className="text-center">
+              <img
+                src="/logo.svg"
+                alt="RabbitHole"
+                className="mx-auto mb-10 h-25"
+              />
+              <p className="text-white/70 text-lg font-figtree mb-8">
+                You've done the work. Now go have that conversation.
+              </p>
+              <button
+                onClick={() => {
                   setStageData({
                     initialInput: "",
                     situation: {},
@@ -176,7 +197,9 @@ function App() {
                   });
                   setStage(0);
                 }}
-              />
+                className="text-white/40 hover:text-white/70 text-base transition-colors underline underline-offset-4 font-figtree">
+                Start another one
+              </button>
             </motion.div>
           )}
         </AnimatePresence>
