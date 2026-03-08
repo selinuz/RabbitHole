@@ -158,9 +158,25 @@ const SpeakerButton = ({ panelRef }) => {
     if (!panelRef.current) return;
 
     const BLOCK_TAGS = new Set([
-      "DIV", "P", "H1", "H2", "H3", "H4", "H5", "H6",
-      "LI", "TR", "TD", "TH", "SECTION", "ARTICLE", "HEADER",
-      "FOOTER", "BLOCKQUOTE", "LABEL", "SPAN",
+      "DIV",
+      "P",
+      "H1",
+      "H2",
+      "H3",
+      "H4",
+      "H5",
+      "H6",
+      "LI",
+      "TR",
+      "TD",
+      "TH",
+      "SECTION",
+      "ARTICLE",
+      "HEADER",
+      "FOOTER",
+      "BLOCKQUOTE",
+      "LABEL",
+      "SPAN",
     ]);
 
     const extractText = (node) => {
@@ -186,7 +202,10 @@ const SpeakerButton = ({ panelRef }) => {
       if (tag === "BUTTON") {
         const btnText = node.textContent?.trim() ?? "";
         // Short action words or arrow-only buttons are navigation — skip them
-        const isNavButton = /^(←|→|back|continue|save|cancel|that'?s right|let me adjust|dive in|dig (in|deeper)|see how|see the bigger picture|add your own)/i.test(btnText);
+        const isNavButton =
+          /^(←|→|back|continue|save|cancel|that'?s right|let me adjust|dive in|dig (in|deeper)|see how|see the bigger picture|add your own)/i.test(
+            btnText,
+          );
         if (isNavButton) return "";
         // Otherwise it's an option pill — read it as a list item
         return btnText + ". ";
@@ -208,7 +227,10 @@ const SpeakerButton = ({ panelRef }) => {
       return inner;
     };
 
-    const text = extractText(panelRef.current).replace(/\.\s*\.\s*/g, ". ").replace(/\s{2,}/g, " ").trim();
+    const text = extractText(panelRef.current)
+      .replace(/\.\s*\.\s*/g, ". ")
+      .replace(/\s{2,}/g, " ")
+      .trim();
     if (!text) return;
 
     setStatus("loading");
@@ -293,7 +315,6 @@ function App() {
         backgroundRepeat: "no-repeat",
         transition: "background-position 1s ease-in-out",
       }}>
-
       {/* Progress sidebar */}
       <div className="fixed right-6 top-1/2 -translate-y-1/2 flex flex-col gap-5 z-50 items-center">
         {[1, 2, 3, 4, 5, 6].map((s) => (
@@ -310,8 +331,9 @@ function App() {
               />
             ) : (
               <div
-                className={`w-5 h-5 rounded-full transition-all duration-500 ${stage > s ? "bg-primary-hover" : "bg-white/20"
-                  }`}
+                className={`w-5 h-5 rounded-full transition-all duration-500 ${
+                  stage > s ? "bg-primary-hover" : "bg-white/20"
+                }`}
               />
             )}
           </div>
@@ -444,34 +466,37 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}
-              className="text-center">
-              <img
-                src="/logo.svg"
-                alt="RabbitHole"
-                className="mx-auto mb-10 h-25"
-              />
-              <p className="text-white/70 text-lg font-figtree mb-8">
-                You've done the work. Now go have that conversation.
-              </p>
-              <button
-                onClick={() => downloadPDF(stageData)}
-                className="flex items-center gap-2 mx-auto mb-6 px-8 py-4 bg-primary text-white rounded-2xl text-base font-semibold hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 font-figtree">
-                <Download size={16} /> Save your plan as PDF
-              </button>
-              <button
-                onClick={() => {
-                  setStageData({
-                    initialInput: "",
-                    situation: {},
-                    preparation: {},
-                    empathy: {},
-                    phrasing: {},
-                  });
-                  setStage(0);
-                }}
-                className="text-white/40 hover:text-white/70 text-base transition-colors underline underline-offset-4 font-figtree">
-                Start another one
-              </button>
+              className="flex flex-col items-center min-h-[80vh]">
+              {/* Top: logo + message */}
+              <div className="text-center">
+                <img
+                  src="/logo.svg"
+                  alt="RabbitHole"
+                  className="mx-auto mb-10 h-25"
+                />
+              </div>
+              {/* Middle: action buttons */}
+              <div className="flex flex-col items-center gap-10 mt-20">
+                <button
+                  onClick={() => downloadPDF(stageData)}
+                  className="flex items-center gap-1 px-8 py-4 bg-primary text-white rounded-2xl text-base font-semibold hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 font-figtree">
+                  <Download size={16} /> Save your plan as PDF
+                </button>
+                <button
+                  onClick={() => {
+                    setStageData({
+                      initialInput: "",
+                      situation: {},
+                      preparation: {},
+                      empathy: {},
+                      phrasing: {},
+                    });
+                    setStage(0);
+                  }}
+                  className="text-white/40 hover:text-white/70 text-base transition-colors underline underline-offset-4 font-figtree">
+                  Start another one
+                </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
