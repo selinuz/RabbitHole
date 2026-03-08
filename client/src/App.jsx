@@ -85,6 +85,16 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4 }}>
+              <div className="text-center mb-10">
+                <img
+                  src="/logo.svg"
+                  alt="RabbitHole"
+                  className="mx-auto mb-10 h-25"
+                />
+                <p className="text-white/80 text-md tracking-widest uppercase">
+                  A guide for difficult conversations
+                </p>
+              </div>
               <Stage0
                 onComplete={(input) => advanceTo(1, { initialInput: input })}
               />
