@@ -34,6 +34,7 @@ const QUESTIONS = [
     text: "How does approaching this conversation make you feel?",
     type: "pills",
     options: FEELINGS,
+    multi: true,
   },
   {
     id: "timeline",
@@ -47,26 +48,27 @@ const QUESTIONS = [
     type: "pills",
     options: IMPORTANCE,
   },
-  {
-    id: "vent",
-    text: null, // filled dynamically using feeling
-    type: "text",
-  },
 ];
 
-const PillGroup = ({ options, selected, onSelect }) => (
+const PillGroup = ({ options, selected, onSelect, multi = false }) => (
   <div className="flex flex-wrap gap-2 mt-4">
-    {options.map((opt) => (
-      <button
-        key={opt}
-        onClick={() => onSelect(opt)}
-        className={`px-4 py-2 rounded-full text-sm transition-all duration-200 font-figtree ${selected === opt
-          ? "bg-primary text-white"
-          : "bg-white/5 text-white/70 hover:text-white lg:hover:bg-white/10"
+    {options.map((opt) => {
+      const isSelected = multi
+        ? Array.isArray(selected) && selected.includes(opt)
+        : selected === opt;
+      return (
+        <button
+          key={opt}
+          onClick={() => onSelect(opt)}
+          className={`px-4 py-2 rounded-full text-base transition-all duration-200 font-figtree ${
+            isSelected
+              ? "border-2 border-primary text-primary bg-[#F4EDE8]/70"
+              : "bg-white/5 text-white/70 hover:text-white lg:hover:bg-white/10"
           }`}>
-        {opt}
-      </button>
-    ))}
+          {opt}
+        </button>
+      );
+    })}
   </div>
 );
 
@@ -75,11 +77,10 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
   const [activeQuestions, setActiveQuestions] = useState(null); // null = loading
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [textInput, setTextInput] = useState("");
+
   const [summaryConfirmed, setSummaryConfirmed] = useState(false);
   const [adjusting, setAdjusting] = useState(false);
   const [draftAnswers, setDraftAnswers] = useState({});
-  const [draftText, setDraftText] = useState("");
 
   // Fetch AI acknowledgement and analyze what's already known
   useEffect(() => {
@@ -96,14 +97,26 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
 
         // Pre-fill answers with inferred values
         const prefilled = {};
-        if (inferred.lifeArea) prefilled.lifeArea = inferred.lifeArea;
-        if (inferred.feeling) prefilled.feeling = inferred.feeling;
-        if (inferred.timeline) prefilled.timeline = inferred.timeline;
-        if (inferred.importance) prefilled.importance = inferred.importance;
+        if (inferred.lifeArea && LIFE_AREAS.includes(inferred.lifeArea))
+          prefilled.lifeArea = inferred.lifeArea;
+        if (Array.isArray(inferred.feeling) && inferred.feeling.length > 0) {
+          prefilled.feeling = inferred.feeling.filter((f) =>
+            FEELINGS.includes(f),
+          );
+          if (prefilled.feeling.length === 0) delete prefilled.feeling;
+        }
+        if (inferred.timeline && TIMELINES.includes(inferred.timeline))
+          prefilled.timeline = inferred.timeline;
+        if (inferred.importance && IMPORTANCE.includes(inferred.importance))
+          prefilled.importance = inferred.importance;
         setAnswers(prefilled);
 
         // Only include questions that weren't already answered
-        const remaining = QUESTIONS.filter((q) => !prefilled[q.id]);
+        const remaining = QUESTIONS.filter(
+          (q) =>
+            !prefilled[q.id] ||
+            (Array.isArray(prefilled[q.id]) && prefilled[q.id].length === 0),
+        );
         setActiveQuestions(remaining);
       } catch {
         setActiveQuestions(QUESTIONS);
@@ -114,14 +127,8 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
 
   const currentQuestion = activeQuestions ? activeQuestions[currentQ] : null;
 
-  const ventPrompt = answers.feeling
-    ? `You mentioned this is making you feel ${answers.feeling.toLowerCase()}. Tell me more — what happened? Who are the key people involved? What led to this moment?`
-    : "Tell me more. What happened, who's involved, and what led to this?";
-
   const handleBack = () => {
     if (currentQ > 0) {
-      const prevQuestion = activeQuestions[currentQ - 1];
-      if (prevQuestion.id === "vent") setTextInput(answers.vent || "");
       setCurrentQ((q) => q - 1);
     } else {
       onBack();
@@ -129,28 +136,28 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
   };
 
   const handlePillSelect = (value) => {
-    const newAnswers = { ...answers, [currentQuestion.id]: value };
-    setAnswers(newAnswers);
-    setTimeout(() => setCurrentQ((q) => q + 1), 300);
-  };
-
-  const handleTextSubmit = () => {
-    if (!textInput.trim()) return;
-    setAnswers((prev) => ({ ...prev, vent: textInput.trim() }));
-    setCurrentQ((q) => q + 1); // move past last question → show summary
+    if (currentQuestion.multi) {
+      const current = Array.isArray(answers[currentQuestion.id])
+        ? answers[currentQuestion.id]
+        : [];
+      const updated = current.includes(value)
+        ? current.filter((v) => v !== value)
+        : [...current, value];
+      setAnswers((prev) => ({ ...prev, [currentQuestion.id]: updated }));
+    } else {
+      const newAnswers = { ...answers, [currentQuestion.id]: value };
+      setAnswers(newAnswers);
+      setTimeout(() => setCurrentQ((q) => q + 1), 300);
+    }
   };
 
   const openAdjust = () => {
     setDraftAnswers({ ...answers });
-    setDraftText(answers.vent || "");
     setAdjusting(true);
   };
 
   const saveAdjust = () => {
-    setAnswers({
-      ...draftAnswers,
-      vent: draftText.trim() || draftAnswers.vent,
-    });
+    setAnswers({ ...draftAnswers });
     setAdjusting(false);
   };
 
@@ -164,7 +171,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
       exit={{ opacity: 0, y: -24 }}
       transition={{ duration: 0.5 }}
       className="glass-panel p-8 text-white">
-      <h2 className="text-3xl font-medium font-serif mb-8">
+      <h2 className="text-3xl font-semibold font-serif mb-8">
         Let's understand the situation
       </h2>
 
@@ -172,7 +179,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
       {activeQuestions === null && (
         <div className="flex items-center gap-3 text-white/50 mb-8">
           <Loader2 size={16} className="animate-spin" />
-          <span className="text-sm">Personalizing your questions...</span>
+          <span className="text-base font-figtree">Personalizing your questions...</span>
         </div>
       )}
 
@@ -184,10 +191,8 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.4 }}>
-            <p className="text-white/90 text-lg font-normal leading-snug">
-              {currentQuestion.id === "vent"
-                ? ventPrompt
-                : currentQuestion.text}
+            <p className="text-white/90 text-lg leading-snug font-figtree">
+              {currentQuestion.text}
             </p>
 
             {currentQuestion.type === "pills" && (
@@ -195,48 +200,39 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 options={currentQuestion.options}
                 selected={answers[currentQuestion.id]}
                 onSelect={handlePillSelect}
+                multi={currentQuestion.multi}
               />
             )}
 
-            {currentQuestion.type === "text" && (
-              <div className="mt-4">
-                <textarea
-                  value={textInput}
-                  onChange={(e) => setTextInput(e.target.value)}
-                  placeholder="Take your time..."
-                  rows={4}
-                  className="w-full bg-white/5 rounded-xl p-4 text-white placeholder-white/25 outline-none focus:bg-white/10 transition-all resize-none"
-                  onKeyDown={(e) =>
-                    e.key === "Enter" && e.metaKey && handleTextSubmit()
-                  }
-                />
-                <button
-                  onClick={handleTextSubmit}
-                  disabled={!textInput.trim()}
-                  className="mt-3 px-5 py-2 bg-primary text-white rounded-full text-sm font-semibold disabled:opacity-30 hover:bg-primary-hover transition-all">
-                  Continue
-                </button>
-              </div>
-            )}
-
-            {/* Back button */}
-            <button
-              onClick={handleBack}
-              className="mt-6 text-white/35 text-sm hover:text-white/60 transition-colors font-figtree">
-              ← Back
-            </button>
+            <div className="flex items-center gap-4 mt-6">
+              {currentQuestion.multi &&
+                Array.isArray(answers[currentQuestion.id]) &&
+                answers[currentQuestion.id].length > 0 && (
+                  <button
+                    onClick={() => setCurrentQ((q) => q + 1)}
+                    className="px-5 py-2.5 bg-primary text-white rounded-full text-base font-semibold hover:bg-primary-hover transition-colors font-figtree">
+                    Continue →
+                  </button>
+                )}
+              <button
+                onClick={handleBack}
+                className="text-white/35 text-base hover:text-white/60 transition-colors font-figtree">
+                ← Back
+              </button>
+            </div>
 
             {/* Step dots */}
             <div className="flex gap-1.5 mt-4">
               {activeQuestions.map((_, i) => (
                 <div
                   key={i}
-                  className={`h-1 rounded-full transition-all duration-300 ${i < currentQ
-                    ? "w-6 bg-primary-hover"
-                    : i === currentQ
-                      ? "w-6 bg-white/60"
-                      : "w-3 bg-white/15"
-                    }`}
+                  className={`h-1 rounded-full transition-all duration-300 ${
+                    i < currentQ
+                      ? "w-6 bg-primary-hover"
+                      : i === currentQ
+                        ? "w-6 bg-white/60"
+                        : "w-3 bg-white/15"
+                  }`}
                 />
               ))}
             </div>
@@ -251,13 +247,13 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}>
-            <p className="text-white/50 text-sm mb-6">
+            <p className="text-white/50 text-base mb-6 font-figtree">
               Update your answers below, then save.
             </p>
 
             <div className="space-y-6">
               <div>
-                <p className="text-white/60 text-xs uppercase tracking-wider mb-2">
+                <p className="text-white/60 text-sm uppercase tracking-wider mb-2 font-figtree">
                   Area of life
                 </p>
                 <PillGroup
@@ -269,19 +265,26 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 />
               </div>
               <div>
-                <p className="text-white/60 text-xs uppercase tracking-wider mb-2">
+                <p className="text-white/60 text-sm uppercase tracking-wider mb-2 font-figtree">
                   How you're feeling
                 </p>
                 <PillGroup
                   options={FEELINGS}
                   selected={draftAnswers.feeling}
-                  onSelect={(v) =>
-                    setDraftAnswers((p) => ({ ...p, feeling: v }))
-                  }
+                  multi={true}
+                  onSelect={(v) => {
+                    const current = Array.isArray(draftAnswers.feeling)
+                      ? draftAnswers.feeling
+                      : [];
+                    const updated = current.includes(v)
+                      ? current.filter((f) => f !== v)
+                      : [...current, v];
+                    setDraftAnswers((p) => ({ ...p, feeling: updated }));
+                  }}
                 />
               </div>
               <div>
-                <p className="text-white/60 text-xs uppercase tracking-wider mb-2">
+                <p className="text-white/60 text-sm uppercase tracking-wider mb-2 font-figtree">
                   Your position
                 </p>
                 <PillGroup
@@ -293,7 +296,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 />
               </div>
               <div>
-                <p className="text-white/60 text-xs uppercase tracking-wider mb-2">
+                <p className="text-white/60 text-sm uppercase tracking-wider mb-2 font-figtree">
                   Importance
                 </p>
                 <PillGroup
@@ -304,28 +307,17 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                   }
                 />
               </div>
-              <div>
-                <p className="text-white/60 text-xs uppercase tracking-wider mb-2">
-                  What you shared
-                </p>
-                <textarea
-                  value={draftText}
-                  onChange={(e) => setDraftText(e.target.value)}
-                  rows={4}
-                  className="w-full bg-white/5 rounded-xl p-4 text-white placeholder-white/25 outline-none focus:bg-white/10 transition-all resize-none"
-                />
-              </div>
             </div>
 
             <div className="flex gap-3 mt-6">
               <button
                 onClick={saveAdjust}
-                className="px-5 py-2.5 bg-primary text-white rounded-full text-sm font-semibold hover:bg-primary-hover transition-colors">
+                className="px-5 py-2.5 bg-primary text-white rounded-full text-base font-semibold hover:bg-primary-hover transition-colors font-figtree">
                 Save changes
               </button>
               <button
                 onClick={() => setAdjusting(false)}
-                className="px-5 py-2.5 bg-white/10 text-white/70 rounded-full text-sm hover:bg-white/15 transition-colors">
+                className="px-5 py-2.5 bg-white/10 text-white/70 rounded-full text-base hover:bg-white/15 transition-colors font-figtree">
                 Cancel
               </button>
             </div>
@@ -340,34 +332,31 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}>
-            <p className="text-white text-md mb-4">
-              Here's what I'm hearing:
-            </p>
+            <p className="text-white text-base mb-4 font-figtree">Here's what I'm hearing:</p>
             <div className="bg-white/5 rounded-2xl p-6 space-y-3 mb-6">
               <SummaryRow label="Area of life" value={answers.lifeArea} />
-              <SummaryRow label="How you're feeling" value={answers.feeling} />
+              <SummaryRow
+                label="How you're feeling"
+                value={
+                  Array.isArray(answers.feeling)
+                    ? answers.feeling.join(" · ")
+                    : answers.feeling
+                }
+              />
               <SummaryRow label="Your position" value={answers.timeline} />
               <SummaryRow label="Importance" value={answers.importance} />
-              {answers.vent && (
-                <div className="pt-3 border-t border-white/5">
-                  <p className="text-white/60 text-sm mb-1">What you shared</p>
-                  <p className="text-white/80 text-sm leading-relaxed font-figtree">
-                    {answers.vent}
-                  </p>
-                </div>
-              )}
             </div>
 
             {!summaryConfirmed ? (
               <div className="flex gap-3">
                 <button
                   onClick={() => setSummaryConfirmed(true)}
-                  className="px-5 py-2.5 bg-primary text-white rounded-full text-sm font-semibold hover:bg-primary-hover transition-all shadow-lg shadow-primary/10">
+                  className="px-5 py-2.5 bg-primary text-white rounded-full text-base font-semibold hover:bg-primary-hover transition-all shadow-lg shadow-primary/10 font-figtree">
                   That's right
                 </button>
                 <button
                   onClick={openAdjust}
-                  className="px-5 py-2.5 bg-white/10 text-white/70 rounded-full text-sm hover:bg-white/15 transition-colors">
+                  className="px-5 py-2.5 bg-white/10 text-white/70 rounded-full text-base hover:bg-white/15 transition-colors font-figtree">
                   Let me adjust
                 </button>
               </div>
@@ -376,7 +365,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 onClick={() => onComplete(answers)}
-                className="w-full py-3 bg-primary text-white rounded-2xl font-semibold hover:bg-primary-hover transition-colors font-figtree">
+                className="w-full py-3 bg-primary text-white rounded-2xl text-lg font-semibold hover:bg-primary-hover transition-colors font-figtree">
                 Dig into the 1st Pillar →
               </motion.button>
             )}
@@ -390,8 +379,8 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
 const SummaryRow = ({ label, value }) =>
   value ? (
     <div className="flex items-baseline gap-3">
-      <span className="text-white/85 text-sm w-40 shrink-0">{label}</span>
-      <span className="text-white/100 text-sm">{value}</span>
+      <span className="text-white/85 text-base w-40 shrink-0 font-figtree">{label}</span>
+      <span className="text-white/100 text-base font-figtree">{value}</span>
     </div>
   ) : null;
 

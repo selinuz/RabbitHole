@@ -112,7 +112,7 @@ const Stage0 = ({ onComplete }) => {
       transition={{ duration: 0.6 }}
       className="glass-panel p-8 text-black text-center"
       style={{ backgroundColor: "#F4EDE8BB" }}>
-      <h2 className="text-3xl font-medium font-serif mb-8 text-black/70">
+      <h2 className="text-3xl font-semibold font-serif mb-8 text-black/70">
         What conversation is on your mind right now?
       </h2>
 
@@ -123,7 +123,7 @@ const Stage0 = ({ onComplete }) => {
             onChange={(e) => setValue(e.target.value)}
             placeholder="Type your thoughts here..."
             rows={4}
-            className="w-full bg-[#F4EDE8]/70 rounded-2xl p-4 text-black/50 placeholder-black/40 text-lg leading-relaxed outline-none bg-[#F4EDE8]/70 transition-all duration-300 resize-none font-figtree"
+            className="w-full bg-[#F4EDE8]/70 rounded-2xl p-4 text-black/50 placeholder-black/40 text-base leading-relaxed outline-none bg-[#F4EDE8]/70 transition-all duration-300 resize-none font-figtree"
           />
           {isRecording && (
             <motion.div
@@ -134,7 +134,7 @@ const Stage0 = ({ onComplete }) => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#F4EDE8]/70"></span>
               </span>
-              <span className="text-[10px] text-black/40 font-bold uppercase tracking-wider font-figtree">
+              <span className="text-sm text-black/40 font-bold uppercase tracking-wider font-figtree">
                 Recording
               </span>
             </motion.div>
@@ -152,10 +152,11 @@ const Stage0 = ({ onComplete }) => {
         <div className="flex flex-col items-center gap-8">
           <button
             onClick={toggleRecording}
-            className={`group flex flex-col items-center gap-3 p-7 rounded-2xl transition-all duration-500 w-full max-w-[280px] ${isRecording
-              ? "bg-[#F4EDE8]/70 text-black/50 shadow-[0_0_40px_rgba(214,107,109,0.2)]"
-              : "bg-[#F4EDE8]/30 text-black/70 hover:text-black/100 lg:hover:bg-[#F4EDE8]/60"
-              } font-figtree`}>
+            className={`group flex flex-col items-center gap-3 p-7 rounded-2xl transition-all duration-500 w-full max-w-[280px] ${
+              isRecording
+                ? "bg-[#F4EDE8]/70 text-black/50 shadow-[0_0_40px_rgba(214,107,109,0.2)]"
+                : "bg-[#F4EDE8]/30 text-black/70 hover:text-black/100 lg:hover:bg-[#F4EDE8]/60"
+            } font-figtree`}>
             <div
               className={`p-4 rounded-full transition-all duration-500 ${isRecording ? "bg-[#F4EDE8]/100 text-black/40" : "bg-[#F4EDE8]/10 text-black/50 group-hover:text-black"}`}>
               {isRecording ? (
@@ -169,7 +170,7 @@ const Stage0 = ({ onComplete }) => {
                 {isRecording ? "Listening to you..." : "Rant Out Loud"}
               </span>
               {!isRecording && (
-                <span className="text-sm text-black/40 font-medium">
+                <span className="text-sm text-black/60 font-medium">
                   Use your voice
                 </span>
               )}
@@ -188,7 +189,7 @@ const Stage0 = ({ onComplete }) => {
                     if (isRecording) recognitionRef.current.stop();
                     onComplete(value.trim());
                   }}
-                  className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-2xl shadow-primary/30 text-xl font-figtree">
+                  className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-2xl shadow-primary/30 text-lg font-figtree">
                   Dive in →
                 </button>
               </motion.div>
@@ -196,7 +197,7 @@ const Stage0 = ({ onComplete }) => {
           </AnimatePresence>
 
           {!ready && wordCount > 0 && (
-            <p className="text-black/80 text-md font-medium">
+            <p className="text-black/60 text-sm font-medium font-figtree">
               A few more details please!
             </p>
           )}

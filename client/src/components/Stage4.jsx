@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, ArrowRight } from 'lucide-react';
+import { Loader2, ArrowRight, ChevronLeft } from 'lucide-react';
 
-const Stage4 = ({ stageData, onComplete }) => {
-  const { situation, preparation, empathy } = stageData;
+const Stage4 = ({ stageData, onComplete, onBack }) => {
+  const { preparation, empathy } = stageData;
   const [instinct, setInstinct] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [rewrite, setRewrite] = useState(null);
@@ -73,24 +73,34 @@ const Stage4 = ({ stageData, onComplete }) => {
       transition={{ duration: 0.5 }}
       className="glass-panel p-8 text-white"
     >
-      <h2 className="text-3xl font-medium font-serif mb-2">Finding the right words</h2>
-      <p className="text-white/50 text-md mt-8 mb-8">Start with what comes naturally — we'll refine from there.</p>
+      <div className="flex items-center mb-6">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1 text-white/40 hover:text-white/70 text-base transition-colors font-figtree"
+        >
+          <ChevronLeft size={16} /> Back
+        </button>
+      </div>
+
+      <p className="text-white/40 text-sm uppercase tracking-widest mb-1 font-figtree">3rd Pillar · Phrasing & Rehearsal</p>
+      <h2 className="text-3xl font-semibold font-serif mb-2">Finding the right words</h2>
+      <p className="text-white/50 text-base mt-8 mb-8 font-figtree">Start with what comes naturally — we'll refine from there.</p>
 
       {/* Step 1: Instinct phrase */}
       {!submitted && (
         <div>
-          <p className="text-white/80 mb-4 font-md">What's the first thing you feel like saying to them?</p>
+          <p className="text-white/80 text-base mb-4 font-figtree">What's the first thing you feel like saying to them?</p>
           <textarea
             value={instinct}
             onChange={e => setInstinct(e.target.value)}
             placeholder="Don't overthink it — just write what comes to mind..."
             rows={3}
-            className="w-full bg-white/5 rounded-xl p-4 text-white placeholder-white/25 outline-none focus:bg-white/10 transition-all resize-none mb-4"
+            className="w-full bg-white/5 rounded-xl p-4 text-white placeholder-white/25 outline-none focus:bg-white/10 transition-all resize-none mb-4 text-base font-figtree"
           />
           <button
             onClick={handleSubmitInstinct}
             disabled={!instinct.trim()}
-            className="px-6 py-2.5 bg-primary text-white rounded-full text-sm font-semibold disabled:opacity-30 hover:bg-primary-hover transition-colors flex items-center gap-2 font-figtree"
+            className="px-6 py-2.5 bg-primary text-white rounded-full text-base font-semibold disabled:opacity-30 hover:bg-primary-hover transition-colors flex items-center gap-2 font-figtree"
           >
             See how this could land <ArrowRight size={14} />
           </button>
@@ -103,18 +113,18 @@ const Stage4 = ({ stageData, onComplete }) => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
             {/* Original */}
             <div className="rounded-xl bg-white/5 p-4 mb-6 shadow-sm font-figtree">
-              <p className="text-white/35 text-xs uppercase tracking-wider mb-2 font-figtree">What you said</p>
-              <p className="text-white/80 italic font-figtree">"{instinct}"</p>
+              <p className="text-white/35 text-sm uppercase tracking-wider mb-2 font-figtree">What you said</p>
+              <p className="text-white/80 text-base italic font-figtree">"{instinct}"</p>
             </div>
 
             {loadingRewrite ? (
               <div className="flex items-center gap-2 text-white/60 font-figtree">
                 <Loader2 size={14} className="animate-spin" />
-                <span className="text-sm">Finding better words...</span>
+                <span className="text-base font-figtree">Finding better words...</span>
               </div>
             ) : rewrite && (
               <div>
-                <p className="text-white/60 text-md mb-4">Here are three science-backed alternatives — tap one to practice with it:</p>
+                <p className="text-white/60 text-base mb-4 font-figtree">Here are three science-backed alternatives — tap one to practice with it:</p>
                 <div className="space-y-3 mb-6">
                   <PhraseCard
                     label="I-statement"
@@ -155,12 +165,12 @@ const Stage4 = ({ stageData, onComplete }) => {
                     className="bg-primary/10 rounded-xl p-4 mb-6 shadow-sm font-figtree"
                   >
                     <p className="text-accent text-sm mb-1 uppercase tracking-wider font-figtree">Your rehearsal template</p>
-                    <div className="text-white/90 text-sm leading-relaxed flex flex-wrap items-center gap-y-2 font-figtree">
+                    <div className="text-white/90 text-base leading-relaxed flex flex-wrap items-center gap-y-2 font-figtree">
                       {renderInteractivePhrase(rewrite[chosenPhrase], fillerValues, (idx, val) => {
                         setFillerValues(prev => ({ ...prev, [idx]: val }));
                       })}
                     </div>
-                    <p className="text-white/35 text-xs mt-3 font-figtree">Fill in the blanks with your own words as you practice.</p>
+                    <p className="text-white/35 text-sm mt-3 font-figtree">Fill in the blanks with your own words as you practice.</p>
                   </motion.div>
                 )}
               </div>
@@ -175,7 +185,7 @@ const Stage4 = ({ stageData, onComplete }) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             onClick={handleComplete}
-            className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover transition-all shadow-xl shadow-primary/20"
+            className="w-full py-4 bg-primary text-white rounded-2xl text-lg font-bold hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 font-figtree"
           >
             See the bigger picture →
           </motion.button>
@@ -202,7 +212,7 @@ const renderInteractivePhrase = (phrase, fillers, onChange) => {
           onChange={(e) => onChange(idx, e.target.value)}
           placeholder={part}
           style={{ width: `${Math.max(val.length || part.length, 4) + 2}ch` }}
-          className="bg-white/10 text-primary px-3 py-1 mx-1 focus:bg-white/15 outline-none transition-all placeholder-white/20 rounded-full text-sm font-medium shadow-inner"
+          className="bg-white/10 text-primary px-3 py-1 mx-1 focus:bg-white/15 outline-none transition-all placeholder-white/20 rounded-full text-base font-medium shadow-inner font-figtree"
         />
       );
     }
@@ -216,7 +226,7 @@ const renderPhrase = (phrase) => {
   return parts.map((part, i) => {
     if (part.startsWith('[') && part.endsWith(']')) {
       return (
-        <span key={i} className="px-2 py-0.5 rounded-full bg-white/10 text-primary mx-0.5 font-semibold text-xs shadow-sm">
+        <span key={i} className="px-2 py-0.5 rounded-full bg-white/10 text-primary mx-0.5 font-semibold text-sm shadow-sm">
           {part}
         </span>
       );
@@ -234,10 +244,10 @@ const PhraseCard = ({ label, sublabel, phrase, selected, onSelect }) => (
       }`}
   >
     <div className="flex items-baseline gap-2 mb-1 font-figtree">
-      <span className="text-md font-semibold uppercase tracking-wider text-accent font-figtree">{label}</span>
-      <span className="text-md text-white/30 font-figtree">{sublabel}</span>
+      <span className="text-base font-semibold uppercase tracking-wider text-accent font-figtree">{label}</span>
+      <span className="text-base text-white/30 font-figtree">{sublabel}</span>
     </div>
-    <div className="text-md leading-relaxed font-figtree">
+    <div className="text-base leading-relaxed font-figtree">
       "{renderPhrase(phrase)}"
     </div>
   </button>

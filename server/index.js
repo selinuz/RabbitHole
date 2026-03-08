@@ -49,22 +49,22 @@ app.post("/api/facilitator", async (req, res) => {
         Determine what information can already be inferred from this message. Return ONLY valid JSON (no markdown):
         {
           "lifeArea": "Work" | "Family" | "Friends" | "Relationship" | "Other" | null,
-          "feeling": "Anxious" | "Hurt" | "Frustrated" | "Hopeful" | "Confused" | "Overwhelmed" | "Nervous" | "Sad" | null,
+          "feeling": ["Anxious", "Hurt", "Frustrated", "Hopeful", "Confused", "Overwhelmed", "Nervous", "Sad"] (array of applicable values, or empty array [] if none are clear),
           "timeline": "I'm initiating it" | "Responding to something" | null,
           "importance": "It's everything right now" | "Really important" | "Somewhat important" | "I'm not sure yet" | null
         }
 
         Rules:
-        - Only set a value if it is clearly inferable from the message. If unsure, return null.
+        - Only set a value if it is clearly inferable from the message. If unsure, use null (or [] for feeling).
         - "lifeArea" examples: mention of boyfriend/girlfriend/partner/husband/wife → "Relationship", mention of boss/work/job/colleague → "Work", mention of mom/dad/sibling/family → "Family", mention of friend → "Friends"
-        - "feeling" examples: "scared", "worried" → "Anxious"; "upset", "betrayed" → "Hurt"; "annoyed", "angry" → "Frustrated"; "lost", "don't know" → "Confused"
+        - "feeling": can include multiple values — e.g. ["Anxious", "Overwhelmed"]. "scared", "worried" → "Anxious"; "upset", "betrayed" → "Hurt"; "annoyed", "angry" → "Frustrated"; "lost", "don't know" → "Confused". Only use exact strings from the allowed list.
         - "timeline": if they say "I need to tell", "I want to bring up", "I'm going to" → "I'm initiating it"; if they say "they said", "I need to respond", "they brought up" → "Responding to something"
-        - "importance": only infer if they use strong language like "need to", "can't go on", "urgent" → "It's everything right now"; otherwise null
+        - "importance": only infer if they use strong language like "need to", "can't go on", "urgent" → "It's everything right now"; otherwise null. Return EXACTLY one of the allowed strings or null — do not paraphrase.
       `);
 
       let inferred = {
         lifeArea: null,
-        feeling: null,
+        feeling: [],
         timeline: null,
         importance: null,
       };

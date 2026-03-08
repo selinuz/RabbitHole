@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2 } from "lucide-react";
+import { Loader2, ChevronLeft } from "lucide-react";
 
 const TONES = [
   { id: "gentle", label: "Gentle", desc: "Soft, easing in slowly" },
@@ -69,12 +69,12 @@ const FlipCard = ({ front, back, selected, flipped, onSelect, suitKey }) => {
           <div style={{ color: suitColor }}>{suit}</div>
           <div className="flex-1 flex flex-col justify-center gap-2 py-4">
             <span
-              className="text-xs font-bold leading-none"
+              className="text-sm font-bold leading-none font-figtree"
               style={{ color: suitColor }}>
               From their side
             </span>
             <p
-              className="text-sm leading-loose"
+              className="text-base leading-loose font-figtree"
               style={{ color: selected ? "rgba(255,255,255,0.9)" : "#5a3a3b" }}>
               {front}
             </p>
@@ -96,12 +96,12 @@ const FlipCard = ({ front, back, selected, flipped, onSelect, suitKey }) => {
           <div style={{ color: suitColor }}>{suit}</div>
           <div className="flex-1 flex flex-col justify-center gap-2 py-4">
             <span
-              className="text-xs font-bold leading-none"
+              className="text-sm font-bold leading-none font-figtree"
               style={{ color: suitColor }}>
               How this might affect them
             </span>
             <p
-              className="text-sm leading-loose"
+              className="text-base leading-loose font-figtree"
               style={{ color: selected ? "rgba(255,255,255,0.9)" : "#5a3a3b" }}>
               {back}
             </p>
@@ -115,7 +115,7 @@ const FlipCard = ({ front, back, selected, flipped, onSelect, suitKey }) => {
   );
 };
 
-const Stage3 = ({ stageData, onComplete }) => {
+const Stage3 = ({ stageData, onComplete, onBack }) => {
   const { initialInput, situation, preparation } = stageData;
   const [perspectives, setPerspectives] = useState([]);
   const [loadingPerspectives, setLoadingPerspectives] = useState(true);
@@ -171,19 +171,28 @@ const Stage3 = ({ stageData, onComplete }) => {
       exit={{ opacity: 0, y: -24 }}
       transition={{ duration: 0.5 }}
       className="glass-panel p-8 text-white">
-      <p className="text-white/40 text-xs uppercase tracking-widest mb-1">
+      <div className="flex items-center mb-6">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1 text-white/40 hover:text-white/70 text-base transition-colors font-figtree"
+        >
+          <ChevronLeft size={16} /> Back
+        </button>
+      </div>
+
+      <p className="text-white/40 text-sm uppercase tracking-widest mb-1 font-figtree">
         2nd Pillar · Open with Empathy
       </p>
-      <h2 className="text-3xl font-bold font-serif mb-2">Their perspective</h2>
-      <p className="text-white/50 text-sm mb-8">
+      <h2 className="text-3xl font-semibold font-serif mb-2">Their perspective</h2>
+      <p className="text-white/50 text-base mb-8 font-figtree">
         Which of these feels most like how they might be experiencing this?
       </p>
 
       {/* Perspective flip cards */}
       {loadingPerspectives ? (
-        <div className="flex items-center gap-2 text-white/60mb-8">
+        <div className="flex items-center gap-2 text-white/60 mb-8">
           <Loader2 size={14} className="animate-spin" />
-          <span className="text-sm">Thinking about their side...</span>
+          <span className="text-base font-figtree">Thinking about their side...</span>
         </div>
       ) : (
         <div
@@ -217,7 +226,7 @@ const Stage3 = ({ stageData, onComplete }) => {
 
       {/* Tone selector */}
       <div className="mb-8">
-        <p className="text-white/70 text-sm mb-4">
+        <p className="text-white/70 text-base mb-4 font-figtree">
           What tone feels right for opening?
         </p>
         <div className="grid grid-cols-3 gap-3">
@@ -225,13 +234,13 @@ const Stage3 = ({ stageData, onComplete }) => {
             <button
               key={tone.id}
               onClick={() => setSelectedTone(tone.id)}
-              className={`p-3 rounded-xl text-left transition-all duration-300 ${
+              className={`p-3 rounded-xl text-left transition-all duration-300 font-figtree ${
                 selectedTone === tone.id
                   ? "bg-primary text-white shadow-lg"
                   : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/80"
               }`}>
-              <p className="font-medium text-sm">{tone.label}</p>
-              <p className="text-xs mt-0.5 opacity-70">{tone.desc}</p>
+              <p className="font-semibold text-base">{tone.label}</p>
+              <p className="text-sm mt-0.5 opacity-70">{tone.desc}</p>
             </button>
           ))}
         </div>
@@ -239,7 +248,7 @@ const Stage3 = ({ stageData, onComplete }) => {
 
       {/* Emotion tags */}
       <div className="mb-8">
-        <p className="text-white/70 text-sm mb-4">
+        <p className="text-white/70 text-base mb-4 font-figtree">
           Which emotions do you want to carry into this conversation?{" "}
           <span className="text-white/30">(pick a few)</span>
         </p>
@@ -248,7 +257,7 @@ const Stage3 = ({ stageData, onComplete }) => {
             <button
               key={emotion}
               onClick={() => toggleEmotion(emotion)}
-              className={`px-3 py-1.5 rounded-full text-sm transition-all duration-300 ${
+              className={`px-3 py-1.5 rounded-full text-base transition-all duration-300 font-figtree ${
                 selectedEmotions.includes(emotion)
                   ? "bg-primary text-white shadow-md"
                   : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/80"
@@ -271,7 +280,7 @@ const Stage3 = ({ stageData, onComplete }) => {
                 perspective: perspectives[selectedPerspective].front,
               })
             }
-            className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover transition-all shadow-xl shadow-primary/20">
+            className="w-full py-4 bg-primary text-white rounded-2xl text-lg font-bold hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 font-figtree">
             Dig into the 3rd Pillar →
           </motion.button>
         )}
