@@ -13,21 +13,14 @@ const Stage0 = ({ onComplete }) => {
       exit={{ opacity: 0, y: -24 }}
       transition={{ duration: 0.6 }}
       className="glass-panel p-10 text-white text-center">
-      <h1 className="text-5xl font-bold mb-3 font-serif tracking-tight">
-        RabbitHole
-      </h1>
-      <p className="text-white/50 text-sm mb-12 tracking-widest uppercase">
-        A guide for difficult conversations
-      </p>
-
-      <p className="text-xl text-white/80 mb-6 font-light">
+      <p className="text-xl text-white/80 mb-6 font">
         What conversation is on your mind?
       </p>
 
       <textarea
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder="Write freely. No one is watching."
+        placeholder="Write freely."
         rows={5}
         className="w-full bg-transparent resize-none outline-none text-white placeholder-white/25 text-lg leading-relaxed border-b border-white/15 pb-4 focus:border-white/40 transition-colors duration-300"
       />
