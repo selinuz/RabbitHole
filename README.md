@@ -28,7 +28,7 @@ Rabbit Hole guides you through the following stages encompassing three pillars -
 | **Frontend** | React + Vite, Tailwind CSS, Framer Motion |
 | **Backend** | Node.js + Express (local dev), Vercel serverless functions (production) |
 | **AI** | Google Gemini 2.5 Flash via `@google/generative-ai` |
-| **Speech** | Web Speech API (browser-native) |
+| **Speech** | ElevenLabs API (text-to-speech & speech-to-text) |
 | **Deploy** | Vercel |
 
 ---
@@ -39,6 +39,7 @@ Rabbit Hole guides you through the following stages encompassing three pillars -
 
 - Node.js 18+
 - A [Google AI Studio](https://aistudio.google.com/) API key
+- An [ElevenLabs](https://elevenlabs.io/) API key (for text-to-speech and speech-to-text)
 
 ### Setup
 
@@ -46,8 +47,9 @@ Rabbit Hole guides you through the following stages encompassing three pillars -
 # Install all dependencies
 make install
 
-# Add your API key
+# Add your API keys
 echo "GEMINI_API_KEY=your_key_here" > server/.env
+echo "ELEVENLABS_API_KEY=your_key_here" >> server/.env
 ```
 
 ### Running locally
@@ -74,7 +76,7 @@ make build     # Build the frontend for production
 
 The project is configured for Vercel with `vercel.json`. The serverless API lives in `/api/facilitator.js`.
 
-Set `GEMINI_API_KEY` as an environment variable in your Vercel project settings.
+Set `GEMINI_API_KEY` and `ELEVENLABS_API_KEY` as environment variables in your Vercel project settings.
 
 ---
 
