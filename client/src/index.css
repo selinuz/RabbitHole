@@ -23,6 +23,13 @@
   --color-glow: rgba(212, 45, 45, 0.6);
 }
 
+button,
+input,
+textarea,
+select {
+  font-family: "Figtree", sans-serif;
+}
+
 body {
   margin: 0;
   display: flex;

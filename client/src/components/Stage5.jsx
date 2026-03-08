@@ -53,9 +53,9 @@ const Stage5 = ({ stageData, onRestart }) => {
     >
       <div className="text-center mb-10">
         <CheckCircle className="text-primary-hover w-10 h-10 mx-auto mb-4" />
-        <p className="text-white/40 text-xs uppercase tracking-widest mb-2">4th Pillar · The Bigger Picture</p>
+        <p className="text-white/60 text-xs uppercase tracking-widest mb-2 font-figtree">4th Pillar · The Bigger Picture</p>
         <h2 className="text-3xl font-bold font-serif mb-2">Your Conversation Compass</h2>
-        <p className="text-white/50 text-sm">Everything you've built — now in one view.</p>
+        <p className="text-white/50 text-sm font-figtree">Everything you've built — now in one view.</p>
       </div>
 
       {/* The 3 bases */}
@@ -68,15 +68,15 @@ const Stage5 = ({ stageData, onRestart }) => {
             transition={{ delay: i * 0.15, duration: 0.4 }}
             className={`rounded-2xl p-5 ${base.color}`}
           >
-            <div className="flex items-center gap-2 mb-3">
-              <span className={`text-xs font-bold ${base.labelColor}`}>BASE {base.number}</span>
-              <span className={`text-sm font-semibold ${base.labelColor}`}>· {base.label}</span>
+            <div className="flex items-center gap-2 mb-3 font-figtree">
+              <span className={`text-xs font-bold ${base.labelColor} font-figtree`}>BASE {base.number}</span>
+              <span className={`text-sm font-semibold ${base.labelColor} font-figtree`}>· {base.label}</span>
             </div>
             <div className="space-y-2">
               {base.items.map(item => (
-                <div key={item.key} className="flex items-baseline gap-3">
-                  <span className="text-white/30 text-xs w-28 shrink-0">{item.key}</span>
-                  <span className="text-white/85 text-sm leading-relaxed">{item.value}</span>
+                <div key={item.key} className="flex items-baseline gap-3 font-figtree">
+                  <span className="text-white/30 text-xs w-28 shrink-0 font-figtree">{item.key}</span>
+                  <span className="text-white/85 text-sm leading-relaxed font-figtree">{item.value}</span>
                 </div>
               ))}
             </div>
@@ -89,11 +89,11 @@ const Stage5 = ({ stageData, onRestart }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
-        className="rounded-2xl bg-white/[0.07] p-5 mb-8 shadow-sm"
+        className="rounded-2xl bg-white/[0.07] p-5 mb-8 shadow-sm font-figtree"
       >
-        <p className="text-white/40 text-xs uppercase tracking-widest mb-1">Base 4</p>
-        <p className="text-white/70 text-sm font-medium mb-3">The rest is in your hands.</p>
-        <p className="text-white/45 text-sm mb-4">Come back after the conversation and record how it went.</p>
+        <p className="text-white/60 text-xs uppercase tracking-widest mb-1 font-figtree">Base 4</p>
+        <p className="text-white/70 text-sm font-medium mb-3 font-figtree">The rest is in your hands.</p>
+        <p className="text-white/45 text-sm mb-4 font-figtree">Come back after the conversation and record how it went.</p>
 
         {!reflectionSaved ? (
           <>
@@ -117,7 +117,7 @@ const Stage5 = ({ stageData, onRestart }) => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-white/5 rounded-xl p-3 text-white/70 text-sm leading-relaxed"
+            className="bg-white/5 rounded-xl p-3 text-white/70 text-sm leading-relaxed font-figtree"
           >
             {reflection}
           </motion.div>
@@ -126,7 +126,7 @@ const Stage5 = ({ stageData, onRestart }) => {
 
       <button
         onClick={onRestart}
-        className="w-full py-2.5 text-white/40 hover:text-white/70 text-sm transition-colors underline underline-offset-4"
+        className="w-full py-2.5 text-white/60 hover:text-white/70 text-sm transition-colors underline underline-offset-4 font-figtree"
       >
         Start another dig
       </button>

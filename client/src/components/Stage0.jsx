@@ -110,11 +110,11 @@ const Stage0 = ({ onComplete }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -24 }}
       transition={{ duration: 0.6 }}
-      className="glass-panel p-5 text-white text-center shadow-2xl"
+      className="glass-panel p-8 text-white text-center shadow-2xl"
       style={{ backgroundColor: "rgba(0, 0, 0, 0.3)" }}>
-      <p className="text-xl text-white mb-8 font">
+      <h2 className="text-3xl font-medium font-serif mb-8">
         What conversation is on your mind right now?
-      </p>
+      </h2>
 
       <div className="space-y-6">
         <div className="relative group">
@@ -123,7 +123,7 @@ const Stage0 = ({ onComplete }) => {
             onChange={(e) => setValue(e.target.value)}
             placeholder="Type your thoughts here..."
             rows={4}
-            className="w-full bg-white/10 rounded-2xl p-4 text-white placeholder-white/40 text-lg leading-relaxed outline-none focus:bg-white/[0.15] transition-all duration-300 resize-none"
+            className="w-full bg-white/10 rounded-2xl p-4 text-white placeholder-white/60 text-lg leading-relaxed outline-none focus:bg-white/[0.15] transition-all duration-300 resize-none font-figtree"
           />
           {isRecording && (
             <motion.div
@@ -134,7 +134,7 @@ const Stage0 = ({ onComplete }) => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
               </span>
-              <span className="text-[10px] text-primary font-bold uppercase tracking-wider">
+              <span className="text-[10px] text-primary font-bold uppercase tracking-wider font-figtree">
                 Recording
               </span>
             </motion.div>
@@ -143,7 +143,7 @@ const Stage0 = ({ onComplete }) => {
 
         <div className="flex items-center gap-4 py-2">
           <div className="h-px bg-white/20 flex-1" />
-          <span className="text-white/40 text-[10px] uppercase tracking-[0.3em] font-bold">
+          <span className="text-white/60 text-[10px] uppercase tracking-[0.3em] font-bold">
             OR
           </span>
           <div className="h-px bg-white/20 flex-1" />
@@ -152,11 +152,10 @@ const Stage0 = ({ onComplete }) => {
         <div className="flex flex-col items-center gap-8">
           <button
             onClick={toggleRecording}
-            className={`group flex flex-col items-center gap-3 p-7 rounded-2xl transition-all duration-500 w-full max-w-[280px] ${
-              isRecording
-                ? "bg-primary/20 text-primary shadow-[0_0_40px_rgba(214,107,109,0.2)]"
-                : "bg-white/10 text-white/70 hover:text-white lg:hover:bg-white/15"
-            }`}>
+            className={`group flex flex-col items-center gap-3 p-7 rounded-2xl transition-all duration-500 w-full max-w-[280px] ${isRecording
+              ? "bg-primary/20 text-primary shadow-[0_0_40px_rgba(214,107,109,0.2)]"
+              : "bg-white/10 text-white/70 hover:text-white lg:hover:bg-white/15"
+              } font-figtree`}>
             <div
               className={`p-4 rounded-full transition-all duration-500 ${isRecording ? "bg-primary/30 text-primary" : "bg-white/10 text-white/50 group-hover:text-white"}`}>
               {isRecording ? (
@@ -170,7 +169,7 @@ const Stage0 = ({ onComplete }) => {
                 {isRecording ? "Listening to you..." : "Rant Out Loud"}
               </span>
               {!isRecording && (
-                <span className="text-[10px] text-white/40 font-medium">
+                <span className="text-[10px] text-white/60 font-medium">
                   Use your voice
                 </span>
               )}
@@ -189,7 +188,7 @@ const Stage0 = ({ onComplete }) => {
                     if (isRecording) recognitionRef.current.stop();
                     onComplete(value.trim());
                   }}
-                  className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-2xl shadow-primary/30 text-xl">
+                  className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-2xl shadow-primary/30 text-xl font-figtree">
                   Dive in →
                 </button>
               </motion.div>
@@ -197,8 +196,8 @@ const Stage0 = ({ onComplete }) => {
           </AnimatePresence>
 
           {!ready && wordCount > 0 && (
-            <p className="text-white/40 text-[10px] uppercase tracking-[0.2em] font-medium">
-              A few more words to find the depth...
+            <p className="text-white/60 text-[10px] font-medium">
+              A few more details please!
             </p>
           )}
         </div>

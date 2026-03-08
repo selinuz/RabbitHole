@@ -60,11 +60,10 @@ const PillGroup = ({ options, selected, onSelect }) => (
       <button
         key={opt}
         onClick={() => onSelect(opt)}
-        className={`px-4 py-2 rounded-full text-sm transition-all duration-200 ${
-          selected === opt
-            ? "bg-primary text-white"
-            : "bg-white/5 text-white/70 hover:text-white lg:hover:bg-white/10"
-        }`}>
+        className={`px-4 py-2 rounded-full text-sm transition-all duration-200 font-figtree ${selected === opt
+          ? "bg-primary text-white"
+          : "bg-white/5 text-white/70 hover:text-white lg:hover:bg-white/10"
+          }`}>
         {opt}
       </button>
     ))}
@@ -165,10 +164,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
       exit={{ opacity: 0, y: -24 }}
       transition={{ duration: 0.5 }}
       className="glass-panel p-8 text-white">
-      <p className="text-white/40 text-xs uppercase tracking-widest mb-1">
-        Figuring out the issue
-      </p>
-      <h2 className="text-3xl font-bold font-serif mb-8">
+      <h2 className="text-3xl font-medium font-serif mb-8">
         Let's understand the situation
       </h2>
 
@@ -188,7 +184,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.4 }}>
-            <p className="text-white/90 text-lg leading-snug">
+            <p className="text-white/90 text-lg font-normal leading-snug">
               {currentQuestion.id === "vent"
                 ? ventPrompt
                 : currentQuestion.text}
@@ -226,7 +222,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
             {/* Back button */}
             <button
               onClick={handleBack}
-              className="mt-6 text-white/35 text-sm hover:text-white/60 transition-colors">
+              className="mt-6 text-white/35 text-sm hover:text-white/60 transition-colors font-figtree">
               ← Back
             </button>
 
@@ -235,13 +231,12 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
               {activeQuestions.map((_, i) => (
                 <div
                   key={i}
-                  className={`h-1 rounded-full transition-all duration-300 ${
-                    i < currentQ
-                      ? "w-6 bg-primary-hover"
-                      : i === currentQ
-                        ? "w-6 bg-white/60"
-                        : "w-3 bg-white/15"
-                  }`}
+                  className={`h-1 rounded-full transition-all duration-300 ${i < currentQ
+                    ? "w-6 bg-primary-hover"
+                    : i === currentQ
+                      ? "w-6 bg-white/60"
+                      : "w-3 bg-white/15"
+                    }`}
                 />
               ))}
             </div>
@@ -345,7 +340,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}>
-            <p className="text-white/50 text-sm mb-4">
+            <p className="text-white text-md mb-4">
               Here's what I'm hearing:
             </p>
             <div className="bg-white/5 rounded-2xl p-6 space-y-3 mb-6">
@@ -355,8 +350,8 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
               <SummaryRow label="Importance" value={answers.importance} />
               {answers.vent && (
                 <div className="pt-3 border-t border-white/5">
-                  <p className="text-white/40 text-xs mb-1">What you shared</p>
-                  <p className="text-white/80 text-sm leading-relaxed">
+                  <p className="text-white/60 text-sm mb-1">What you shared</p>
+                  <p className="text-white/80 text-sm leading-relaxed font-figtree">
                     {answers.vent}
                   </p>
                 </div>
@@ -381,7 +376,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 onClick={() => onComplete(answers)}
-                className="w-full py-3 bg-primary text-white rounded-2xl font-semibold hover:bg-primary-hover transition-colors">
+                className="w-full py-3 bg-primary text-white rounded-2xl font-semibold hover:bg-primary-hover transition-colors font-figtree">
                 Dig into the 1st Pillar →
               </motion.button>
             )}
@@ -395,8 +390,8 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
 const SummaryRow = ({ label, value }) =>
   value ? (
     <div className="flex items-baseline gap-3">
-      <span className="text-white/35 text-xs w-28 shrink-0">{label}</span>
-      <span className="text-white/85 text-sm">{value}</span>
+      <span className="text-white/85 text-sm w-40 shrink-0">{label}</span>
+      <span className="text-white/100 text-sm">{value}</span>
     </div>
   ) : null;
 

@@ -15,9 +15,8 @@ const FlipCard = ({ front, back, selected, onSelect }) => {
 
   return (
     <div
-      className={`relative cursor-pointer transition-all duration-300 rounded-xl ${
-        selected ? 'bg-primary/5 scale-[1.02] shadow-2xl' : ''
-      }`}
+      className={`relative cursor-pointer transition-all duration-300 rounded-xl ${selected ? 'bg-primary/5 scale-[1.02] shadow-2xl' : ''
+        }`}
       style={{ perspective: 1000 }}
       onClick={(e) => {
         // If they click the "tap to flip" or the back, don't necessarily select
@@ -38,13 +37,12 @@ const FlipCard = ({ front, back, selected, onSelect }) => {
       >
         {/* Front */}
         <div
-          className={`rounded-xl p-4 transition-all duration-300 ${
-            selected ? 'bg-primary/20 shadow-lg' : 'bg-white/5'
-          }`}
+          className={`rounded-xl p-4 transition-all duration-300 ${selected ? 'bg-primary/20 shadow-lg' : 'bg-white/5'
+            }`}
           style={{ backfaceVisibility: 'hidden' }}
         >
           <div className="flex justify-between items-start mb-1">
-            <p className="text-white/40 text-xs">From their side</p>
+            <p className="text-white/60 text-xs">From their side</p>
             {selected && <div className="w-2 h-2 rounded-full bg-primary-hover shadow-[0_0_8px_var(--color-glow)]" />}
           </div>
           <p className="text-white/85 text-sm leading-relaxed">{front}</p>
@@ -55,9 +53,8 @@ const FlipCard = ({ front, back, selected, onSelect }) => {
 
         {/* Back */}
         <div
-          className={`absolute inset-0 rounded-xl p-4 transition-all duration-300 ${
-            selected ? 'bg-primary/30 shadow-lg' : 'bg-primary/10'
-          }`}
+          className={`absolute inset-0 rounded-xl p-4 transition-all duration-300 ${selected ? 'bg-primary/30 shadow-lg' : 'bg-primary/10'
+            }`}
           style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
         >
           <p className="text-accent text-xs mb-1">How this might affect them</p>
@@ -115,13 +112,12 @@ const Stage3 = ({ stageData, onComplete }) => {
       transition={{ duration: 0.5 }}
       className="glass-panel p-8 text-white"
     >
-      <p className="text-white/40 text-xs uppercase tracking-widest mb-1">2nd Pillar · Open with Empathy</p>
-      <h2 className="text-3xl font-bold font-serif mb-2">Their perspective</h2>
-      <p className="text-white/50 text-sm mb-8">Which of these feels most like how they might be experiencing this?</p>
+      <h2 className="text-3xl font-medium font-serif mb-2">Their perspective</h2>
+      <p className="text-white/80 text-md mt-8 mb-8">Which of these feels most like how they might be experiencing this?</p>
 
       {/* Perspective flip cards */}
       {loadingPerspectives ? (
-        <div className="flex items-center gap-2 text-white/40 mb-8">
+        <div className="flex items-center gap-2 text-white/60mb-8">
           <Loader2 size={14} className="animate-spin" />
           <span className="text-sm">Thinking about their side...</span>
         </div>
@@ -146,39 +142,37 @@ const Stage3 = ({ stageData, onComplete }) => {
       )}
 
       {/* Tone selector */}
-      <div className="mb-8">
-        <p className="text-white/70 text-sm mb-4">What tone feels right for opening?</p>
+      <div className="mb-8 font-figtree">
+        <p className="text-white/80 text-md mb-4 font-serif">What tone feels right for opening?</p>
         <div className="grid grid-cols-3 gap-3">
           {TONES.map(tone => (
             <button
               key={tone.id}
               onClick={() => setSelectedTone(tone.id)}
-              className={`p-3 rounded-xl text-left transition-all duration-300 ${
-                selectedTone === tone.id
-                  ? 'bg-primary text-white shadow-lg'
-                  : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/80'
-              }`}
+              className={`p-3 rounded-xl text-left transition-all duration-300 font-figtree ${selectedTone === tone.id
+                ? 'bg-primary text-white shadow-lg'
+                : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/80'
+                }`}
             >
-              <p className="font-medium text-sm">{tone.label}</p>
-              <p className="text-xs mt-0.5 opacity-70">{tone.desc}</p>
+              <p className="font-medium text-sm font-figtree">{tone.label}</p>
+              <p className="text-xs mt-0.5 opacity-70 font-figtree">{tone.desc}</p>
             </button>
           ))}
         </div>
       </div>
 
       {/* Emotion tags */}
-      <div className="mb-8">
-        <p className="text-white/70 text-sm mb-4">Which emotions do you want to carry into this conversation? <span className="text-white/30">(pick a few)</span></p>
+      <div className="mb-8 font-figtree">
+        <p className="text-white/70 text-sm mb-4 font-figtree">Which emotions do you want to carry into this conversation? <span className="text-white/30">(pick a few)</span></p>
         <div className="flex flex-wrap gap-2">
           {EMOTIONS.map(emotion => (
             <button
               key={emotion}
               onClick={() => toggleEmotion(emotion)}
-              className={`px-3 py-1.5 rounded-full text-sm transition-all duration-300 ${
-                selectedEmotions.includes(emotion)
-                  ? 'bg-primary text-white shadow-md'
-                  : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/80'
-              }`}
+              className={`px-3 py-1.5 rounded-full text-sm transition-all duration-300 ${selectedEmotions.includes(emotion)
+                ? 'bg-primary text-white shadow-md'
+                : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/80'
+                }`}
             >
               {emotion}
             </button>
@@ -196,9 +190,9 @@ const Stage3 = ({ stageData, onComplete }) => {
               emotions: selectedEmotions,
               perspective: perspectives[selectedPerspective].front
             })}
-            className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover transition-all shadow-xl shadow-primary/20"
+            className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover transition-all shadow-xl shadow-primary/20 font-figtree"
           >
-            Dig into the 3rd Pillar →
+            Dig deeper →
           </motion.button>
         )}
       </AnimatePresence>
