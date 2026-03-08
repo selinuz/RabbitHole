@@ -157,22 +157,58 @@ const SpeakerButton = ({ panelRef }) => {
 
     if (!panelRef.current) return;
 
-    // Clone the panel so we can inject placeholder text without mutating the DOM
-    const clone = panelRef.current.cloneNode(true);
-    clone.querySelectorAll("textarea, input[type='text']").forEach((el) => {
-      const value = el.value?.trim();
-      const placeholder = el.placeholder?.trim();
-      if (!value && placeholder) {
-        // Replace the element with a text node so innerText picks it up
-        const textNode = document.createTextNode(placeholder + ". ");
-        el.replaceWith(textNode);
-      } else if (value) {
-        const textNode = document.createTextNode(value + ". ");
-        el.replaceWith(textNode);
-      }
-    });
+    const BLOCK_TAGS = new Set([
+      "DIV", "P", "H1", "H2", "H3", "H4", "H5", "H6",
+      "LI", "TR", "TD", "TH", "SECTION", "ARTICLE", "HEADER",
+      "FOOTER", "BLOCKQUOTE", "LABEL", "SPAN",
+    ]);
 
-    const text = clone.innerText?.trim();
+    const extractText = (node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return node.textContent;
+      }
+
+      if (node.nodeType !== Node.ELEMENT_NODE) return "";
+
+      const tag = node.tagName;
+
+      // Replace inputs/textareas with their value or placeholder
+      if (tag === "TEXTAREA" || tag === "INPUT") {
+        const val = node.value?.trim();
+        const ph = node.placeholder?.trim();
+        return (val || ph || "") + ". ";
+      }
+
+      // Skip SVGs entirely
+      if (tag === "SVG" || tag === "svg") return "";
+
+      // Skip navigation/action buttons (Back, Continue, →, etc.) but read option buttons
+      if (tag === "BUTTON") {
+        const btnText = node.textContent?.trim() ?? "";
+        // Short action words or arrow-only buttons are navigation — skip them
+        const isNavButton = /^(←|→|back|continue|save|cancel|that'?s right|let me adjust|dive in|dig (in|deeper)|see how|see the bigger picture|add your own)/i.test(btnText);
+        if (isNavButton) return "";
+        // Otherwise it's an option pill — read it as a list item
+        return btnText + ". ";
+      }
+
+      let inner = "";
+      for (const child of node.childNodes) {
+        inner += extractText(child);
+      }
+
+      // After block-level elements, ensure a sentence break
+      if (BLOCK_TAGS.has(tag)) {
+        const trimmed = inner.trim();
+        if (!trimmed) return "";
+        // Add ". " if doesn't already end with sentence-ending punctuation
+        return trimmed.match(/[.!?]$/) ? trimmed + " " : trimmed + ". ";
+      }
+
+      return inner;
+    };
+
+    const text = extractText(panelRef.current).replace(/\.\s*\.\s*/g, ". ").replace(/\s{2,}/g, " ").trim();
     if (!text) return;
 
     setStatus("loading");
