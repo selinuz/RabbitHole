@@ -124,6 +124,7 @@ function App() {
               <Stage2
                 stageData={stageData}
                 onComplete={(preparation) => advanceTo(3, { preparation })}
+                onBack={goBack}
               />
             </motion.div>
           )}
@@ -137,6 +138,7 @@ function App() {
               <Stage3
                 stageData={stageData}
                 onComplete={(empathy) => advanceTo(4, { empathy })}
+                onBack={goBack}
               />
             </motion.div>
           )}
@@ -150,6 +152,7 @@ function App() {
               <Stage4
                 stageData={stageData}
                 onComplete={(phrasing) => advanceTo(5, { phrasing })}
+                onBack={goBack}
               />
             </motion.div>
           )}
@@ -162,6 +165,7 @@ function App() {
               transition={{ duration: 0.4 }}>
               <Stage5
                 stageData={stageData}
+                onBack={goBack}
                 onRestart={() => {
                   setStageData({
                     initialInput: "",

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ChevronLeft } from 'lucide-react';
 
-const Stage2 = ({ stageData, onComplete }) => {
+const Stage2 = ({ stageData, onComplete, onBack }) => {
   const { initialInput, situation } = stageData;
   const [coreIssue, setCoreIssue] = useState('');
   const [loadingIssue, setLoadingIssue] = useState(true);
@@ -45,6 +45,15 @@ const Stage2 = ({ stageData, onComplete }) => {
       transition={{ duration: 0.5 }}
       className="glass-panel p-8 text-white"
     >
+      <div className="flex items-center mb-6">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1 text-white/40 hover:text-white/70 text-sm transition-colors"
+        >
+          <ChevronLeft size={16} /> Back
+        </button>
+      </div>
+
       <p className="text-white/40 text-xs uppercase tracking-widest mb-1">1st Pillar · Preparation</p>
       <h2 className="text-3xl font-bold font-serif mb-2">Mapping the situation</h2>
       <p className="text-white/50 text-sm mb-8">Before walking in, you need to know what you're carrying.</p>

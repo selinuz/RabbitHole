@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2 } from "lucide-react";
+import { Loader2, ChevronLeft } from "lucide-react";
 
 const TONES = [
   { id: "gentle", label: "Gentle", desc: "Soft, easing in slowly" },
@@ -114,7 +114,7 @@ const FlipCard = ({ front, back, selected, flipped, onSelect, suitKey }) => {
   );
 };
 
-const Stage3 = ({ stageData, onComplete }) => {
+const Stage3 = ({ stageData, onComplete, onBack }) => {
   const { initialInput, situation, preparation } = stageData;
   const [perspectives, setPerspectives] = useState([]);
   const [loadingPerspectives, setLoadingPerspectives] = useState(true);
@@ -170,6 +170,15 @@ const Stage3 = ({ stageData, onComplete }) => {
       exit={{ opacity: 0, y: -24 }}
       transition={{ duration: 0.5 }}
       className="glass-panel p-8 text-white">
+      <div className="flex items-center mb-6">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1 text-white/40 hover:text-white/70 text-sm transition-colors"
+        >
+          <ChevronLeft size={16} /> Back
+        </button>
+      </div>
+
       <p className="text-white/40 text-xs uppercase tracking-widest mb-1">
         2nd Pillar · Open with Empathy
       </p>
