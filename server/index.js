@@ -250,6 +250,36 @@ app.post("/api/facilitator", async (req, res) => {
       return res.json({ rewrite });
     }
 
+    // Stage: Extract blank values from a spoken transcript given a template
+    if (stage === "extractBlanks") {
+      const { transcript, template } = JSON.parse(message);
+      const blanks = (template.match(/\[.*?\]/g) || []);
+      const result = await model.generateContent(`
+        You are helping fill in blanks in a sentence template based on what someone said aloud.
+
+        Template: "${template}"
+        What the person said: "${transcript}"
+
+        The template has ${blanks.length} blank(s): ${blanks.join(", ")}
+
+        Extract only the words that fill each blank from what the person said. Ignore any template words they repeated.
+
+        Return ONLY valid JSON (no markdown), an array of strings in order:
+        { "fillers": ["value for blank 1", "value for blank 2", ...] }
+
+        If a blank cannot be filled from what was said, use an empty string "".
+      `);
+
+      let fillers = blanks.map(() => "");
+      try {
+        const text = result.response.text().trim();
+        const cleaned = text.replace(/```json|```/g, "").trim();
+        fillers = JSON.parse(cleaned).fillers || fillers;
+      } catch { /* use empty fallback */ }
+
+      return res.json({ fillers });
+    }
+
     res.status(400).json({ error: "Unknown stage." });
   } catch (error) {
     console.error(error);
