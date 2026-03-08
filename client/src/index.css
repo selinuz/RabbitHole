@@ -36,21 +36,9 @@ body {
   }
 }
 
-/* Legacy gradient — kept as fallback if background image is absent */
-.rabbit-hole-bg {
-  background: linear-gradient(
-    to bottom,
-    #e8f5e9 0%,
-    #4a4a4a 40%,
-    #2c2c2c 70%,
-    #1a1a1a 100%
-  );
-}
-
 /* Alice in Wonderland inspired glassmorphism */
 .glass-panel {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
 }

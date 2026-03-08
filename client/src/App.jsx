@@ -50,19 +50,27 @@ function App() {
         }}
       />
 
-      {/* Progress dots */}
-      {stage > 0 && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 flex gap-2 z-50">
-          {[1, 2, 3, 4, 5].map((s) => (
-            <div
-              key={s}
-              className={`h-1.5 rounded-full transition-all duration-500 ${
-                stage >= s ? "w-8 bg-teal-400" : "w-3 bg-white/20"
-              }`}
-            />
-          ))}
-        </div>
-      )}
+      {/* Progress sidebar */}
+      <div className="fixed right-6 top-1/2 -translate-y-1/2 flex flex-col gap-5 z-50 items-center">
+        {[1, 2, 3, 4, 5].map((s) => (
+          <div key={s} className="relative flex items-center justify-center">
+            {stage === s || (stage === 0 && s === 1) ? (
+              <img
+                src="/rabbit.png"
+                alt="current step"
+                className="w-6 h-9 select-none"
+                style={{ filter: "drop-shadow(0 0 4px rgba(0,0,0,0.6))" }}
+              />
+            ) : (
+              <div
+                className={`w-5 h-5 rounded-full transition-all duration-500 ${
+                  stage > s ? "bg-teal-400" : "bg-white/20"
+                }`}
+              />
+            )}
+          </div>
+        ))}
+      </div>
 
       {/* Single stage shown at a time, fades in/out */}
       <div className="max-w-2xl w-full relative z-10">
