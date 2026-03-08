@@ -47,7 +47,7 @@ const Stage0 = ({ onComplete }) => {
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3 }}
               onClick={() => onComplete(value.trim())}
-              className="bg-white text-gray-900 px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-teal-50 transition-colors">
+              className="bg-white text-gray-900 px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-accent/20 transition-colors">
               Dive in
             </motion.button>
           )}

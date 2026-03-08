@@ -58,9 +58,9 @@ const Stage2 = ({ stageData, onComplete }) => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="rounded-2xl border border-teal-400/30 bg-teal-500/10 p-5"
+              className="rounded-2xl border border-primary-hover/30 bg-primary/10 p-5"
             >
-              <p className="text-teal-300 text-xs uppercase tracking-widest mb-2">Core Issue</p>
+              <p className="text-accent text-xs uppercase tracking-widest mb-2">Core Issue</p>
               {loadingIssue ? (
                 <div className="flex items-center gap-2 text-white/40">
                   <Loader2 size={14} className="animate-spin" />
@@ -129,7 +129,7 @@ const Stage2 = ({ stageData, onComplete }) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             onClick={() => onComplete({ coreIssue, goal: goal.trim(), outcome: outcome.trim() })}
-            className="mt-8 w-full py-3 bg-teal-500 text-white rounded-2xl font-semibold hover:bg-teal-400 transition-colors"
+            className="mt-8 w-full py-3 bg-primary text-white rounded-2xl font-semibold hover:bg-primary-hover transition-colors"
           >
             Dig into the 2nd Pillar →
           </motion.button>

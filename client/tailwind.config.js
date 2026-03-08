@@ -4,14 +4,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: {
-          deep: "#1a1a1a",
-          surface: "#f5f5f5",
-        },
-        primary: {
-          soft: "#e0f2f1",
-          accent: "#b2dfdb",
-        },
+        primary: "var(--color-primary)",
+        "primary-hover": "var(--color-primary-hover)",
+        accent: "var(--color-accent)",
+        surface: "var(--color-surface)",
+        border: "var(--color-border)",
       },
       backgroundImage: {
         "rabbit-hole":

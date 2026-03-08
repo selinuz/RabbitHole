@@ -11,8 +11,8 @@ const Stage5 = ({ stageData, onRestart }) => {
     {
       number: '1',
       label: 'Core Needs',
-      color: 'border-teal-400/40 bg-teal-500/10',
-      labelColor: 'text-teal-300',
+      color: 'border-primary-hover/40 bg-primary/10',
+      labelColor: 'text-accent',
       items: [
         preparation.coreIssue && { key: 'The issue', value: preparation.coreIssue },
         preparation.goal && { key: 'Your goal', value: preparation.goal },
@@ -52,7 +52,7 @@ const Stage5 = ({ stageData, onRestart }) => {
       className="glass-panel p-8 text-white"
     >
       <div className="text-center mb-10">
-        <CheckCircle className="text-teal-400 w-10 h-10 mx-auto mb-4" />
+        <CheckCircle className="text-primary-hover w-10 h-10 mx-auto mb-4" />
         <p className="text-white/40 text-xs uppercase tracking-widest mb-2">4th Pillar · The Bigger Picture</p>
         <h2 className="text-3xl font-bold font-serif mb-2">Your Conversation Compass</h2>
         <p className="text-white/50 text-sm">Everything you've built — now in one view.</p>

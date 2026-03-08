@@ -11,6 +11,17 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* === Theme === */
+  --color-bg: #0d1117;
+  --color-primary: #14b8a6; /* teal-500 — buttons, active states */
+  --color-primary-hover: #2dd4bf; /* teal-400 — hover */
+  --color-accent: #5eead4; /* teal-300 — highlights, labels */
+  --color-text: #ffffff;
+  --color-surface: rgba(255, 255, 255, 0.05);
+  --color-border: rgba(255, 255, 255, 0.15);
+  --color-overlay: rgba(0, 0, 0, 0.4);
+  --color-glow: rgba(45, 212, 191, 0.6);
 }
 
 body {
@@ -38,7 +49,7 @@ body {
 
 /* Alice in Wonderland inspired glassmorphism */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--color-surface);
   backdrop-filter: blur(10px);
   border-radius: 20px;
 }

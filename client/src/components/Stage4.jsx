@@ -91,7 +91,7 @@ const Stage4 = ({ stageData, onComplete }) => {
           <button
             onClick={handleSubmitInstinct}
             disabled={!instinct.trim()}
-            className="px-6 py-2.5 bg-teal-500 text-white rounded-full text-sm font-semibold disabled:opacity-30 hover:bg-teal-400 transition-colors flex items-center gap-2"
+            className="px-6 py-2.5 bg-primary text-white rounded-full text-sm font-semibold disabled:opacity-30 hover:bg-primary-hover transition-colors flex items-center gap-2"
           >
             See how this could land <ArrowRight size={14} />
           </button>
@@ -153,9 +153,9 @@ const Stage4 = ({ stageData, onComplete }) => {
                   <motion.div
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-teal-500/10 border border-teal-400/30 rounded-xl p-4 mb-6"
+                    className="bg-primary/10 border border-primary-hover/30 rounded-xl p-4 mb-6"
                   >
-                    <p className="text-teal-300 text-xs mb-1 uppercase tracking-wider">Your rehearsal template</p>
+                    <p className="text-accent text-xs mb-1 uppercase tracking-wider">Your rehearsal template</p>
                     <div className="text-white/90 text-sm leading-relaxed flex flex-wrap items-center gap-y-2">
                       {renderInteractivePhrase(rewrite[chosenPhrase], fillerValues, (idx, val) => {
                         setFillerValues(prev => ({ ...prev, [idx]: val }));
@@ -176,7 +176,7 @@ const Stage4 = ({ stageData, onComplete }) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             onClick={handleComplete}
-            className="w-full py-3 bg-teal-500 text-white rounded-2xl font-semibold hover:bg-teal-400 transition-colors"
+            className="w-full py-3 bg-primary text-white rounded-2xl font-semibold hover:bg-primary-hover transition-colors"
           >
             See the bigger picture →
           </motion.button>
@@ -203,7 +203,7 @@ const renderInteractivePhrase = (phrase, fillers, onChange) => {
           onChange={(e) => onChange(idx, e.target.value)}
           placeholder={part}
           style={{ width: `${Math.max(val.length || part.length, 4) + 2}ch` }}
-          className="bg-white/10 text-teal-300 border-b border-white/20 px-2 py-0.5 mx-1 focus:border-teal-400 outline-none transition-all placeholder-white/20 rounded-t"
+          className="bg-white/10 text-accent border-b border-white/20 px-2 py-0.5 mx-1 focus:border-primary-hover outline-none transition-all placeholder-white/20 rounded-t"
         />
       );
     }
@@ -217,7 +217,7 @@ const renderPhrase = (phrase) => {
   return parts.map((part, i) => {
     if (part.startsWith('[') && part.endsWith(']')) {
       return (
-        <span key={i} className="px-1.5 py-0.5 rounded bg-white/10 text-teal-300 border border-white/10 mx-0.5 font-medium">
+        <span key={i} className="px-1.5 py-0.5 rounded bg-white/10 text-accent border border-white/10 mx-0.5 font-medium">
           {part}
         </span>
       );
@@ -231,12 +231,12 @@ const PhraseCard = ({ label, sublabel, phrase, selected, onSelect }) => (
     onClick={onSelect}
     className={`w-full text-left rounded-xl border p-4 transition-all ${
       selected
-        ? 'border-teal-400 bg-teal-500/15 text-white'
+        ? 'border-primary-hover bg-primary/15 text-white'
         : 'border-white/15 bg-white/5 text-white/75 hover:border-white/30'
     }`}
   >
     <div className="flex items-baseline gap-2 mb-1">
-      <span className="text-xs font-semibold uppercase tracking-wider text-teal-300">{label}</span>
+      <span className="text-xs font-semibold uppercase tracking-wider text-accent">{label}</span>
       <span className="text-xs text-white/30">{sublabel}</span>
     </div>
     <div className="text-sm leading-relaxed">

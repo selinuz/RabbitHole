@@ -46,7 +46,7 @@ function App() {
         className="fixed inset-0 pointer-events-none"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%)",
+            "linear-gradient(to bottom, transparent 0%, var(--color-overlay) 100%)",
         }}
       />
 
@@ -59,12 +59,12 @@ function App() {
                 src="/rabbit.png"
                 alt="current step"
                 className="w-6 h-9 select-none"
-                style={{ filter: "drop-shadow(0 0 4px rgba(0,0,0,0.6))" }}
+                style={{ filter: "drop-shadow(0 0 4px var(--color-black-60, rgba(0,0,0,0.6)))" }}
               />
             ) : (
               <div
                 className={`w-5 h-5 rounded-full transition-all duration-500 ${
-                  stage > s ? "bg-teal-400" : "bg-white/20"
+                  stage > s ? "bg-primary-hover" : "bg-white/20"
                 }`}
               />
             )}
