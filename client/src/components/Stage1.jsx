@@ -267,12 +267,12 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
               {currentQuestion.multi && (
                 isFeelingQuestion ? totalSelected.length > 0 : (Array.isArray(answers[currentQuestion.id]) && answers[currentQuestion.id].length > 0)
               ) && (
-                <button
-                  onClick={() => setCurrentQ((q) => q + 1)}
-                  className="px-5 py-2.5 bg-primary text-black/80 rounded-full text-base font-semibold hover:bg-primary-hover transition-colors font-figtree">
-                  Continue →
-                </button>
-              )}
+                  <button
+                    onClick={() => setCurrentQ((q) => q + 1)}
+                    className="px-5 py-2.5 bg-primary text-black/80 rounded-full text-base font-semibold hover:bg-primary-hover transition-colors font-figtree">
+                    Continue →
+                  </button>
+                )}
               <button
                 onClick={handleBack}
                 className="text-black/80 text-base hover:text-black/60 transition-colors font-figtree">
@@ -418,7 +418,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
               <div className="flex gap-3">
                 <button
                   onClick={() => setSummaryConfirmed(true)}
-                  className="px-5 py-2.5 bg-primary text-black/80 rounded-full text-base font-semibold hover:bg-primary-hover transition-all shadow-lg shadow-primary/10 font-figtree">
+                  className="px-5 py-2.5 bg-primary text-white rounded-full text-base font-semibold hover:bg-primary-hover transition-all shadow-lg shadow-primary/10 font-figtree">
                   That's right
                 </button>
                 <button
@@ -432,7 +432,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 onClick={() => onComplete(buildFinalAnswers())}
-                className="w-full py-3 bg-primary text-black/80 rounded-2xl text-lg font-semibold hover:bg-primary-hover transition-colors font-figtree">
+                className="w-full py-3 bg-primary text-white rounded-2xl text-lg font-semibold hover:bg-primary-hover transition-colors font-figtree">
                 Dig into the 1st Pillar →
               </motion.button>
             )}

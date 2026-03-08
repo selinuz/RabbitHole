@@ -177,14 +177,6 @@ function App() {
         backgroundRepeat: "no-repeat",
         transition: "background-position 1s ease-in-out",
       }}>
-      {/* Dark overlay */}
-      <div
-        className="fixed inset-0 pointer-events-none"
-        style={{
-          background:
-            "linear-gradient(to bottom, transparent 0%, var(--color-overlay) 100%)",
-        }}
-      />
 
       {/* Progress sidebar */}
       <div className="fixed right-6 top-1/2 -translate-y-1/2 flex flex-col gap-5 z-50 items-center">
@@ -202,9 +194,8 @@ function App() {
               />
             ) : (
               <div
-                className={`w-5 h-5 rounded-full transition-all duration-500 ${
-                  stage > s ? "bg-primary-hover" : "bg-white/20"
-                }`}
+                className={`w-5 h-5 rounded-full transition-all duration-500 ${stage > s ? "bg-primary-hover" : "bg-white/20"
+                  }`}
               />
             )}
           </div>
