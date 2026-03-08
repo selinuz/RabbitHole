@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Loader2, CheckCircle, ChevronUp } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Send, Loader2, ChevronDown } from "lucide-react";
 
 const Facilitator = ({ stage, initialTheme, onComplete }) => {
   const [messages, setMessages] = useState([]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [completed, setCompleted] = useState(false);
 
@@ -13,24 +13,26 @@ const Facilitator = ({ stage, initialTheme, onComplete }) => {
     const initFacilitator = async () => {
       setLoading(true);
       try {
-        const response = await fetch('/api/facilitator', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const response = await fetch("/api/facilitator", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            message: initialTheme ? `I've started with this context: ${initialTheme}` : "Let's start the preparation.",
+            message: initialTheme
+              ? `I've started with this context: ${initialTheme}`
+              : "Let's start the preparation.",
             history: [],
-            stage: stage
+            stage: stage,
           }),
         });
         const data = await response.json();
-        setMessages([{ role: 'assistant', content: data.reply }]);
+        setMessages([{ role: "assistant", content: data.reply }]);
       } catch (error) {
         console.error(error);
       } finally {
         setLoading(false);
       }
     };
-    
+
     if (messages.length === 0) {
       initFacilitator();
     }
@@ -39,27 +41,30 @@ const Facilitator = ({ stage, initialTheme, onComplete }) => {
   const handleSend = async () => {
     if (!inputValue.trim() || loading) return;
 
-    const newMessages = [...messages, { role: 'user', content: inputValue }];
+    const newMessages = [...messages, { role: "user", content: inputValue }];
     setMessages(newMessages);
-    setInputValue('');
+    setInputValue("");
     setLoading(true);
 
     try {
-      const response = await fetch('/api/facilitator', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/facilitator", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: inputValue,
           history: newMessages,
-          stage: stage
+          stage: stage,
         }),
       });
       const data = await response.json();
-      
-      setMessages([...newMessages, { role: 'assistant', content: data.reply }]);
 
-      // Simple completion heuristic: If AI says "Climb higher" or "next stage"
-      if (data.reply.toLowerCase().includes("climb higher") || data.reply.toLowerCase().includes("next stage")) {
+      setMessages([...newMessages, { role: "assistant", content: data.reply }]);
+
+      // Simple completion heuristic: If AI says "dig deeper" or "next stage"
+      if (
+        data.reply.toLowerCase().includes("dig deeper") ||
+        data.reply.toLowerCase().includes("next stage")
+      ) {
         setCompleted(true);
       }
     } catch (error) {
@@ -76,17 +81,15 @@ const Facilitator = ({ stage, initialTheme, onComplete }) => {
           {messages.map((msg, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, x: msg.role === 'user' ? 20 : -20 }}
+              initial={{ opacity: 0, x: msg.role === "user" ? 20 : -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
-              <div 
+              className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div
                 className={`max-w-[85%] p-4 rounded-2xl ${
-                  msg.role === 'user' 
-                    ? 'bg-teal-600 text-white rounded-tr-none' 
-                    : 'bg-white/10 text-white rounded-tl-none border border-white/10'
-                }`}
-              >
+                  msg.role === "user"
+                    ? "bg-teal-600 text-white rounded-tr-none"
+                    : "bg-white/10 text-white rounded-tl-none border border-white/10"
+                }`}>
                 {msg.content}
               </div>
             </motion.div>
@@ -95,8 +98,7 @@ const Facilitator = ({ stage, initialTheme, onComplete }) => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex justify-start"
-            >
+              className="flex justify-start">
               <div className="bg-white/10 p-4 rounded-2xl rounded-tl-none border border-white/10">
                 <Loader2 className="animate-spin text-teal-400" />
               </div>
@@ -111,9 +113,8 @@ const Facilitator = ({ stage, initialTheme, onComplete }) => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             onClick={onComplete}
-            className="w-full p-4 bg-teal-500 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-teal-400 transition-all shadow-lg"
-          >
-            Climb higher <ChevronUp />
+            className="w-full p-4 bg-teal-500 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-teal-400 transition-all shadow-lg">
+            Dig deeper <ChevronDown />
           </motion.button>
         ) : (
           <>
@@ -121,15 +122,14 @@ const Facilitator = ({ stage, initialTheme, onComplete }) => {
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
               placeholder="Reflect here..."
               className="w-full p-4 bg-white/5 border border-white/20 rounded-2xl text-white outline-none focus:ring-2 focus:ring-teal-400/50 pr-12 transition-all"
             />
             <button
               onClick={handleSend}
               disabled={loading || !inputValue.trim()}
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-teal-500 rounded-xl text-white hover:bg-teal-400 disabled:opacity-50 transition-all"
-            >
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-teal-500 rounded-xl text-white hover:bg-teal-400 disabled:opacity-50 transition-all">
               <Send size={20} />
             </button>
           </>

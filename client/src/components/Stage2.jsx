@@ -131,7 +131,7 @@ const Stage2 = ({ stageData, onComplete }) => {
             onClick={() => onComplete({ coreIssue, goal: goal.trim(), outcome: outcome.trim() })}
             className="mt-8 w-full py-3 bg-teal-500 text-white rounded-2xl font-semibold hover:bg-teal-400 transition-colors"
           >
-            Climb to the 2nd Pillar →
+            Dig into the 2nd Pillar →
           </motion.button>
         )}
       </AnimatePresence>

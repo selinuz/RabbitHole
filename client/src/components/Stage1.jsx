@@ -148,7 +148,10 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
   };
 
   const saveAdjust = () => {
-    setAnswers({ ...draftAnswers, vent: draftText.trim() || draftAnswers.vent });
+    setAnswers({
+      ...draftAnswers,
+      vent: draftText.trim() || draftAnswers.vent,
+    });
     setAdjusting(false);
   };
 
@@ -265,7 +268,9 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 <PillGroup
                   options={LIFE_AREAS}
                   selected={draftAnswers.lifeArea}
-                  onSelect={(v) => setDraftAnswers((p) => ({ ...p, lifeArea: v }))}
+                  onSelect={(v) =>
+                    setDraftAnswers((p) => ({ ...p, lifeArea: v }))
+                  }
                 />
               </div>
               <div>
@@ -275,7 +280,9 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 <PillGroup
                   options={FEELINGS}
                   selected={draftAnswers.feeling}
-                  onSelect={(v) => setDraftAnswers((p) => ({ ...p, feeling: v }))}
+                  onSelect={(v) =>
+                    setDraftAnswers((p) => ({ ...p, feeling: v }))
+                  }
                 />
               </div>
               <div>
@@ -285,7 +292,9 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 <PillGroup
                   options={TIMELINES}
                   selected={draftAnswers.timeline}
-                  onSelect={(v) => setDraftAnswers((p) => ({ ...p, timeline: v }))}
+                  onSelect={(v) =>
+                    setDraftAnswers((p) => ({ ...p, timeline: v }))
+                  }
                 />
               </div>
               <div>
@@ -295,7 +304,9 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 <PillGroup
                   options={IMPORTANCE}
                   selected={draftAnswers.importance}
-                  onSelect={(v) => setDraftAnswers((p) => ({ ...p, importance: v }))}
+                  onSelect={(v) =>
+                    setDraftAnswers((p) => ({ ...p, importance: v }))
+                  }
                 />
               </div>
               <div>
@@ -371,7 +382,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 animate={{ opacity: 1, scale: 1 }}
                 onClick={() => onComplete(answers)}
                 className="w-full py-3 bg-teal-500 text-white rounded-2xl font-semibold hover:bg-teal-400 transition-colors">
-                Climb to the 1st Pillar →
+                Dig into the 1st Pillar →
               </motion.button>
             )}
           </motion.div>

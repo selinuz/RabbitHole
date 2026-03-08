@@ -128,7 +128,7 @@ const Stage5 = ({ stageData, onRestart }) => {
         onClick={onRestart}
         className="w-full py-2.5 text-white/40 hover:text-white/70 text-sm transition-colors underline underline-offset-4"
       >
-        Start another climb
+        Start another dig
       </button>
     </motion.div>
   );

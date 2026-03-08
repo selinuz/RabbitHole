@@ -198,7 +198,7 @@ const Stage3 = ({ stageData, onComplete }) => {
             })}
             className="w-full py-3 bg-teal-500 text-white rounded-2xl font-semibold hover:bg-teal-400 transition-colors"
           >
-            Climb to the 3rd Pillar →
+            Dig into the 3rd Pillar →
           </motion.button>
         )}
       </AnimatePresence>
