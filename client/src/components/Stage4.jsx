@@ -9,6 +9,7 @@ const Stage4 = ({ stageData, onComplete }) => {
   const [rewrite, setRewrite] = useState(null);
   const [loadingRewrite, setLoadingRewrite] = useState(false);
   const [chosenPhrase, setChosenPhrase] = useState(null);
+  const [fillerValues, setFillerValues] = useState({});
 
   const handleSubmitInstinct = async () => {
     if (!instinct.trim()) return;
@@ -31,13 +32,35 @@ const Stage4 = ({ stageData, onComplete }) => {
       setRewrite(data.rewrite || null);
     } catch {
       setRewrite({
-        iStatement: `I feel ${situation.feeling?.toLowerCase() || 'affected'} when this happens, and I'd like us to talk about it.`,
-        gottman: `I've been thinking about something important to me. Can we find a moment to talk?`,
-        framing: `I want us to be on the same page about this — I think there's something worth understanding together.`,
+        iStatement: `I feel [emotion] when [behavior] happens because [impact], and I'd like to talk about it.`,
+        gottman: `I've been thinking about [topic] and how it's affecting me. Can we find a moment to talk about [goal]?`,
+        framing: `I want us to be on the same page about [issue] — I think there's [something worth understanding] together.`,
       });
     } finally {
       setLoadingRewrite(false);
     }
+  };
+
+  const constructFinalPhrase = (template, fillers) => {
+    if (!template) return '';
+    const parts = template.split(/(\[.*?\])/g);
+    let blankIndex = 0;
+    return parts.map(part => {
+      if (part.startsWith('[') && part.endsWith(']')) {
+        const value = fillers[blankIndex++];
+        return value || part;
+      }
+      return part;
+    }).join('');
+  };
+
+  const handleComplete = () => {
+    const finalPhrase = constructFinalPhrase(rewrite[chosenPhrase], fillerValues);
+    onComplete({
+      instinct,
+      chosenPhrase,
+      chosenText: finalPhrase || rewrite?.[chosenPhrase] || '',
+    });
   };
 
   const canContinue = !!chosenPhrase;
@@ -99,21 +122,30 @@ const Stage4 = ({ stageData, onComplete }) => {
                     sublabel="Avoids harsh start-ups"
                     phrase={rewrite.iStatement}
                     selected={chosenPhrase === 'iStatement'}
-                    onSelect={() => setChosenPhrase('iStatement')}
+                    onSelect={() => {
+                        setChosenPhrase('iStatement');
+                        setFillerValues({});
+                    }}
                   />
                   <PhraseCard
                     label="Soft opening"
                     sublabel="Gottman-based start"
                     phrase={rewrite.gottman}
                     selected={chosenPhrase === 'gottman'}
-                    onSelect={() => setChosenPhrase('gottman')}
+                    onSelect={() => {
+                        setChosenPhrase('gottman');
+                        setFillerValues({});
+                    }}
                   />
                   <PhraseCard
                     label="Framing"
                     sublabel="Builds a shared picture"
                     phrase={rewrite.framing}
                     selected={chosenPhrase === 'framing'}
-                    onSelect={() => setChosenPhrase('framing')}
+                    onSelect={() => {
+                        setChosenPhrase('framing');
+                        setFillerValues({});
+                    }}
                   />
                 </div>
 
@@ -123,9 +155,13 @@ const Stage4 = ({ stageData, onComplete }) => {
                     animate={{ opacity: 1, y: 0 }}
                     className="bg-teal-500/10 border border-teal-400/30 rounded-xl p-4 mb-6"
                   >
-                    <p className="text-teal-300 text-xs mb-1 uppercase tracking-wider">Your chosen opener</p>
-                    <p className="text-white/90 text-sm leading-relaxed">"{rewrite[chosenPhrase]}"</p>
-                    <p className="text-white/35 text-xs mt-3">Say this out loud a few times — notice how it feels.</p>
+                    <p className="text-teal-300 text-xs mb-1 uppercase tracking-wider">Your rehearsal template</p>
+                    <div className="text-white/90 text-sm leading-relaxed flex flex-wrap items-center gap-y-2">
+                      {renderInteractivePhrase(rewrite[chosenPhrase], fillerValues, (idx, val) => {
+                        setFillerValues(prev => ({ ...prev, [idx]: val }));
+                      })}
+                    </div>
+                    <p className="text-white/35 text-xs mt-3">Fill in the blanks with your own words as you practice.</p>
                   </motion.div>
                 )}
               </div>
@@ -139,11 +175,7 @@ const Stage4 = ({ stageData, onComplete }) => {
           <motion.button
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            onClick={() => onComplete({
-              instinct,
-              chosenPhrase,
-              chosenText: rewrite?.[chosenPhrase] || '',
-            })}
+            onClick={handleComplete}
             className="w-full py-3 bg-teal-500 text-white rounded-2xl font-semibold hover:bg-teal-400 transition-colors"
           >
             See the bigger picture →
@@ -152,6 +184,46 @@ const Stage4 = ({ stageData, onComplete }) => {
       </AnimatePresence>
     </motion.div>
   );
+};
+
+const renderInteractivePhrase = (phrase, fillers, onChange) => {
+  if (!phrase) return null;
+  const parts = phrase.split(/(\[.*?\])/g);
+  let blankIndex = 0;
+  
+  return parts.map((part, i) => {
+    if (part.startsWith('[') && part.endsWith(']')) {
+      const idx = blankIndex++;
+      const val = fillers[idx] || '';
+      return (
+        <input
+          key={i}
+          type="text"
+          value={val}
+          onChange={(e) => onChange(idx, e.target.value)}
+          placeholder={part}
+          style={{ width: `${Math.max(val.length || part.length, 4) + 2}ch` }}
+          className="bg-white/10 text-teal-300 border-b border-white/20 px-2 py-0.5 mx-1 focus:border-teal-400 outline-none transition-all placeholder-white/20 rounded-t"
+        />
+      );
+    }
+    return <span key={i}>{part}</span>;
+  });
+};
+
+const renderPhrase = (phrase) => {
+  if (!phrase) return null;
+  const parts = phrase.split(/(\[.*?\])/g);
+  return parts.map((part, i) => {
+    if (part.startsWith('[') && part.endsWith(']')) {
+      return (
+        <span key={i} className="px-1.5 py-0.5 rounded bg-white/10 text-teal-300 border border-white/10 mx-0.5 font-medium">
+          {part}
+        </span>
+      );
+    }
+    return part;
+  });
 };
 
 const PhraseCard = ({ label, sublabel, phrase, selected, onSelect }) => (
@@ -167,7 +239,9 @@ const PhraseCard = ({ label, sublabel, phrase, selected, onSelect }) => (
       <span className="text-xs font-semibold uppercase tracking-wider text-teal-300">{label}</span>
       <span className="text-xs text-white/30">{sublabel}</span>
     </div>
-    <p className="text-sm leading-relaxed">"{phrase}"</p>
+    <div className="text-sm leading-relaxed">
+      "{renderPhrase(phrase)}"
+    </div>
   </button>
 );
 
