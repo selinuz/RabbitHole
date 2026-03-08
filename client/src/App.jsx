@@ -90,7 +90,7 @@ function App() {
                   alt="RabbitHole"
                   className="mx-auto mb-10 h-25"
                 />
-                <p className="text-white/80 text-md tracking-widest uppercase font-figtree">
+                <p className="text-white/80 text-base tracking-widest uppercase font-figtree">
                   A guide for navigating difficult conversations
                 </p>
               </div>

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle, ChevronLeft } from "lucide-react";
 
@@ -76,17 +77,17 @@ const Stage5 = ({ stageData, onRestart, onBack }) => {
       <div className="flex items-center mb-6">
         <button
           onClick={onBack}
-          className="flex items-center gap-1 text-white/40 hover:text-white/70 text-sm transition-colors">
+          className="flex items-center gap-1 text-white/40 hover:text-white/70 text-base transition-colors font-figtree">
           <ChevronLeft size={16} /> Back
         </button>
       </div>
 
       <div className="text-center mb-10">
         <CheckCircle className="text-primary-hover w-10 h-10 mx-auto mb-4" />
-        <h2 className="text-3xl font-bold font-serif mb-2">
+        <h2 className="text-3xl font-semibold font-serif mb-2">
           Your Conversation Compass
         </h2>
-        <p className="text-white/50 text-sm">
+        <p className="text-white/50 text-base font-figtree">
           Everything you've built — now in one view.
         </p>
       </div>
@@ -101,18 +102,18 @@ const Stage5 = ({ stageData, onRestart, onBack }) => {
             transition={{ delay: i * 0.15, duration: 0.4 }}
             className={`rounded-2xl p-5 ${base.color}`}>
             <div className="flex items-center gap-2 mb-3 font-figtree">
-              <span className={`text-xs font-bold ${base.labelColor}`}>
+              <span className={`text-sm font-bold ${base.labelColor} font-figtree`}>
                 BASE {base.number}
               </span>
-              <span className={`text-sm font-semibold ${base.labelColor}`}>
+              <span className={`text-base font-semibold ${base.labelColor} font-figtree`}>
                 · {base.label}
               </span>
             </div>
             <div className="space-y-2">
               {base.items.map(item => (
                 <div key={item.key} className="flex items-baseline gap-3 font-figtree">
-                  <span className="text-white/30 text-xs w-28 shrink-0 font-figtree">{item.key}</span>
-                  <span className="text-white/85 text-sm leading-relaxed font-figtree">{item.value}</span>
+                  <span className="text-white/30 text-sm w-28 shrink-0 font-figtree">{item.key}</span>
+                  <span className="text-white/85 text-base leading-relaxed font-figtree">{item.value}</span>
                 </div>
               ))}
             </div>
@@ -126,9 +127,9 @@ const Stage5 = ({ stageData, onRestart, onBack }) => {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6 }}
         className="rounded-2xl bg-white/[0.07] p-5 mb-8 shadow-sm font-figtree">
-        <p className="text-white/60 text-xs uppercase tracking-widest mb-1 font-figtree">Base 4</p>
-        <p className="text-white/70 text-sm font-medium mb-3 font-figtree">The rest is in your hands.</p>
-        <p className="text-white/45 text-sm mb-4 font-figtree">Come back after the conversation and record how it went.</p>
+        <p className="text-white/60 text-sm uppercase tracking-widest mb-1 font-figtree">Base 4</p>
+        <p className="text-white/70 text-base font-medium mb-3 font-figtree">The rest is in your hands.</p>
+        <p className="text-white/45 text-base mb-4 font-figtree">Come back after the conversation and record how it went.</p>
 
         {!reflectionSaved ? (
           <>
@@ -137,12 +138,12 @@ const Stage5 = ({ stageData, onRestart, onBack }) => {
               onChange={(e) => setReflection(e.target.value)}
               placeholder="How did it go? What happened? How do you feel now?"
               rows={3}
-              className="w-full bg-white/5 rounded-xl p-3 text-white placeholder-white/20 outline-none focus:bg-white/10 transition-all resize-none text-sm mb-3"
+              className="w-full bg-white/5 rounded-xl p-3 text-white placeholder-white/20 outline-none focus:bg-white/10 transition-all resize-none text-base mb-3 font-figtree"
             />
             {reflection.trim() && (
               <button
                 onClick={() => setReflectionSaved(true)}
-                className="px-4 py-2 bg-white/10 text-white/70 rounded-full text-xs hover:bg-white/15 transition-colors">
+                className="px-4 py-2 bg-white/10 text-white/70 rounded-full text-base hover:bg-white/15 transition-colors font-figtree">
                 Save reflection
               </button>
             )}
@@ -151,7 +152,7 @@ const Stage5 = ({ stageData, onRestart, onBack }) => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="bg-white/5 rounded-xl p-3 text-white/70 text-sm leading-relaxed font-figtree"
+            className="bg-white/5 rounded-xl p-3 text-white/70 text-base leading-relaxed font-figtree"
           >
             {reflection}
           </motion.div>
@@ -160,7 +161,7 @@ const Stage5 = ({ stageData, onRestart, onBack }) => {
 
       <button
         onClick={onRestart}
-        className="w-full py-2.5 text-white/60 hover:text-white/70 text-sm transition-colors underline underline-offset-4 font-figtree"
+        className="w-full py-2.5 text-white/60 hover:text-white/70 text-base transition-colors underline underline-offset-4 font-figtree"
       >
         Start another dig
       </button>

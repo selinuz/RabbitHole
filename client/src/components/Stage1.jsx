@@ -60,7 +60,7 @@ const PillGroup = ({ options, selected, onSelect, multi = false }) => (
         <button
           key={opt}
           onClick={() => onSelect(opt)}
-          className={`px-4 py-2 rounded-full text-sm transition-all duration-200 font-figtree ${
+          className={`px-4 py-2 rounded-full text-base transition-all duration-200 font-figtree ${
             isSelected
               ? "border-2 border-primary text-primary bg-[#F4EDE8]/70"
               : "bg-white/5 text-white/70 hover:text-white lg:hover:bg-white/10"
@@ -171,7 +171,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
       exit={{ opacity: 0, y: -24 }}
       transition={{ duration: 0.5 }}
       className="glass-panel p-8 text-white">
-      <h2 className="text-3xl font-medium font-serif mb-8">
+      <h2 className="text-3xl font-semibold font-serif mb-8">
         Let's understand the situation
       </h2>
 
@@ -179,7 +179,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
       {activeQuestions === null && (
         <div className="flex items-center gap-3 text-white/50 mb-8">
           <Loader2 size={16} className="animate-spin" />
-          <span className="text-sm">Personalizing your questions...</span>
+          <span className="text-base font-figtree">Personalizing your questions...</span>
         </div>
       )}
 
@@ -191,7 +191,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.4 }}>
-            <p className="text-white/90 text-lg leading-snug">
+            <p className="text-white/90 text-lg leading-snug font-figtree">
               {currentQuestion.text}
             </p>
 
@@ -210,13 +210,13 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 answers[currentQuestion.id].length > 0 && (
                   <button
                     onClick={() => setCurrentQ((q) => q + 1)}
-                    className="px-5 py-2.5 bg-primary text-white rounded-full text-sm font-semibold hover:bg-primary-hover transition-colors font-figtree">
+                    className="px-5 py-2.5 bg-primary text-white rounded-full text-base font-semibold hover:bg-primary-hover transition-colors font-figtree">
                     Continue →
                   </button>
                 )}
               <button
                 onClick={handleBack}
-                className="text-white/35 text-sm hover:text-white/60 transition-colors font-figtree">
+                className="text-white/35 text-base hover:text-white/60 transition-colors font-figtree">
                 ← Back
               </button>
             </div>
@@ -247,13 +247,13 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}>
-            <p className="text-white/50 text-sm mb-6">
+            <p className="text-white/50 text-base mb-6 font-figtree">
               Update your answers below, then save.
             </p>
 
             <div className="space-y-6">
               <div>
-                <p className="text-white/60 text-xs uppercase tracking-wider mb-2">
+                <p className="text-white/60 text-sm uppercase tracking-wider mb-2 font-figtree">
                   Area of life
                 </p>
                 <PillGroup
@@ -265,7 +265,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 />
               </div>
               <div>
-                <p className="text-white/60 text-xs uppercase tracking-wider mb-2">
+                <p className="text-white/60 text-sm uppercase tracking-wider mb-2 font-figtree">
                   How you're feeling
                 </p>
                 <PillGroup
@@ -284,7 +284,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 />
               </div>
               <div>
-                <p className="text-white/60 text-xs uppercase tracking-wider mb-2">
+                <p className="text-white/60 text-sm uppercase tracking-wider mb-2 font-figtree">
                   Your position
                 </p>
                 <PillGroup
@@ -296,7 +296,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 />
               </div>
               <div>
-                <p className="text-white/60 text-xs uppercase tracking-wider mb-2">
+                <p className="text-white/60 text-sm uppercase tracking-wider mb-2 font-figtree">
                   Importance
                 </p>
                 <PillGroup
@@ -312,12 +312,12 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={saveAdjust}
-                className="px-5 py-2.5 bg-primary text-white rounded-full text-sm font-semibold hover:bg-primary-hover transition-colors">
+                className="px-5 py-2.5 bg-primary text-white rounded-full text-base font-semibold hover:bg-primary-hover transition-colors font-figtree">
                 Save changes
               </button>
               <button
                 onClick={() => setAdjusting(false)}
-                className="px-5 py-2.5 bg-white/10 text-white/70 rounded-full text-sm hover:bg-white/15 transition-colors">
+                className="px-5 py-2.5 bg-white/10 text-white/70 rounded-full text-base hover:bg-white/15 transition-colors font-figtree">
                 Cancel
               </button>
             </div>
@@ -332,7 +332,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}>
-            <p className="text-white text-md mb-4">Here's what I'm hearing:</p>
+            <p className="text-white text-base mb-4 font-figtree">Here's what I'm hearing:</p>
             <div className="bg-white/5 rounded-2xl p-6 space-y-3 mb-6">
               <SummaryRow label="Area of life" value={answers.lifeArea} />
               <SummaryRow
@@ -351,12 +351,12 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
               <div className="flex gap-3">
                 <button
                   onClick={() => setSummaryConfirmed(true)}
-                  className="px-5 py-2.5 bg-primary text-white rounded-full text-sm font-semibold hover:bg-primary-hover transition-all shadow-lg shadow-primary/10">
+                  className="px-5 py-2.5 bg-primary text-white rounded-full text-base font-semibold hover:bg-primary-hover transition-all shadow-lg shadow-primary/10 font-figtree">
                   That's right
                 </button>
                 <button
                   onClick={openAdjust}
-                  className="px-5 py-2.5 bg-white/10 text-white/70 rounded-full text-sm hover:bg-white/15 transition-colors">
+                  className="px-5 py-2.5 bg-white/10 text-white/70 rounded-full text-base hover:bg-white/15 transition-colors font-figtree">
                   Let me adjust
                 </button>
               </div>
@@ -365,7 +365,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 onClick={() => onComplete(answers)}
-                className="w-full py-3 bg-primary text-white rounded-2xl font-semibold hover:bg-primary-hover transition-colors font-figtree">
+                className="w-full py-3 bg-primary text-white rounded-2xl text-lg font-semibold hover:bg-primary-hover transition-colors font-figtree">
                 Dig into the 1st Pillar →
               </motion.button>
             )}
@@ -379,8 +379,8 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
 const SummaryRow = ({ label, value }) =>
   value ? (
     <div className="flex items-baseline gap-3">
-      <span className="text-white/85 text-sm w-40 shrink-0">{label}</span>
-      <span className="text-white/100 text-sm">{value}</span>
+      <span className="text-white/85 text-base w-40 shrink-0 font-figtree">{label}</span>
+      <span className="text-white/100 text-base font-figtree">{value}</span>
     </div>
   ) : null;
 

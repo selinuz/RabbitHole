@@ -112,7 +112,7 @@ const Stage0 = ({ onComplete }) => {
       transition={{ duration: 0.6 }}
       className="glass-panel p-8 text-white text-center shadow-2xl"
       style={{ backgroundColor: "rgba(0, 0, 0, 0.3)" }}>
-      <h2 className="text-3xl font-medium font-serif mb-8">
+      <h2 className="text-3xl font-semibold font-serif mb-8">
         What conversation is on your mind right now?
       </h2>
 
@@ -123,7 +123,7 @@ const Stage0 = ({ onComplete }) => {
             onChange={(e) => setValue(e.target.value)}
             placeholder="Type your thoughts here..."
             rows={4}
-            className="w-full bg-white/10 rounded-2xl p-4 text-white placeholder-white/60 text-lg leading-relaxed outline-none focus:bg-white/[0.15] transition-all duration-300 resize-none font-figtree"
+            className="w-full bg-white/10 rounded-2xl p-4 text-white placeholder-white/60 text-base leading-relaxed outline-none focus:bg-white/[0.15] transition-all duration-300 resize-none font-figtree"
           />
           {isRecording && (
             <motion.div
@@ -134,7 +134,7 @@ const Stage0 = ({ onComplete }) => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
               </span>
-              <span className="text-[10px] text-primary font-bold uppercase tracking-wider font-figtree">
+              <span className="text-sm text-primary font-bold uppercase tracking-wider font-figtree">
                 Recording
               </span>
             </motion.div>
@@ -143,7 +143,7 @@ const Stage0 = ({ onComplete }) => {
 
         <div className="flex items-center gap-4 py-2">
           <div className="h-px bg-white/20 flex-1" />
-          <span className="text-white/60 text-[10px] uppercase tracking-[0.3em] font-bold">
+          <span className="text-white/60 text-sm uppercase tracking-[0.3em] font-bold font-figtree">
             OR
           </span>
           <div className="h-px bg-white/20 flex-1" />
@@ -165,11 +165,11 @@ const Stage0 = ({ onComplete }) => {
               )}
             </div>
             <div className="flex flex-col gap-1">
-              <span className="text-xs font-bold uppercase tracking-[0.2em]">
+              <span className="text-sm font-bold uppercase tracking-[0.2em]">
                 {isRecording ? "Listening to you..." : "Rant Out Loud"}
               </span>
               {!isRecording && (
-                <span className="text-[10px] text-white/60 font-medium">
+                <span className="text-sm text-white/60 font-medium">
                   Use your voice
                 </span>
               )}
@@ -188,7 +188,7 @@ const Stage0 = ({ onComplete }) => {
                     if (isRecording) recognitionRef.current.stop();
                     onComplete(value.trim());
                   }}
-                  className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-2xl shadow-primary/30 text-xl font-figtree">
+                  className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-2xl shadow-primary/30 text-lg font-figtree">
                   Dive in →
                 </button>
               </motion.div>
@@ -196,7 +196,7 @@ const Stage0 = ({ onComplete }) => {
           </AnimatePresence>
 
           {!ready && wordCount > 0 && (
-            <p className="text-white/60 text-[10px] font-medium">
+            <p className="text-white/60 text-sm font-medium font-figtree">
               A few more details please!
             </p>
           )}
