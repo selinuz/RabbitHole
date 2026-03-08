@@ -192,9 +192,6 @@ const Stage0 = ({ onComplete }) => {
                   className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-2xl shadow-primary/30 text-xl">
                   Dive in →
                 </button>
-                <span className="text-white/50 text-xs tabular-nums font-semibold tracking-wide">
-                  {wordCount} words shared
-                </span>
               </motion.div>
             )}
           </AnimatePresence>
