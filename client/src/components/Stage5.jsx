@@ -1,13 +1,9 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle, ChevronLeft } from "lucide-react";
 
 const Stage5 = ({ stageData, onRestart, onBack }) => {
   const { situation, preparation, empathy, phrasing } = stageData;
-  const [reflection, setReflection] = useState("");
-  const [reflectionSaved, setReflectionSaved] = useState(false);
-
-  const bases = [
+const bases = [
     {
       number: "1",
       label: "Core Needs",
@@ -121,45 +117,7 @@ const Stage5 = ({ stageData, onRestart, onBack }) => {
         ))}
       </div>
 
-      {/* Base 4: Reflection log */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6 }}
-        className="rounded-2xl bg-white/[0.07] p-5 mb-8 shadow-sm font-figtree">
-        <p className="text-white/60 text-sm uppercase tracking-widest mb-1 font-figtree">Base 4</p>
-        <p className="text-white/70 text-base font-medium mb-3 font-figtree">The rest is in your hands.</p>
-        <p className="text-white/45 text-base mb-4 font-figtree">Come back after the conversation and record how it went.</p>
-
-        {!reflectionSaved ? (
-          <>
-            <textarea
-              value={reflection}
-              onChange={(e) => setReflection(e.target.value)}
-              placeholder="How did it go? What happened? How do you feel now?"
-              rows={3}
-              className="w-full bg-white/5 rounded-xl p-3 text-white placeholder-white/20 outline-none focus:bg-white/10 transition-all resize-none text-base mb-3 font-figtree"
-            />
-            {reflection.trim() && (
-              <button
-                onClick={() => setReflectionSaved(true)}
-                className="px-4 py-2 bg-white/10 text-white/70 rounded-full text-base hover:bg-white/15 transition-colors font-figtree">
-                Save reflection
-              </button>
-            )}
-          </>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="bg-white/5 rounded-xl p-3 text-white/70 text-base leading-relaxed font-figtree"
-          >
-            {reflection}
-          </motion.div>
-        )}
-      </motion.div>
-
-      <button
+<button
         onClick={onRestart}
         className="w-full py-2.5 text-white/60 hover:text-white/70 text-base transition-colors underline underline-offset-4 font-figtree"
       >
