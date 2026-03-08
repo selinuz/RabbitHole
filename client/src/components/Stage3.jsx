@@ -49,7 +49,8 @@ const FlipCard = ({ front, back, selected, flipped, onSelect, suitKey }) => {
 
   return (
     <div
-      className="relative cursor-pointer transition-all duration-300 rounded-xl w-full"
+      className={`relative cursor-pointer transition-all duration-300 rounded-xl ${selected ? 'bg-primary/5 scale-[1.02] shadow-2xl' : ''
+        }`}
       style={{ perspective: 1000 }}
       onClick={onSelect}>
       <motion.div
@@ -180,7 +181,7 @@ const Stage3 = ({ stageData, onComplete }) => {
 
       {/* Perspective flip cards */}
       {loadingPerspectives ? (
-        <div className="flex items-center gap-2 text-white/40 mb-8">
+        <div className="flex items-center gap-2 text-white/60mb-8">
           <Loader2 size={14} className="animate-spin" />
           <span className="text-sm">Thinking about their side...</span>
         </div>
