@@ -10,14 +10,25 @@ const TONES = [
 
 const EMOTIONS = ['Calm', 'Caring', 'Honest', 'Open', 'Firm', 'Warm', 'Patient', 'Clear'];
 
-const FlipCard = ({ front, back }) => {
+const FlipCard = ({ front, back, selected, onSelect }) => {
   const [flipped, setFlipped] = useState(false);
 
   return (
     <div
-      className="relative cursor-pointer"
+      className={`relative cursor-pointer transition-all duration-300 rounded-xl ${
+        selected ? 'ring-2 ring-teal-400 ring-offset-2 ring-offset-[#0d1117] scale-[1.02]' : ''
+      }`}
       style={{ perspective: 1000 }}
-      onClick={() => setFlipped(f => !f)}
+      onClick={(e) => {
+        // If they click the "tap to flip" or the back, don't necessarily select
+        // But the requirement says "ask the user which of the three options sounds most like them"
+        // Let's make the whole card selectable, and a specific flip button if needed?
+        // Actually, the current FlipCard flips on click. Let's keep that but add a selection button or just select on flip?
+        // Better: Select on flip or have a "This is them" button.
+        // Let's try: click to flip, and a small "Select" button/indicator.
+        setFlipped(f => !f);
+        onSelect();
+      }}
     >
       <motion.div
         animate={{ rotateY: flipped ? 180 : 0 }}
@@ -27,19 +38,26 @@ const FlipCard = ({ front, back }) => {
       >
         {/* Front */}
         <div
-          className="rounded-xl border border-white/15 bg-white/5 p-4"
+          className={`rounded-xl border p-4 transition-colors ${
+            selected ? 'border-teal-400 bg-teal-500/20' : 'border-white/15 bg-white/5'
+          }`}
           style={{ backfaceVisibility: 'hidden' }}
         >
-          <p className="text-white/40 text-xs mb-1">From their side</p>
+          <div className="flex justify-between items-start mb-1">
+            <p className="text-white/40 text-xs">From their side</p>
+            {selected && <div className="w-2 h-2 rounded-full bg-teal-400 shadow-[0_0_8px_rgba(45,212,191,0.6)]" />}
+          </div>
           <p className="text-white/85 text-sm leading-relaxed">{front}</p>
           <p className="text-white/25 text-xs mt-3 flex items-center gap-1">
-            <RotateCcw size={10} /> tap to flip
+            <RotateCcw size={10} /> tap to flip & select
           </p>
         </div>
 
         {/* Back */}
         <div
-          className="absolute inset-0 rounded-xl border border-teal-400/30 bg-teal-500/10 p-4"
+          className={`absolute inset-0 rounded-xl border p-4 ${
+            selected ? 'border-teal-400 bg-teal-500/20' : 'border-teal-400/30 bg-teal-500/10'
+          }`}
           style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
         >
           <p className="text-teal-300 text-xs mb-1">How this might affect them</p>
@@ -54,6 +72,7 @@ const Stage3 = ({ stageData, onComplete }) => {
   const { initialInput, situation, preparation } = stageData;
   const [perspectives, setPerspectives] = useState([]);
   const [loadingPerspectives, setLoadingPerspectives] = useState(true);
+  const [selectedPerspective, setSelectedPerspective] = useState(null);
   const [selectedTone, setSelectedTone] = useState(null);
   const [selectedEmotions, setSelectedEmotions] = useState([]);
 
@@ -86,7 +105,7 @@ const Stage3 = ({ stageData, onComplete }) => {
     );
   };
 
-  const canContinue = selectedTone && selectedEmotions.length > 0;
+  const canContinue = selectedPerspective !== null && selectedTone && selectedEmotions.length > 0;
 
   return (
     <motion.div
@@ -98,7 +117,7 @@ const Stage3 = ({ stageData, onComplete }) => {
     >
       <p className="text-white/40 text-xs uppercase tracking-widest mb-1">2nd Pillar · Open with Empathy</p>
       <h2 className="text-3xl font-bold font-serif mb-2">Their perspective</h2>
-      <p className="text-white/50 text-sm mb-8">How might they be experiencing this?</p>
+      <p className="text-white/50 text-sm mb-8">Which of these feels most like how they might be experiencing this?</p>
 
       {/* Perspective flip cards */}
       {loadingPerspectives ? (
@@ -115,7 +134,12 @@ const Stage3 = ({ stageData, onComplete }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.15 }}
             >
-              <FlipCard front={p.front} back={p.back} />
+              <FlipCard
+                front={p.front}
+                back={p.back}
+                selected={selectedPerspective === i}
+                onSelect={() => setSelectedPerspective(i)}
+              />
             </motion.div>
           ))}
         </div>
@@ -167,7 +191,11 @@ const Stage3 = ({ stageData, onComplete }) => {
           <motion.button
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            onClick={() => onComplete({ tone: selectedTone, emotions: selectedEmotions })}
+            onClick={() => onComplete({
+              tone: selectedTone,
+              emotions: selectedEmotions,
+              perspective: perspectives[selectedPerspective].front
+            })}
             className="w-full py-3 bg-teal-500 text-white rounded-2xl font-semibold hover:bg-teal-400 transition-colors"
           >
             Climb to the 3rd Pillar →

@@ -134,9 +134,13 @@ export default async function handler(req, res) {
       const result = await model.generateContent(`
         You are a conversation coach trained in Gottman Method principles and nonviolent communication.
 
-        Context about the situation and tone: "${message}"
+        The user is preparing for a difficult conversation. They have identified with a specific perspective of the other person to better understand where they are coming from.
 
-        Rewrite the user's instinct phrase in 3 different ways. Return ONLY valid JSON (no markdown):
+        Context about the situation, the other person's perspective, and the desired tone: "${message}"
+
+        Rewrite the user's instinct phrase in 3 different ways. Use the identified perspective to ensure the tone and framing address the other person's likely concerns or feelings.
+
+        Return ONLY valid JSON (no markdown):
         {
           "iStatement": "A version using I-statements that avoids blame (e.g. 'I feel... when... because...')",
           "gottman": "A soft, Gottman-style opening that avoids harsh start-ups and invites dialogue",

@@ -26,6 +26,7 @@ const Stage5 = ({ stageData, onRestart }) => {
       labelColor: 'text-purple-300',
       items: [
         situation.feeling && { key: 'Going in feeling', value: situation.feeling },
+        empathy.perspective && { key: 'Their side', value: empathy.perspective },
         empathy.tone && { key: 'Tone', value: empathy.tone.charAt(0).toUpperCase() + empathy.tone.slice(1) },
         empathy.emotions?.length && { key: 'Emotions to bring', value: empathy.emotions.join(' · ') },
       ].filter(Boolean),
