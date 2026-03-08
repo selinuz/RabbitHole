@@ -46,8 +46,13 @@ const downloadPDF = ({ situation, preparation, empathy, phrasing }) => {
 
   const drawBlock = (labelText, bodyText, highlighted = false) => {
     if (!bodyText) return;
+    const bodyFontSize = 12;
+    const lineHeightMm = bodyFontSize * 0.3528 * 1.15;
     const lines = doc.splitTextToSize(bodyText, contentW - 8);
-    const blockH = 6 + lines.length * 5 + 4;
+    const labelH = 6;       // top padding + label row
+    const bodyStartY = 4;   // gap between label baseline and first body line
+    const paddingBottom = 4;
+    const blockH = labelH + bodyStartY + lines.length * lineHeightMm + paddingBottom;
     checkPage(blockH + 4);
 
     if (highlighted) {
@@ -66,10 +71,10 @@ const downloadPDF = ({ situation, preparation, empathy, phrasing }) => {
     doc.setTextColor(...(highlighted ? accent : muted));
     doc.text(labelText.toUpperCase(), margin + 4, y + 5);
 
-    doc.setFontSize(9);
+    doc.setFontSize(bodyFontSize);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(...dark);
-    doc.text(lines, margin + 4, y + 10);
+    doc.text(lines, margin + 4, y + labelH + bodyStartY, { lineHeightFactor: 1.15 });
 
     y += blockH + 3;
   };
