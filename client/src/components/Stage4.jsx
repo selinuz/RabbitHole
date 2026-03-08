@@ -300,7 +300,10 @@ const Stage4 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
                               {sublabel}
                             </span>
                           </div>
-                          <MicButton state={micState[key]} onClick={() => toggleMic(key)} />
+                          <MicButton
+                            state={micState[key]}
+                            onClick={() => toggleMic(key)}
+                          />
                         </div>
                         <div className="text-white/90 text-base leading-relaxed flex flex-wrap items-center gap-y-2 font-figtree">
                           {renderInteractivePhrase(
@@ -354,15 +357,30 @@ const MicButton = ({ state, onClick }) => (
       fontFamily: "Figtree, sans-serif",
       border: "none",
       cursor: state === "transcribing" ? "wait" : "pointer",
-      background: state === "recording" ? "rgba(239,68,68,0.2)" : "rgba(255,255,255,0.1)",
-      color: state === "recording" ? "#f87171" : state === "transcribing" ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.6)",
+      background:
+        state === "recording" ? "rgba(239,68,68,0.2)" : "rgba(255,255,255,0.1)",
+      color:
+        state === "recording"
+          ? "#f87171"
+          : state === "transcribing"
+            ? "rgba(255,255,255,0.4)"
+            : "rgba(255,255,255,0.6)",
     }}>
     {state === "recording" ? (
-      <><MicOff size={13} /><span>Stop</span></>
+      <>
+        <MicOff size={13} />
+        <span>Stop</span>
+      </>
     ) : state === "transcribing" ? (
-      <><Loader2 size={13} style={{ animation: "spin 1s linear infinite" }} /><span>Listening...</span></>
+      <>
+        <Loader2 size={13} style={{ animation: "spin 1s linear infinite" }} />
+        <span>Listening...</span>
+      </>
     ) : (
-      <><Mic size={13} /><span>Read aloud</span></>
+      <>
+        <Mic size={13} />
+        <span>Read aloud</span>
+      </>
     )}
   </button>
 );
@@ -383,8 +401,12 @@ const renderInteractivePhrase = (phrase, fillers, onChange) => {
           value={val}
           onChange={(e) => onChange(idx, e.target.value)}
           placeholder={part}
-          style={{ width: `${Math.max(val.length || part.length, 4) + 2}ch` }}
-          className="bg-white/10 text-primary px-3 py-1 mx-1 focus:bg-white/15 outline-none transition-all placeholder-white/20 rounded-full text-base font-medium shadow-inner font-figtree"
+          className="px-3 py-1 mx-1 outline-none transition-all rounded-full text-base font-medium shadow-inner font-figtree"
+          style={{
+            width: `${Math.max(val.length || part.length, 4) + 2}ch`,
+            backgroundColor: "#F4EDE8",
+            color: "#d66b6d",
+          }}
         />
       );
     }
