@@ -86,7 +86,7 @@ const Stage4 = ({ stageData, onComplete }) => {
             onChange={e => setInstinct(e.target.value)}
             placeholder="Don't overthink it — just write what comes to mind..."
             rows={3}
-            className="w-full bg-white/5 border border-white/15 rounded-xl p-4 text-white placeholder-white/25 outline-none focus:border-white/35 transition-colors resize-none mb-4"
+            className="w-full bg-white/5 rounded-xl p-4 text-white placeholder-white/25 outline-none focus:bg-white/10 transition-all resize-none mb-4"
           />
           <button
             onClick={handleSubmitInstinct}
@@ -103,7 +103,7 @@ const Stage4 = ({ stageData, onComplete }) => {
         <AnimatePresence>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
             {/* Original */}
-            <div className="rounded-xl border border-white/10 bg-white/5 p-4 mb-6">
+            <div className="rounded-xl bg-white/5 p-4 mb-6 shadow-sm">
               <p className="text-white/35 text-xs uppercase tracking-wider mb-2">What you said</p>
               <p className="text-white/80 italic">"{instinct}"</p>
             </div>
@@ -153,7 +153,7 @@ const Stage4 = ({ stageData, onComplete }) => {
                   <motion.div
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-primary/10 border border-primary-hover/30 rounded-xl p-4 mb-6"
+                    className="bg-primary/10 rounded-xl p-4 mb-6 shadow-sm"
                   >
                     <p className="text-accent text-xs mb-1 uppercase tracking-wider">Your rehearsal template</p>
                     <div className="text-white/90 text-sm leading-relaxed flex flex-wrap items-center gap-y-2">
@@ -176,7 +176,7 @@ const Stage4 = ({ stageData, onComplete }) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             onClick={handleComplete}
-            className="w-full py-3 bg-primary text-white rounded-2xl font-semibold hover:bg-primary-hover transition-colors"
+            className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary-hover transition-all shadow-xl shadow-primary/20"
           >
             See the bigger picture →
           </motion.button>
@@ -203,7 +203,7 @@ const renderInteractivePhrase = (phrase, fillers, onChange) => {
           onChange={(e) => onChange(idx, e.target.value)}
           placeholder={part}
           style={{ width: `${Math.max(val.length || part.length, 4) + 2}ch` }}
-          className="bg-white/10 text-accent border-b border-white/20 px-2 py-0.5 mx-1 focus:border-primary-hover outline-none transition-all placeholder-white/20 rounded-t"
+          className="bg-white/10 text-primary px-3 py-1 mx-1 focus:bg-white/15 outline-none transition-all placeholder-white/20 rounded-full text-sm font-medium shadow-inner"
         />
       );
     }
@@ -217,7 +217,7 @@ const renderPhrase = (phrase) => {
   return parts.map((part, i) => {
     if (part.startsWith('[') && part.endsWith(']')) {
       return (
-        <span key={i} className="px-1.5 py-0.5 rounded bg-white/10 text-accent border border-white/10 mx-0.5 font-medium">
+        <span key={i} className="px-2 py-0.5 rounded-full bg-white/10 text-primary mx-0.5 font-semibold text-xs shadow-sm">
           {part}
         </span>
       );
@@ -229,10 +229,10 @@ const renderPhrase = (phrase) => {
 const PhraseCard = ({ label, sublabel, phrase, selected, onSelect }) => (
   <button
     onClick={onSelect}
-    className={`w-full text-left rounded-xl border p-4 transition-all ${
+    className={`w-full text-left rounded-xl p-4 transition-all duration-300 ${
       selected
-        ? 'border-primary-hover bg-primary/15 text-white'
-        : 'border-white/15 bg-white/5 text-white/75 hover:border-white/30'
+        ? 'bg-primary/20 text-white shadow-lg'
+        : 'bg-white/5 text-white/75 hover:bg-white/10'
     }`}
   >
     <div className="flex items-baseline gap-2 mb-1">
