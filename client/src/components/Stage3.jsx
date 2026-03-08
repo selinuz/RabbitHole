@@ -186,7 +186,8 @@ const Stage3 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
       exit={{ opacity: 0, y: -24 }}
       ref={ref}
       transition={{ duration: 0.5 }}
-      className="glass-panel p-8 text-white">
+      className="glass-panel p-8 text-white"
+      style={{ backgroundColor: "rgba(0, 0, 0, 0.40)" }}>
       <div className="flex items-center mb-6">
         <button
           onClick={onBack}
@@ -250,11 +251,10 @@ const Stage3 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
             <button
               key={tone.id}
               onClick={() => setSelectedTone(tone.id)}
-              className={`p-3 rounded-xl text-left transition-all duration-300 font-figtree ${
-                selectedTone === tone.id
+              className={`p-3 rounded-xl text-left transition-all duration-300 font-figtree ${selectedTone === tone.id
                   ? "bg-primary text-white shadow-lg"
                   : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/80"
-              }`}>
+                }`}>
               <p className="font-semibold text-base">{tone.label}</p>
               <p className="text-sm mt-0.5 opacity-70">{tone.desc}</p>
             </button>
@@ -279,11 +279,10 @@ const Stage3 = forwardRef(({ stageData, onComplete, onBack }, ref) => {
                   ? setCustomEmotions((prev) => prev.filter((x) => x !== emotion))
                   : toggleEmotion(emotion)
                 }
-                className={`px-3 py-1.5 rounded-full text-base transition-all duration-300 font-figtree flex items-center gap-1.5 ${
-                  isSelected
+                className={`px-3 py-1.5 rounded-full text-base transition-all duration-300 font-figtree flex items-center gap-1.5 ${isSelected
                     ? "bg-primary text-white shadow-md"
                     : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/80"
-                }`}>
+                  }`}>
                 {emotion}
                 {isCustom && <span className="text-xs opacity-60">✕</span>}
               </button>
