@@ -66,8 +66,9 @@ function App() {
               />
             ) : (
               <div
-                className={`w-5 h-5 rounded-full transition-all duration-500 ${stage > s ? "bg-primary-hover" : "bg-white/20"
-                  }`}
+                className={`w-5 h-5 rounded-full transition-all duration-500 ${
+                  stage > s ? "bg-primary-hover" : "bg-white/20"
+                }`}
               />
             )}
           </div>

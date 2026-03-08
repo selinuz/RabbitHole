@@ -3,65 +3,6 @@ import { CheckCircle, ChevronLeft } from "lucide-react";
 
 const Stage5 = ({ stageData, onRestart, onBack }) => {
   const { situation, preparation, empathy, phrasing } = stageData;
-const bases = [
-    {
-      number: "1",
-      label: "Core Needs",
-      color: "bg-primary/15 shadow-sm",
-      labelColor: "text-accent",
-      items: [
-        preparation.coreIssue && {
-          key: "The issue",
-          value: preparation.coreIssue,
-        },
-        preparation.goal && { key: "Your goal", value: preparation.goal },
-        preparation.outcome && {
-          key: "Desired outcome",
-          value: preparation.outcome,
-        },
-      ].filter(Boolean),
-    },
-    {
-      number: "2",
-      label: "Strategy",
-      color: "bg-purple-500/15 shadow-sm",
-      labelColor: "text-purple-300",
-      items: [
-        (Array.isArray(situation.feeling) ? situation.feeling.length > 0 : situation.feeling) && {
-          key: "Going in feeling",
-          value: Array.isArray(situation.feeling) ? situation.feeling.join(" · ") : situation.feeling,
-        },
-        empathy.perspective && {
-          key: "Their side",
-          value: empathy.perspective,
-        },
-        empathy.tone && {
-          key: "Tone",
-          value: empathy.tone.charAt(0).toUpperCase() + empathy.tone.slice(1),
-        },
-        empathy.emotions?.length && {
-          key: "Emotions to bring",
-          value: empathy.emotions.join(" · "),
-        },
-      ].filter(Boolean),
-    },
-    {
-      number: "3",
-      label: "Your Opener",
-      color: "bg-amber-500/15 shadow-sm",
-      labelColor: "text-amber-300",
-      items: [
-        phrasing.chosenText && {
-          key: "Practice saying this",
-          value: `"${phrasing.chosenText}"`,
-        },
-        phrasing.instinct && {
-          key: "Your instinct was",
-          value: `"${phrasing.instinct}"`,
-        },
-      ].filter(Boolean),
-    },
-  ];
 
   return (
     <motion.div
@@ -79,48 +20,252 @@ const bases = [
       </div>
 
       <div className="text-center mb-10">
-        <CheckCircle className="text-primary-hover w-10 h-10 mx-auto mb-4" />
         <h2 className="text-3xl font-semibold font-serif mb-2">
-          Your Conversation Compass
+          Your Conversation Plan
         </h2>
-        <p className="text-white/50 text-base font-figtree">
-          Everything you've built — now in one view.
-        </p>
       </div>
 
-      {/* The 3 bases */}
-      <div className="space-y-4 mb-8">
-        {bases.map((base, i) => (
-          <motion.div
-            key={base.number}
-            initial={{ opacity: 0, x: -16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.15, duration: 0.4 }}
-            className={`rounded-2xl p-5 ${base.color}`}>
-            <div className="flex items-center gap-2 mb-3 font-figtree">
-              <span className={`text-sm font-bold ${base.labelColor} font-figtree`}>
-                BASE {base.number}
-              </span>
-              <span className={`text-base font-semibold ${base.labelColor} font-figtree`}>
-                · {base.label}
-              </span>
-            </div>
-            <div className="space-y-2">
-              {base.items.map(item => (
-                <div key={item.key} className="flex items-baseline gap-3 font-figtree">
-                  <span className="text-white/30 text-sm w-28 shrink-0 font-figtree">{item.key}</span>
-                  <span className="text-white/85 text-base leading-relaxed font-figtree">{item.value}</span>
+      <div className="grid grid-cols-3 gap-3 mb-8 items-stretch">
+        {/* BASE 1 — Core Needs */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0, duration: 0.4 }}
+          className="rounded-xl px-5 py-6 flex flex-col"
+          style={{ backgroundColor: "#F4EDE8", border: "1.5px solid #D66B6D" }}>
+          <div className="mb-4">
+            <span
+              className="text-xs font-bold font-figtree"
+              style={{ color: "#D66B6D" }}>
+              PILLAR 1
+            </span>
+            <p
+              className="text-sm font-semibold font-figtree mt-0.5"
+              style={{ color: "#5a3a3b" }}>
+              Core Needs
+            </p>
+          </div>
+          <div className="flex-1 space-y-3">
+            {preparation.coreIssue && (
+              <div
+                className="rounded-xl p-3"
+                style={{
+                  backgroundColor: "rgba(214,107,109,0.12)",
+                  border: "1px solid #D66B6D",
+                }}>
+                <p
+                  className="text-xs font-bold uppercase tracking-widest mb-1 font-figtree"
+                  style={{ color: "#D66B6D" }}>
+                  Core Issue
+                </p>
+                <p
+                  className="text-sm leading-relaxed font-figtree"
+                  style={{ color: "#5a3a3b" }}>
+                  {preparation.coreIssue}
+                </p>
+              </div>
+            )}
+            {preparation.goal && (
+              <div
+                className="rounded-xl p-3"
+                style={{ backgroundColor: "rgba(90,58,59,0.07)" }}>
+                <p
+                  className="text-xs uppercase tracking-widest mb-1 font-figtree"
+                  style={{ color: "#a07070" }}>
+                  Your Goal
+                </p>
+                <p
+                  className="text-sm leading-relaxed font-figtree"
+                  style={{ color: "#5a3a3b" }}>
+                  {preparation.goal}
+                </p>
+              </div>
+            )}
+            {preparation.outcome && (
+              <div
+                className="rounded-xl p-3"
+                style={{ backgroundColor: "rgba(90,58,59,0.07)" }}>
+                <p
+                  className="text-xs uppercase tracking-widest mb-1 font-figtree"
+                  style={{ color: "#a07070" }}>
+                  Desired Outcome
+                </p>
+                <p
+                  className="text-sm leading-relaxed font-figtree"
+                  style={{ color: "#5a3a3b" }}>
+                  {preparation.outcome}
+                </p>
+              </div>
+            )}
+          </div>
+        </motion.div>
+
+        {/* PILLAR 2 — Strategy */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15, duration: 0.4 }}
+          className="rounded-xl px-5 py-6 flex flex-col"
+          style={{ backgroundColor: "#F4EDE8", border: "1.5px solid #D66B6D" }}>
+          <div className="mb-4">
+            <span
+              className="text-xs font-bold font-figtree"
+              style={{ color: "#D66B6D" }}>
+              PILLAR 2
+            </span>
+            <p
+              className="text-sm font-semibold font-figtree mt-0.5"
+              style={{ color: "#5a3a3b" }}>
+              Strategy
+            </p>
+          </div>
+          <div className="flex-1 space-y-3">
+            {empathy.perspective && (
+              <div
+                className="rounded-xl p-3"
+                style={{
+                  backgroundColor: "rgba(214,107,109,0.12)",
+                  border: "1px solid #D66B6D",
+                }}>
+                <p
+                  className="text-xs font-bold uppercase tracking-widest mb-1 font-figtree"
+                  style={{ color: "#D66B6D" }}>
+                  Their side
+                </p>
+                <p
+                  className="text-sm leading-relaxed font-figtree"
+                  style={{ color: "#5a3a3b" }}>
+                  {empathy.perspective}
+                </p>
+              </div>
+            )}
+            {empathy.tone && (
+              <div
+                className="rounded-xl p-3"
+                style={{ backgroundColor: "rgba(90,58,59,0.07)" }}>
+                <p
+                  className="text-xs uppercase tracking-widest mb-1 font-figtree"
+                  style={{ color: "#a07070" }}>
+                  Tone
+                </p>
+                <p
+                  className="text-sm font-semibold font-figtree"
+                  style={{ color: "#5a3a3b" }}>
+                  {empathy.tone.charAt(0).toUpperCase() + empathy.tone.slice(1)}
+                </p>
+                <p
+                  className="text-xs mt-0.5 font-figtree"
+                  style={{ color: "#a07070" }}>
+                  {empathy.tone === "gentle" && "Soft, easing in slowly"}
+                  {empathy.tone === "direct" && "Clear and straightforward"}
+                  {empathy.tone === "curious" && "Open, seeking to understand"}
+                </p>
+              </div>
+            )}
+            {empathy.emotions?.length > 0 && (
+              <div>
+                <p
+                  className="text-xs uppercase tracking-widest mb-1.5 font-figtree"
+                  style={{ color: "#a07070" }}>
+                  Emotions to bring
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {empathy.emotions.map((emotion) => (
+                    <span
+                      key={emotion}
+                      className="px-2.5 py-1 rounded-full text-xs font-figtree font-medium"
+                      style={{ backgroundColor: "#D66B6D", color: "#F4EDE8" }}>
+                      {emotion}
+                    </span>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </motion.div>
-        ))}
+              </div>
+            )}
+            {(Array.isArray(situation.feeling)
+              ? situation.feeling.length > 0
+              : situation.feeling) && (
+              <div
+                className="rounded-xl p-3"
+                style={{ backgroundColor: "rgba(90,58,59,0.07)" }}>
+                <p
+                  className="text-xs uppercase tracking-widest mb-1 font-figtree"
+                  style={{ color: "#a07070" }}>
+                  Going in feeling
+                </p>
+                <p
+                  className="text-sm leading-relaxed font-figtree"
+                  style={{ color: "#5a3a3b" }}>
+                  {Array.isArray(situation.feeling)
+                    ? situation.feeling.join(" · ")
+                    : situation.feeling}
+                </p>
+              </div>
+            )}
+          </div>
+        </motion.div>
+
+        {/* PILLAR 3 — Your Opener */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.4 }}
+          className="rounded-xl px-5 py-6 flex flex-col"
+          style={{ backgroundColor: "#F4EDE8", border: "1.5px solid #D66B6D" }}>
+          <div className="mb-4">
+            <span
+              className="text-xs font-bold font-figtree"
+              style={{ color: "#D66B6D" }}>
+              PILLAR 3
+            </span>
+            <p
+              className="text-sm font-semibold font-figtree mt-0.5"
+              style={{ color: "#5a3a3b" }}>
+              Your Opener
+            </p>
+          </div>
+          <div className="flex-1 space-y-3">
+            {phrasing.chosenText && (
+              <div
+                className="rounded-xl p-3"
+                style={{
+                  backgroundColor: "rgba(214,107,109,0.12)",
+                  border: "1px solid #D66B6D",
+                }}>
+                <p
+                  className="text-xs font-bold uppercase tracking-widest mb-1.5 font-figtree"
+                  style={{ color: "#D66B6D" }}>
+                  Practice saying this
+                </p>
+                <p
+                  className="text-sm leading-relaxed font-figtree"
+                  style={{ color: "#5a3a3b" }}>
+                  "{phrasing.chosenText}"
+                </p>
+              </div>
+            )}
+            {phrasing.instinct && (
+              <div
+                className="rounded-xl p-3"
+                style={{ backgroundColor: "rgba(90,58,59,0.07)" }}>
+                <p
+                  className="text-xs uppercase tracking-widest mb-1.5 font-figtree"
+                  style={{ color: "#a07070" }}>
+                  Your instinct was
+                </p>
+                <p
+                  className="text-sm leading-relaxed italic font-figtree"
+                  style={{ color: "#5a3a3b" }}>
+                  "{phrasing.instinct}"
+                </p>
+              </div>
+            )}
+          </div>
+        </motion.div>
       </div>
 
-<button
+      <button
         onClick={onRestart}
-        className="w-full py-2.5 text-white/60 hover:text-white/70 text-base transition-colors underline underline-offset-4 font-figtree"
-      >
+        className="w-full py-2.5 text-white/60 hover:text-white/70 text-base transition-colors underline underline-offset-4 font-figtree">
         Start another dig
       </button>
     </motion.div>
