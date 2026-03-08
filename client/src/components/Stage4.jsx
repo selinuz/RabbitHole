@@ -17,6 +17,7 @@ const Stage4 = ({ stageData, onComplete }) => {
 
     try {
       const context = `
+        Perspective identified: "${empathy.perspective}".
         Tone chosen: ${empathy.tone}. Emotions to bring: ${empathy.emotions?.join(', ')}.
         Core issue: ${preparation.coreIssue}. Goal: ${preparation.goal}.
         The user's instinct phrase: "${instinct}"
