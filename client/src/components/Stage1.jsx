@@ -47,11 +47,6 @@ const QUESTIONS = [
     type: "pills",
     options: IMPORTANCE,
   },
-  {
-    id: "vent",
-    text: null, // filled dynamically using feeling
-    type: "text",
-  },
 ];
 
 const PillGroup = ({ options, selected, onSelect }) => (
@@ -76,11 +71,10 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
   const [activeQuestions, setActiveQuestions] = useState(null); // null = loading
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [textInput, setTextInput] = useState("");
+
   const [summaryConfirmed, setSummaryConfirmed] = useState(false);
   const [adjusting, setAdjusting] = useState(false);
   const [draftAnswers, setDraftAnswers] = useState({});
-  const [draftText, setDraftText] = useState("");
 
   // Fetch AI acknowledgement and analyze what's already known
   useEffect(() => {
@@ -115,14 +109,8 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
 
   const currentQuestion = activeQuestions ? activeQuestions[currentQ] : null;
 
-  const ventPrompt = answers.feeling
-    ? `You mentioned this is making you feel ${answers.feeling.toLowerCase()}. Tell me more — what happened? Who are the key people involved? What led to this moment?`
-    : "Tell me more. What happened, who's involved, and what led to this?";
-
   const handleBack = () => {
     if (currentQ > 0) {
-      const prevQuestion = activeQuestions[currentQ - 1];
-      if (prevQuestion.id === "vent") setTextInput(answers.vent || "");
       setCurrentQ((q) => q - 1);
     } else {
       onBack();
@@ -135,23 +123,13 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
     setTimeout(() => setCurrentQ((q) => q + 1), 300);
   };
 
-  const handleTextSubmit = () => {
-    if (!textInput.trim()) return;
-    setAnswers((prev) => ({ ...prev, vent: textInput.trim() }));
-    setCurrentQ((q) => q + 1); // move past last question → show summary
-  };
-
   const openAdjust = () => {
     setDraftAnswers({ ...answers });
-    setDraftText(answers.vent || "");
     setAdjusting(true);
   };
 
   const saveAdjust = () => {
-    setAnswers({
-      ...draftAnswers,
-      vent: draftText.trim() || draftAnswers.vent,
-    });
+    setAnswers({ ...draftAnswers });
     setAdjusting(false);
   };
 
@@ -189,9 +167,7 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
             exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.4 }}>
             <p className="text-white/90 text-lg leading-snug">
-              {currentQuestion.id === "vent"
-                ? ventPrompt
-                : currentQuestion.text}
+              {currentQuestion.text}
             </p>
 
             {currentQuestion.type === "pills" && (
@@ -200,27 +176,6 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                 selected={answers[currentQuestion.id]}
                 onSelect={handlePillSelect}
               />
-            )}
-
-            {currentQuestion.type === "text" && (
-              <div className="mt-4">
-                <textarea
-                  value={textInput}
-                  onChange={(e) => setTextInput(e.target.value)}
-                  placeholder="Take your time..."
-                  rows={4}
-                  className="w-full bg-white/5 rounded-xl p-4 text-white placeholder-white/25 outline-none focus:bg-white/10 transition-all resize-none"
-                  onKeyDown={(e) =>
-                    e.key === "Enter" && e.metaKey && handleTextSubmit()
-                  }
-                />
-                <button
-                  onClick={handleTextSubmit}
-                  disabled={!textInput.trim()}
-                  className="mt-3 px-5 py-2 bg-primary text-white rounded-full text-sm font-semibold disabled:opacity-30 hover:bg-primary-hover transition-all">
-                  Continue
-                </button>
-              </div>
             )}
 
             {/* Back button */}
@@ -309,17 +264,6 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
                   }
                 />
               </div>
-              <div>
-                <p className="text-white/60 text-xs uppercase tracking-wider mb-2">
-                  What you shared
-                </p>
-                <textarea
-                  value={draftText}
-                  onChange={(e) => setDraftText(e.target.value)}
-                  rows={4}
-                  className="w-full bg-white/5 rounded-xl p-4 text-white placeholder-white/25 outline-none focus:bg-white/10 transition-all resize-none"
-                />
-              </div>
             </div>
 
             <div className="flex gap-3 mt-6">
@@ -353,14 +297,6 @@ const Stage1 = ({ stageData, onComplete, onBack }) => {
               <SummaryRow label="How you're feeling" value={answers.feeling} />
               <SummaryRow label="Your position" value={answers.timeline} />
               <SummaryRow label="Importance" value={answers.importance} />
-              {answers.vent && (
-                <div className="pt-3 border-t border-white/5">
-                  <p className="text-white/40 text-xs mb-1">What you shared</p>
-                  <p className="text-white/80 text-sm leading-relaxed">
-                    {answers.vent}
-                  </p>
-                </div>
-              )}
             </div>
 
             {!summaryConfirmed ? (
