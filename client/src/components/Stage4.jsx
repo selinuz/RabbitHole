@@ -8,8 +8,7 @@ const Stage4 = ({ stageData, onComplete, onBack }) => {
   const [submitted, setSubmitted] = useState(false);
   const [rewrite, setRewrite] = useState(null);
   const [loadingRewrite, setLoadingRewrite] = useState(false);
-  const [chosenPhrase, setChosenPhrase] = useState(null);
-  const [fillerValues, setFillerValues] = useState({});
+  const [fillerValues, setFillerValues] = useState({ iStatement: {}, gottman: {}, framing: {} });
 
   const handleSubmitInstinct = async () => {
     if (!instinct.trim()) return;
@@ -54,16 +53,30 @@ const Stage4 = ({ stageData, onComplete, onBack }) => {
     }).join('');
   };
 
+  const countBlanks = (template) => {
+    if (!template) return 0;
+    return (template.match(/\[.*?\]/g) || []).length;
+  };
+
+  const allBlanksFilled = (template, fillers) => {
+    const blanks = countBlanks(template);
+    return Array.from({ length: blanks }, (_, i) => fillers[i]).every(v => v && v.trim().length > 0);
+  };
+
   const handleComplete = () => {
-    const finalPhrase = constructFinalPhrase(rewrite[chosenPhrase], fillerValues);
     onComplete({
       instinct,
-      chosenPhrase,
-      chosenText: finalPhrase || rewrite?.[chosenPhrase] || '',
+      iStatementText: constructFinalPhrase(rewrite.iStatement, fillerValues.iStatement),
+      gottmanText: constructFinalPhrase(rewrite.gottman, fillerValues.gottman),
+      framingText: constructFinalPhrase(rewrite.framing, fillerValues.framing),
     });
   };
 
-  const canContinue = !!chosenPhrase;
+  const canContinue = rewrite && (
+    allBlanksFilled(rewrite.iStatement, fillerValues.iStatement) &&
+    allBlanksFilled(rewrite.gottman, fillerValues.gottman) &&
+    allBlanksFilled(rewrite.framing, fillerValues.framing)
+  );
 
   return (
     <motion.div
@@ -124,55 +137,26 @@ const Stage4 = ({ stageData, onComplete, onBack }) => {
               </div>
             ) : rewrite && (
               <div>
-                <p className="text-white/60 text-base mb-4 font-figtree">Here are three science-backed alternatives — tap one to practice with it:</p>
-                <div className="space-y-3 mb-6">
-                  <PhraseCard
-                    label="I-statement"
-                    sublabel="Avoids harsh start-ups"
-                    phrase={rewrite.iStatement}
-                    selected={chosenPhrase === 'iStatement'}
-                    onSelect={() => {
-                      setChosenPhrase('iStatement');
-                      setFillerValues({});
-                    }}
-                  />
-                  <PhraseCard
-                    label="Soft opening"
-                    sublabel="Gottman-based start"
-                    phrase={rewrite.gottman}
-                    selected={chosenPhrase === 'gottman'}
-                    onSelect={() => {
-                      setChosenPhrase('gottman');
-                      setFillerValues({});
-                    }}
-                  />
-                  <PhraseCard
-                    label="Framing"
-                    sublabel="Builds a shared picture"
-                    phrase={rewrite.framing}
-                    selected={chosenPhrase === 'framing'}
-                    onSelect={() => {
-                      setChosenPhrase('framing');
-                      setFillerValues({});
-                    }}
-                  />
-                </div>
-
-                {chosenPhrase && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-primary/10 rounded-xl p-4 mb-6 shadow-sm font-figtree"
-                  >
-                    <p className="text-accent text-sm mb-1 uppercase tracking-wider font-figtree">Your rehearsal template</p>
-                    <div className="text-white/90 text-base leading-relaxed flex flex-wrap items-center gap-y-2 font-figtree">
-                      {renderInteractivePhrase(rewrite[chosenPhrase], fillerValues, (idx, val) => {
-                        setFillerValues(prev => ({ ...prev, [idx]: val }));
-                      })}
+                <p className="text-white/60 text-base mb-4 font-figtree">Try all three science-backed techniques — fill in the blanks on each to continue:</p>
+                <div className="space-y-4 mb-6">
+                  {[
+                    { key: 'iStatement', label: 'I-statement', sublabel: 'Avoids harsh start-ups' },
+                    { key: 'gottman', label: 'Soft opening', sublabel: 'Gottman-based start' },
+                    { key: 'framing', label: 'Framing', sublabel: 'Builds a shared picture' },
+                  ].map(({ key, label, sublabel }) => (
+                    <div key={key} className="bg-white/5 rounded-xl p-4 font-figtree">
+                      <div className="flex items-baseline gap-2 mb-2">
+                        <span className="text-base font-semibold uppercase tracking-wider text-accent font-figtree">{label}</span>
+                        <span className="text-base text-white/30 font-figtree">{sublabel}</span>
+                      </div>
+                      <div className="text-white/90 text-base leading-relaxed flex flex-wrap items-center gap-y-2 font-figtree">
+                        {renderInteractivePhrase(rewrite[key], fillerValues[key], (idx, val) => {
+                          setFillerValues(prev => ({ ...prev, [key]: { ...prev[key], [idx]: val } }));
+                        })}
+                      </div>
                     </div>
-                    <p className="text-white/35 text-sm mt-3 font-figtree">Fill in the blanks with your own words as you practice.</p>
-                  </motion.div>
-                )}
+                  ))}
+                </div>
               </div>
             )}
           </motion.div>
@@ -220,37 +204,5 @@ const renderInteractivePhrase = (phrase, fillers, onChange) => {
   });
 };
 
-const renderPhrase = (phrase) => {
-  if (!phrase) return null;
-  const parts = phrase.split(/(\[.*?\])/g);
-  return parts.map((part, i) => {
-    if (part.startsWith('[') && part.endsWith(']')) {
-      return (
-        <span key={i} className="px-2 py-0.5 rounded-full bg-white/10 text-primary mx-0.5 font-semibold text-sm shadow-sm">
-          {part}
-        </span>
-      );
-    }
-    return part;
-  });
-};
-
-const PhraseCard = ({ label, sublabel, phrase, selected, onSelect }) => (
-  <button
-    onClick={onSelect}
-    className={`w-full text-left rounded-xl p-4 transition-all duration-300 font-figtree ${selected
-      ? 'bg-primary/20 text-white shadow-lg'
-      : 'bg-white/5 text-white/75 hover:bg-white/10'
-      }`}
-  >
-    <div className="flex items-baseline gap-2 mb-1 font-figtree">
-      <span className="text-base font-semibold uppercase tracking-wider text-accent font-figtree">{label}</span>
-      <span className="text-base text-white/30 font-figtree">{sublabel}</span>
-    </div>
-    <div className="text-base leading-relaxed font-figtree">
-      "{renderPhrase(phrase)}"
-    </div>
-  </button>
-);
 
 export default Stage4;
